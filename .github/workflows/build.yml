@@ -1,13 +1,13 @@
-name: Build Android APK
+name: Build APK for Android
 
 on:
   push:
     branches:
-      - main  # Exécute lors d'un push sur la branche 'main'
+      - main  # Ou la branche que tu veux utiliser
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Utilise un runner Ubuntu sur GitHub Actions
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
@@ -16,45 +16,31 @@ jobs:
     - name: Set up JDK 17
       uses: actions/setup-java@v2
       with:
-        distribution: 'zulu'
         java-version: '17'
-
-    - name: Verify Java Installation
-      run: |
-        java -version
-        javac -version
-
-    - name: Install Android SDK Command-line tools
-      run: |
-        mkdir -p $HOME/android-sdk/cmdline-tools
-        curl -o commandlinetools.zip https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip
-        unzip commandlinetools.zip -d $HOME/android-sdk/cmdline-tools
-        rm commandlinetools.zip
-        echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-        echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
+        distribution: 'zulu'
 
     - name: Install Android SDK
       run: |
-        # Mettre à jour le sdkmanager
-        curl -sSL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip -o tools.zip
-        unzip tools.zip -d $ANDROID_HOME
-        rm tools.zip
-        
-        # Accepter les licences
-        yes | sdkmanager --licenses
-        
-        # Installer les outils nécessaires
-        sdkmanager --update
-        sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-34"
-        sdkmanager "system-images;android-34;google_apis;x86_64"
-        sdkmanager "emulator"
+        # Download command line tools
+        mkdir -p $HOME/android-sdk/cmdline-tools
+        wget https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip -O android-sdk.zip
+        unzip android-sdk.zip -d $HOME/android-sdk/cmdline-tools
+        rm android-sdk.zip
+
+        # Install required packages
+        echo "y" | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk --update
+        echo "y" | $HOME/android-sdk/cmdline-tools/bin/sdkmanager --sdk_root=$HOME/android-sdk "platform-tools" "build-tools;30.0.3" "platforms;android-34"
+
+        # Set environment variables for Android SDK
+        echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+        echo "PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
 
     - name: Build APK
       run: |
+        # Commande pour compiler ton APK
         ./gradlew assembleRelease
-        # Si tu veux une version debug, remplace assembleRelease par assembleDebug
 
-    - name: Upload APK artifact
+    - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
       with:
         name: apk
