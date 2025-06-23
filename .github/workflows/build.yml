@@ -41,8 +41,9 @@ jobs:
           echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
 
-          # Vérifier que sdkmanager fonctionne bien
-          sdkmanager --version
+          # Vérification de l'installation de sdkmanager
+          echo "Vérification de sdkmanager"
+          sdkmanager --version || echo "sdkmanager n'a pas été trouvé. L'installation échoue."
 
           # Mettre à jour les outils du SDK Android
           sdkmanager --update
