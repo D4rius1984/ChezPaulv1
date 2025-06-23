@@ -25,33 +25,28 @@ jobs:
           distribution: 'zulu'
 
       # Étape 3: Installer Android SDK
-      - name: Set up Android SDK
+      - name: Install Android SDK
         run: |
-          # Créer un répertoire pour Android SDK et installer les outils nécessaires
+          # Créer le répertoire pour Android SDK
           mkdir -p $HOME/android-sdk/cmdline-tools
-          cd $HOME/android-sdk
 
-          # Télécharger et extraire le SDK Android
+          # Télécharger et extraire les outils de ligne de commande Android
           curl -L https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip -o commandlinetools-linux.zip
-          unzip commandlinetools-linux.zip -d cmdline-tools
+          unzip commandlinetools-linux.zip -d $HOME/android-sdk/cmdline-tools
           rm commandlinetools-linux.zip
 
-          # Assurer que le répertoire cmdline-tools/bin existe
-          ls $HOME/android-sdk/cmdline-tools
-
-          # Vérification de l'existence de sdkmanager
-          ls $HOME/android-sdk/cmdline-tools/bin
-          if [ ! -f "$HOME/android-sdk/cmdline-tools/bin/sdkmanager" ]; then
-            echo "Erreur : sdkmanager n'est pas trouvé"
-            exit 1
-          fi
-
-          # Configurer les variables d'environnement
+          # Ajouter SDK à PATH
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
 
-          # Mettre à jour les outils SDK
+          # Vérifier si sdkmanager est correctement installé
+          if [ ! -f "$HOME/android-sdk/cmdline-tools/bin/sdkmanager" ]; then
+            echo "Erreur : sdkmanager non trouvé"
+            exit 1
+          fi
+
+          # Mettre à jour sdkmanager
           sdkmanager --update
 
       # Étape 4: Accepter les licences Android
