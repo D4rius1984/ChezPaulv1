@@ -31,18 +31,23 @@ jobs:
         unzip commandlinetools.zip -d $HOME/android-sdk/cmdline-tools
         rm commandlinetools.zip
         echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-        echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$PATH" >> $GITHUB_ENV
+        echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
 
     - name: Install Android SDK
       run: |
+        # Mettre à jour le sdkmanager
+        curl -sSL https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip -o tools.zip
+        unzip tools.zip -d $ANDROID_HOME
+        rm tools.zip
+        
+        # Accepter les licences
+        yes | sdkmanager --licenses
+        
+        # Installer les outils nécessaires
         sdkmanager --update
         sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-34"
         sdkmanager "system-images;android-34;google_apis;x86_64"
         sdkmanager "emulator"
-        
-    - name: Accept licenses
-      run: |
-        yes | sdkmanager --licenses
 
     - name: Build APK
       run: |
