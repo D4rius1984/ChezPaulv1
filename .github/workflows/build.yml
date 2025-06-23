@@ -43,6 +43,7 @@ jobs:
 
           # Vérification de l'installation de sdkmanager
           echo "Vérification de sdkmanager"
+          ls $ANDROID_HOME/cmdline-tools/bin
           sdkmanager --version || echo "sdkmanager n'a pas été trouvé. L'installation échoue."
 
           # Mettre à jour les outils du SDK Android
