@@ -35,12 +35,15 @@ jobs:
           unzip commandlinetools-linux.zip -d $HOME/android-sdk/cmdline-tools
           rm commandlinetools-linux.zip
 
+          # Déplacer les outils dans le répertoire correct
+          mv $HOME/android-sdk/cmdline-tools/cmdline-tools/* $HOME/android-sdk/cmdline-tools/
+
           # Ajouter SDK à PATH
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
 
-          # Vérifier si sdkmanager est correctement installé
+          # Vérification de sdkmanager
           if [ ! -f "$HOME/android-sdk/cmdline-tools/bin/sdkmanager" ]; then
             echo "Erreur : sdkmanager non trouvé"
             exit 1
