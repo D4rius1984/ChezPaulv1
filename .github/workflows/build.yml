@@ -36,17 +36,22 @@ jobs:
           unzip commandlinetools-linux.zip -d cmdline-tools
           rm commandlinetools-linux.zip
 
+          # Assurer que le répertoire cmdline-tools/bin existe
+          ls $HOME/android-sdk/cmdline-tools
+
+          # Vérification de l'existence de sdkmanager
+          ls $HOME/android-sdk/cmdline-tools/bin
+          if [ ! -f "$HOME/android-sdk/cmdline-tools/bin/sdkmanager" ]; then
+            echo "Erreur : sdkmanager n'est pas trouvé"
+            exit 1
+          fi
+
           # Configurer les variables d'environnement
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
 
-          # Vérification de l'installation de sdkmanager
-          echo "Vérification de sdkmanager"
-          ls $ANDROID_HOME/cmdline-tools/bin
-          sdkmanager --version || echo "sdkmanager n'a pas été trouvé. L'installation échoue."
-
-          # Mettre à jour les outils du SDK Android
+          # Mettre à jour les outils SDK
           sdkmanager --update
 
       # Étape 4: Accepter les licences Android
