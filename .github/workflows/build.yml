@@ -27,19 +27,21 @@ jobs:
       # Étape 3: Installer Android SDK
       - name: Set up Android SDK
         run: |
-          # Télécharge et installe les outils en ligne de commande d'Android SDK
+          # Crée le répertoire pour Android SDK
           mkdir -p $HOME/android-sdk/cmdline-tools
           cd $HOME/android-sdk/cmdline-tools
+
+          # Télécharge et décompresse le SDK
           curl -O https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip
           unzip commandlinetools-linux-8092744_latest.zip
           rm commandlinetools-linux-8092744_latest.zip
 
-          # Configurer ANDROID_HOME et ajouter les outils SDK au PATH
+          # Configurer les variables d'environnement
           echo "export ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "export PATH=$ANDROID_HOME/cmdline-tools/bin:$ANDROID_HOME/platform-tools:$PATH" >> $GITHUB_ENV
           source $GITHUB_ENV
 
-          # Vérifie si sdkmanager est installé correctement
+          # Vérifie que sdkmanager est bien installé
           sdkmanager --version
 
       # Étape 4: Accepter les licences Android
