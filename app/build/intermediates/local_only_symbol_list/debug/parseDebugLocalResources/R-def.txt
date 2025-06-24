@@ -1,0 +1,20 @@
+R_DEF: Internal format may change without notice
+local
+color colorBackground
+color colorError
+color colorOnPrimary
+color colorOnSecondary
+color colorPrimary
+color colorPrimaryVariant
+color colorSecondary
+color colorSecondaryVariant
+color colorSurface
+drawable logo
+string app_name
+string boissons
+string nouvelle_commande
+string plats
+string resume
+string valider
+string valider_commande
+style Theme.ChezPaul

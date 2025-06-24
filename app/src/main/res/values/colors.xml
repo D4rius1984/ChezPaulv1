@@ -1,8 +1,14 @@
-<resources> 
-    <color name="purple_200">#BB86FC</color> 
-    <color name="purple_500">#6200EE</color> 
-    <color name="purple_700">#3700B3</color> 
-    <color name="teal_200">#03DAC5</color> 
-    <color name="black">#000000</color> 
-    <color name="white">#FFFFFF</color> 
-</resources> 
+<resources>
+    <!-- Définition des couleurs de base -->
+    <color name="colorPrimary">#F4A300</color> <!-- Couleur principale, orange -->
+    <color name="colorPrimaryVariant">#E69500</color> <!-- Variante plus foncée de l'orange -->
+    <color name="colorOnPrimary">#FFFFFF</color> <!-- Texte sur le fond principal (blanc) -->
+
+    <color name="colorSecondary">#B7950B</color> <!-- Couleur secondaire, jaune -->
+    <color name="colorSecondaryVariant">#F1C232</color> <!-- Variante plus claire du jaune -->
+    <color name="colorOnSecondary">#000000</color> <!-- Texte sur la couleur secondaire (noir) -->
+
+    <color name="colorBackground">#FFEECC</color> <!-- Fond général (jaune clair) -->
+    <color name="colorSurface">#FFFFFF</color> <!-- Surface (blanc pour les éléments en arrière-plan) -->
+    <color name="colorError">#D32F2F</color> <!-- Couleur d'erreur -->
+</resources>

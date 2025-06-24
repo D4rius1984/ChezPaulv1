@@ -1,12 +1,9 @@
 package com.chezpaul.model
 
-enum class CategorieBoisson {
-    APEROS, VINS, DIGESTIFS, BIERES, SOFTS
-}
+import com.chezpaul.model.CategorieBoisson
 
 data class Boisson(
     val nom: String,
-    val categorie: CategorieBoisson,
-    val sousCategorie: String? = null,
-    val format: String? = null
+    val quantite: Int,
+    val categorie: CategorieBoisson
 )

@@ -10,7 +10,7 @@ private val DarkColors = darkColorScheme()
 
 @Composable
 fun ChezPaulTheme(
-    darkTheme: Boolean = false,
+    darkTheme: Boolean = true,
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

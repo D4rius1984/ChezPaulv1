@@ -1,0 +1,69 @@
+com.chezpaul.app-lifecycle-viewmodel-2.7.0-0 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\058205a1b9c53b5cdd0104fac1ef9149\transformed\lifecycle-viewmodel-2.7.0\res
+com.chezpaul.app-cardview-1.0.0-1 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\09e20716c92e1b6821fad68a9103caa1\transformed\cardview-1.0.0\res
+com.chezpaul.app-transition-1.2.0-2 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\0caefc5eb0718b924f43d02ec3d522f8\transformed\transition-1.2.0\res
+com.chezpaul.app-jetified-savedstate-1.2.1-3 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\0dba6ad5ed87eb1cdd9cbe37486142e9\transformed\jetified-savedstate-1.2.1\res
+com.chezpaul.app-jetified-animation-core-release-4 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\125bd218cc119fe946d62012ab61d01d\transformed\jetified-animation-core-release\res
+com.chezpaul.app-jetified-lifecycle-livedata-core-ktx-2.7.0-5 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\22858ffc19f8bd93caef984dd90d4219\transformed\jetified-lifecycle-livedata-core-ktx-2.7.0\res
+com.chezpaul.app-jetified-ui-tooling-data-release-6 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\26ab54d94266403a14a32b66e0165c8e\transformed\jetified-ui-tooling-data-release\res
+com.chezpaul.app-coordinatorlayout-1.1.0-7 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\290151da1009e298c6f97f00e6c07bf7\transformed\coordinatorlayout-1.1.0\res
+com.chezpaul.app-jetified-navigation-compose-2.7.7-8 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\2a8ee102a9f1275c64f7ec2b0d5979a6\transformed\jetified-navigation-compose-2.7.7\res
+com.chezpaul.app-lifecycle-livedata-core-2.7.0-9 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\2c88e951cf17109cd5e07b88e8b85268\transformed\lifecycle-livedata-core-2.7.0\res
+com.chezpaul.app-jetified-emoji2-views-helper-1.3.0-10 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\35a6a8ab3ffcd67fb6c8f0f0e0da006d\transformed\jetified-emoji2-views-helper-1.3.0\res
+com.chezpaul.app-jetified-ui-tooling-preview-release-11 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\36cd54e48f43ac6573dd22621c345ae5\transformed\jetified-ui-tooling-preview-release\res
+com.chezpaul.app-jetified-lifecycle-viewmodel-savedstate-2.7.0-12 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\45e7f62bcaadeefa4d623353b311049c\transformed\jetified-lifecycle-viewmodel-savedstate-2.7.0\res
+com.chezpaul.app-jetified-customview-poolingcontainer-1.0.0-13 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\463a2251663b7886b212e9b0bf4164ad\transformed\jetified-customview-poolingcontainer-1.0.0\res
+com.chezpaul.app-jetified-appcompat-resources-1.5.0-14 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\49b413217e98263a863af2d5901b9e5f\transformed\jetified-appcompat-resources-1.5.0\res
+com.chezpaul.app-jetified-runtime-release-15 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\4be2a6da24240bcbc535cf110d2235cd\transformed\jetified-runtime-release\res
+com.chezpaul.app-jetified-lifecycle-runtime-ktx-2.7.0-16 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\58e59d8c960bc24a169a1f4f421ae37b\transformed\jetified-lifecycle-runtime-ktx-2.7.0\res
+com.chezpaul.app-jetified-animation-release-17 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\5909826691da51e307e3ab07ed017bad\transformed\jetified-animation-release\res
+com.chezpaul.app-navigation-common-2.7.7-18 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\5db192483811c7d567f0082f8480c25c\transformed\navigation-common-2.7.7\res
+com.chezpaul.app-jetified-activity-1.9.0-19 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\5fecd7192af1e346730cd57c7a68f657\transformed\jetified-activity-1.9.0\res
+com.chezpaul.app-jetified-ui-geometry-release-20 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\6224e3225f4ccb74beedab62000fbd30\transformed\jetified-ui-geometry-release\res
+com.chezpaul.app-core-runtime-2.2.0-21 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\62c5eb946aaa59a53e4989b195ff3edc\transformed\core-runtime-2.2.0\res
+com.chezpaul.app-jetified-startup-runtime-1.1.1-22 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\66ab733b07612c31b2b5cc23c13dee3d\transformed\jetified-startup-runtime-1.1.1\res
+com.chezpaul.app-jetified-activity-ktx-1.9.0-23 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\6ce1cd93c70dfccc4416b0b93cdaf701\transformed\jetified-activity-ktx-1.9.0\res
+com.chezpaul.app-drawerlayout-1.1.1-24 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\6e461d24428a07417bbe6f26bb33aa13\transformed\drawerlayout-1.1.1\res
+com.chezpaul.app-jetified-material-release-25 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\7138ed43a85da5946e2a230d7c330e88\transformed\jetified-material-release\res
+com.chezpaul.app-jetified-material3-release-26 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\72e4d92ea167e64000a7fe311ea2460e\transformed\jetified-material3-release\res
+com.chezpaul.app-jetified-annotation-experimental-1.4.0-27 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\7b46a395f1e6eefa1deef14b3097dcde\transformed\jetified-annotation-experimental-1.4.0\res
+com.chezpaul.app-jetified-material-icons-extended-release-28 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\7c12bf02409e3753d85cb06c05f2e8e3\transformed\jetified-material-icons-extended-release\res
+com.chezpaul.app-navigation-runtime-2.7.7-29 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\7c24f5c0bb5651a588deb924f1e4906c\transformed\navigation-runtime-2.7.7\res
+com.chezpaul.app-jetified-ui-unit-release-30 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\81ada8ca28909323f8395172cb7b540c\transformed\jetified-ui-unit-release\res
+com.chezpaul.app-jetified-material-ripple-release-31 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\81cf7c9494af4cd2fbb582cc671310b4\transformed\jetified-material-ripple-release\res
+com.chezpaul.app-jetified-runtime-livedata-1.6.5-32 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\8c2b8ff026c03d1523da523f186e8498\transformed\jetified-runtime-livedata-1.6.5\res
+com.chezpaul.app-jetified-lifecycle-viewmodel-compose-2.7.0-33 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\9014ca740a16ddeaad5147cbc4c25995\transformed\jetified-lifecycle-viewmodel-compose-2.7.0\res
+com.chezpaul.app-jetified-runtime-saveable-release-34 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\909aed0510b72ba60d5b75bca263692a\transformed\jetified-runtime-saveable-release\res
+com.chezpaul.app-fragment-1.3.6-35 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\911c439a183808150635c734a877403a\transformed\fragment-1.3.6\res
+com.chezpaul.app-navigation-runtime-ktx-2.7.7-36 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\99c18c8b78c12d413bbd1b864207bb1f\transformed\navigation-runtime-ktx-2.7.7\res
+com.chezpaul.app-constraintlayout-2.0.1-37 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\a34b9bdc89c427edff222d94d7ed5ba9\transformed\constraintlayout-2.0.1\res
+com.chezpaul.app-jetified-profileinstaller-1.3.1-38 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\a353fa05aa2a09f0c3e5acd73c25fe02\transformed\jetified-profileinstaller-1.3.1\res
+com.chezpaul.app-material-1.7.0-39 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\a5766d05297f24c1444a5c50ebdc8e1d\transformed\material-1.7.0\res
+com.chezpaul.app-recyclerview-1.1.0-40 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\a6fd42d4879aaefadef9e69f0f625129\transformed\recyclerview-1.1.0\res
+com.chezpaul.app-jetified-foundation-layout-release-41 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\a9d95994928a7c080a99f0181043b716\transformed\jetified-foundation-layout-release\res
+com.chezpaul.app-lifecycle-runtime-2.7.0-42 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\b04c6940b2e75677b575197400b4122b\transformed\lifecycle-runtime-2.7.0\res
+com.chezpaul.app-jetified-lifecycle-process-2.7.0-43 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\c7f024192f8af4b694ee9a79a1fb7477\transformed\jetified-lifecycle-process-2.7.0\res
+com.chezpaul.app-jetified-lifecycle-viewmodel-ktx-2.7.0-44 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\cafc186fe2344c8dd5f9c7d53f722f28\transformed\jetified-lifecycle-viewmodel-ktx-2.7.0\res
+com.chezpaul.app-jetified-activity-compose-1.9.0-45 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\d1e2852559701d569a53b7bdc8cd6502\transformed\jetified-activity-compose-1.9.0\res
+com.chezpaul.app-jetified-ui-release-46 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\d39365450b0503d2b1f9481062ce0453\transformed\jetified-ui-release\res
+com.chezpaul.app-jetified-ui-tooling-release-47 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\d634ecf07cd5f475f586ab82f3fcb805\transformed\jetified-ui-tooling-release\res
+com.chezpaul.app-jetified-foundation-release-48 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\d6b0402a9cfed041f40adeace22801a3\transformed\jetified-foundation-release\res
+com.chezpaul.app-jetified-emoji2-1.3.0-49 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\dbe2e5d48f27d4c740c4aee41bf5f606\transformed\jetified-emoji2-1.3.0\res
+com.chezpaul.app-jetified-ui-test-manifest-1.6.5-50 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\de3629186b2721846df6692026f9ecfc\transformed\jetified-ui-test-manifest-1.6.5\res
+com.chezpaul.app-jetified-ui-graphics-release-51 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\e3fc8e942bd5a4ad8dd66b6d68a0a6e3\transformed\jetified-ui-graphics-release\res
+com.chezpaul.app-core-1.13.1-52 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\e7203c2222802412bca8edb5e5c31959\transformed\core-1.13.1\res
+com.chezpaul.app-appcompat-1.5.0-53 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\eb7a3879091ef593ce6e2e33fd03014c\transformed\appcompat-1.5.0\res
+com.chezpaul.app-jetified-ui-util-release-54 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\edcf0eea285d2c2109f4d033910f4d7d\transformed\jetified-ui-util-release\res
+com.chezpaul.app-jetified-viewpager2-1.0.0-55 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\ef8fecca02f8384eb833aa3a9d70cdc5\transformed\jetified-viewpager2-1.0.0\res
+com.chezpaul.app-navigation-common-ktx-2.7.7-56 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\f115e884bb223d74145427d2c85ac108\transformed\navigation-common-ktx-2.7.7\res
+com.chezpaul.app-jetified-core-ktx-1.13.1-57 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\f2c6e15b98391d1b8347900afc661bca\transformed\jetified-core-ktx-1.13.1\res
+com.chezpaul.app-jetified-material-icons-core-release-58 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\f3d36950a81cf2eb66652b149bc454ea\transformed\jetified-material-icons-core-release\res
+com.chezpaul.app-jetified-ui-text-release-59 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\f9ac05145db522f305de2445c5090321\transformed\jetified-ui-text-release\res
+com.chezpaul.app-jetified-savedstate-ktx-1.2.1-60 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\fb70d0034fab5f1cde9f48b2367bae97\transformed\jetified-savedstate-ktx-1.2.1\res
+com.chezpaul.app-lifecycle-livedata-2.7.0-61 C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\fca1e1f28a10d202469059e387e89c61\transformed\lifecycle-livedata-2.7.0\res
+com.chezpaul.app-pngs-62 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\generated\res\pngs\debug
+com.chezpaul.app-resValues-63 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\generated\res\resValues\debug
+com.chezpaul.app-packageDebugResources-64 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.chezpaul.app-packageDebugResources-65 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.chezpaul.app-debug-66 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.chezpaul.app-debug-67 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\debug\res
+com.chezpaul.app-main-68 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\res

@@ -1,9 +1,8 @@
-package com.chezpaul
+package com.chezpaul.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.chezpaul.ui.ChezPaulApp
 import com.chezpaul.ui.theme.ChezPaulTheme
 
 class MainActivity : ComponentActivity() {
