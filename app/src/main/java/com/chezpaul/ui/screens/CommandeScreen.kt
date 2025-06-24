@@ -9,6 +9,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommandeScreen(
     commande: Commande?,
@@ -17,7 +18,7 @@ fun CommandeScreen(
     var numeroTable by remember { mutableStateOf(commande?.numeroTable ?: "") }
     var salle by remember { mutableStateOf(commande?.salle ?: "") }
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
-    var plat by remember { mutableStateOf(commande?.plat) }
+    var platState by remember { mutableStateOf(commande?.plat) }
 
     val plats = listOf(
         Plat("Langue de bœuf piquante", false),
@@ -31,22 +32,14 @@ fun CommandeScreen(
 
     var ravigoteVisible by remember { mutableStateOf(false) }
 
-    ravigoteVisible = plat?.contientRavigote == true
+    // Logic for showing Ravigote warning
+    LaunchedEffect(platState) {
+        ravigoteVisible = platState?.contientRavigote == true
+    }
 
     Column(Modifier.padding(16.dp)) {
-        OutlinedTextField(
-            value = numeroTable,
-            onValueChange = { numeroTable = it },
-            label = { Text("Numéro de table") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.fillMaxWidth()
-        )
-        OutlinedTextField(
-            value = salle,
-            onValueChange = { salle = it },
-            label = { Text("Salle") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        OutlinedTextField(value = numeroTable, onValueChange = { numeroTable = it }, label = { Text("Numéro de table") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), modifier = Modifier.fillMaxWidth())
+        OutlinedTextField(value = salle, onValueChange = { salle = it }, label = { Text("Salle") }, modifier = Modifier.fillMaxWidth())
         OutlinedTextField(
             value = couverts,
             onValueChange = { couverts = it.filter { c -> c.isDigit() } },
@@ -55,16 +48,19 @@ fun CommandeScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
+
+        // Display the Plat options
         Text("Plat principal :", style = MaterialTheme.typography.titleMedium)
         plats.forEach {
             Row(Modifier.fillMaxWidth()) {
                 RadioButton(
-                    selected = plat?.nom == it.nom,
-                    onClick = { plat = it }
+                    selected = platState?.nom == it.nom,
+                    onClick = { platState = it }
                 )
                 Text(it.nom, Modifier.padding(start = 4.dp))
             }
         }
+
         if (ravigoteVisible) {
             Text(
                 "⚡ Ravigote à prévoir pour cette table !",
@@ -73,16 +69,19 @@ fun CommandeScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
+
         Spacer(Modifier.height(16.dp))
+
+        // Validation button
         Button(
             onClick = {
-                if (numeroTable.isNotBlank() && salle.isNotBlank() && couverts.isNotBlank() && plat != null) {
+                if (numeroTable.isNotBlank() && salle.isNotBlank() && couverts.isNotBlank() && platState != null) {
                     onNext(
                         Commande(
                             numeroTable = numeroTable,
                             salle = salle,
                             nombreCouverts = couverts.toInt(),
-                            plat = plat,
+                            plat = platState!!,
                             boissons = emptyList()
                         )
                     )

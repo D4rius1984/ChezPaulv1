@@ -36,6 +36,7 @@ fun ChezPaulApp() {
                     Tab(selected = currentScreen == idx, onClick = { currentScreen = idx }, text = { Text(title) })
                 }
             }
+
             when (currentScreen) {
                 0 -> CommandeScreen(
                     commande = commande,
