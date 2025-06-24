@@ -1,0 +1,9 @@
+<resources> 
+    <string name="app_name">Chez Paul</string> 
+    <string name="nouvelle_commande">Nouvelle commande</string> 
+    <string name="valider">Valider</string> 
+    <string name="valider_commande">Valider la commande</string> 
+    <string name="boissons">Boissons</string> 
+    <string name="plats">Plats</string> 
+    <string name="resume">Résumé</string> 
+</resources> 
