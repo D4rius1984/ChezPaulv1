@@ -34,6 +34,10 @@ fun GroupeCommandeScreen(
     val orangeMenu = Color(0xFFEDA637)
     val tabTitles = listOf("Plats", "Boissons")
 
+    // Ajout pour résumé intermédiaire
+    var showResume by remember { mutableStateOf(false) }
+    var commandeAValider by remember { mutableStateOf<Commande?>(null) }
+
     data class PlatConfig(val nom: String, val contientRavigote: Boolean, val isCervelle: Boolean = false)
     val platsData = listOf(
         PlatConfig("Tête de veau sauce ravigote", true),
@@ -80,6 +84,108 @@ fun GroupeCommandeScreen(
     }.values.sum()
     val ravigoteVisible = (platsSelectionnes["Tête de veau sauce ravigote"] ?: 0) > 0 ||
             (platsSelectionnes["Langue de bœuf sauce ravigote"] ?: 0) > 0
+
+    // ========== FLOW AVEC RESUME ==========
+    if (showResume && commandeAValider != null) {
+        // Affiche un résumé similaire à ResumeScreen, mais simplifié
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF23190e))
+                .padding(16.dp)
+        ) {
+            Text(
+                "Résumé de la commande groupe",
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                color = jauneMenu,
+                modifier = Modifier.padding(start = 24.dp, top = 36.dp, bottom = 12.dp)
+            )
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
+                elevation = CardDefaults.cardElevation(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 18.dp)
+            ) {
+                Column(Modifier.padding(18.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            color = jauneMenu,
+                            shape = RoundedCornerShape(6.dp),
+                            modifier = Modifier.padding(end = 8.dp)
+                        ) {
+                            Text(
+                                "GROUPE",
+                                color = Color(0xFF222222),
+                                fontWeight = FontWeight.Black,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                            )
+                        }
+                        Text(
+                            buildString {
+                                append("Tables : ${commandeAValider!!.numeroTable}")
+                                append(" (${commandeAValider!!.nomGroupe})")
+                            },
+                            color = jauneMenu,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(Modifier.width(16.dp))
+                        Text(
+                            "Couverts : ${commandeAValider!!.nombreCouverts}",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                    Spacer(Modifier.height(10.dp))
+                    Text("Plats :", color = Color.White, style = MaterialTheme.typography.titleSmall)
+                    if (commandeAValider!!.plats.isNotEmpty()) {
+                        commandeAValider!!.plats.forEach { plat ->
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text("- ${plat.nom} x${plat.quantite}", color = Color.White)
+                                if (plat.contientRavigote) {
+                                    Text(" ⚡ Ravigote", color = jauneMenu)
+                                }
+                            }
+                        }
+                    } else {
+                        Text("Aucun plat", color = Color.Gray)
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    Text("Boissons :", color = Color.White, style = MaterialTheme.typography.titleSmall)
+                    if (commandeAValider!!.boissons.isNotEmpty()) {
+                        commandeAValider!!.boissons.forEach { boisson ->
+                            Text("- ${boisson.nom} x${boisson.quantite}", color = Color.White)
+                        }
+                    } else {
+                        Text("Aucune boisson", color = Color.Gray)
+                    }
+                    Spacer(Modifier.height(18.dp))
+                    Button(
+                        onClick = {
+                            onCommandeValidee(commandeAValider!!)
+                            showResume = false
+                            commandeAValider = null
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(54.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = jauneMenu,
+                            contentColor = Color(0xFF222222)
+                        )
+                    ) {
+                        Text("Valider la commande", fontWeight = FontWeight.Bold)
+                    }
+                }
+            }
+        }
+        return // Pour ne pas afficher le reste
+    }
+    // ========== FIN FLOW RESUME ==========
 
     Column(
         modifier = Modifier
@@ -292,16 +398,16 @@ fun GroupeCommandeScreen(
                                     if (qte > 0) Boisson(nom, qte, CategorieBoisson.VINS)
                                     else null
                                 }
-                                onCommandeValidee(
-                                    Commande(
-                                        numeroTable = tables,
-                                        nombreCouverts = nbCouvertsInt,
-                                        plats = platsCommandes,
-                                        boissons = boissonsCommandes,
-                                        isGroupe = true,
-                                        nomGroupe = nomGroupe
-                                    )
+                                // CHANGEMENT PRINCIPAL :
+                                commandeAValider = Commande(
+                                    numeroTable = tables,
+                                    nombreCouverts = nbCouvertsInt,
+                                    plats = platsCommandes,
+                                    boissons = boissonsCommandes,
+                                    isGroupe = true,
+                                    nomGroupe = nomGroupe
                                 )
+                                showResume = true
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -374,16 +480,16 @@ fun GroupeCommandeScreen(
                                     val qte = boissonsSelectionnees[nom] ?: 0
                                     if (qte > 0) Boisson(nom, qte, CategorieBoisson.VINS) else null
                                 }
-                                onCommandeValidee(
-                                    Commande(
-                                        numeroTable = tables,
-                                        nombreCouverts = nbCouvertsInt,
-                                        plats = platsCommandes,
-                                        boissons = boissonsCommandes,
-                                        isGroupe = true,
-                                        nomGroupe = nomGroupe
-                                    )
+                                // CHANGEMENT PRINCIPAL :
+                                commandeAValider = Commande(
+                                    numeroTable = tables,
+                                    nombreCouverts = nbCouvertsInt,
+                                    plats = platsCommandes,
+                                    boissons = boissonsCommandes,
+                                    isGroupe = true,
+                                    nomGroupe = nomGroupe
                                 )
+                                showResume = true
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
