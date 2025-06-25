@@ -3,7 +3,6 @@ package com.chezpaul.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.Commande
@@ -62,7 +61,6 @@ fun ChezPaulApp() {
                             commandesList = mainViewModel.commandes,
                             onValide = {
                                 if (commandeEnCours != null) {
-                                    // Si c’est une modif, retire l’ancienne commande pour éviter les doublons
                                     mainViewModel.commandes.removeAll { it.numeroTable == commandeEnCours!!.numeroTable }
                                     mainViewModel.commandes.add(commandeEnCours!!)
                                     commandeEnCours = null
@@ -77,7 +75,8 @@ fun ChezPaulApp() {
                                 mainViewModel.commandes.remove(commandeAModifier)
                                 showResume = false // Reviens à l’écran de commande
                                 selectedRoute = "commandes"
-                            }
+                            },
+                            onModifieGroupeTable = { /* À compléter pour groupes si besoin */ }
                         )
                     }
                 }
@@ -93,22 +92,23 @@ fun ChezPaulApp() {
                         mainViewModel.commandes.remove(commandeAModifier)
                         showResume = false
                         selectedRoute = "commandes"
+                    },
+                    onModifieGroupeTable = { /* idem, groupes */ }
+                )
+                // Modif ici : on passe la lambda pour ajouter à la liste des commandes
+                "groupes" -> GroupeCommandeScreen(
+                    onCommandeValidee = { commandeGroupe ->
+                        mainViewModel.commandes.removeAll { it.numeroTable == commandeGroupe.numeroTable }
+                        mainViewModel.commandes.add(commandeGroupe)
+                        // Optionnel : revenir à ResumeScreen ou Tables après validation
+                        // selectedRoute = "tables"
                     }
                 )
-                "groupes" -> GroupesScreen()
                 "settings" -> SettingsScreen(
                     viewModel = mainViewModel
                 )
                 "accueil" -> AccueilScreen(commandesList = mainViewModel.commandes)
             }
         }
-    }
-}
-
-// ---- Ecran Groupes temporaire (à personnaliser plus tard) ----
-@Composable
-fun GroupesScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Écran Groupes (à faire)")
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.chezpaul.model.Commande
 import com.chezpaul.model.CategorieBoisson
 
@@ -49,12 +50,13 @@ fun AccueilScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.Top
     ) {
+        // Titre principal harmonisé
         Text(
             "Accueil",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.White,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 20.dp)
+            color = jauneMenu,
+            modifier = Modifier.padding(start = 24.dp, top = 36.dp, bottom = 12.dp)
         )
 
         // CARD : Total couverts

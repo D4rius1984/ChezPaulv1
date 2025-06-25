@@ -1,4 +1,4 @@
-com.chezpaul.test.app-androidTest-0 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\generated\res\resValues\androidTest\debug
-com.chezpaul.test.app-mergeDebugAndroidTestResources-1 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.chezpaul.test.app-mergeDebugAndroidTestResources-2 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.chezpaul.test.app-debugAndroidTest-3 C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
+com.chezpaul.test.app-androidTest-0 C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\build\generated\res\resValues\androidTest\debug
+com.chezpaul.test.app-mergeDebugAndroidTestResources-1 C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.chezpaul.test.app-mergeDebugAndroidTestResources-2 C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.chezpaul.test.app-debugAndroidTest-3 C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

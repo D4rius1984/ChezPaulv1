@@ -20,36 +20,36 @@
 15-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\e7203c2222802412bca8edb5e5c31959\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
 16
 17    <application
-17-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:3:3-19:17
+17-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:3:3-19:17
 18        android:allowBackup="true"
-18-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:4:7-33
+18-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:4:7-33
 19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 19-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.11.1\transforms\e7203c2222802412bca8edb5e5c31959\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
 20        android:debuggable="true"
 21        android:extractNativeLibs="false"
 22        android:icon="@drawable/logo"
-22-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:8:7-36
+22-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:8:7-36
 23        android:label="Chez Paul"
-23-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:5:7-32
+23-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:5:7-32
 24        android:supportsRtl="true"
-24-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:7:7-33
+24-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:7:7-33
 25        android:theme="@style/Theme.ChezPaul" >
-25-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:6:7-44
+25-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:6:7-44
 26        <activity
-26-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:10:5-17:16
+26-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:10:5-17:16
 27            android:name="com.chezpaul.ui.MainActivity"
-27-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:11:9-52
+27-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:11:9-52
 28            android:exported="true" >
-28-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:12:9-32
+28-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:12:9-32
 29            <intent-filter>
-29-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:13:7-16:23
+29-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:13:7-16:23
 30                <action android:name="android.intent.action.MAIN" />
-30-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:14:9-61
-30-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:14:17-58
+30-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:14:9-61
+30-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:14:17-58
 31
 32                <category android:name="android.intent.category.LAUNCHER" />
-32-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:15:9-69
-32-->C:\Users\Lenovo\Documents\Android dev\Projects\Projects\ChezPaul\app\src\main\AndroidManifest.xml:15:19-66
+32-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:15:9-69
+32-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaulv1\app\src\main\AndroidManifest.xml:15:19-66
 33            </intent-filter>
 34        </activity>
 35

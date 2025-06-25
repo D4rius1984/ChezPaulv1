@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import com.chezpaul.model.Commande
@@ -55,7 +56,6 @@ fun CommandeScreen(
         PlatConfig("Boudin", "Boudin", false),
         PlatConfig("Piece du B", "Piece du B", false)
     )
-    // Initialisation intelligente si commande (édition)
     var platsSelectionnes by remember {
         mutableStateOf(
             buildMap {
@@ -140,10 +140,10 @@ fun CommandeScreen(
     ) {
         Text(
             "Commande",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.White,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 20.dp)
+            color = jauneMenu,
+            modifier = Modifier.padding(start = 24.dp, top = 36.dp, bottom = 12.dp)
         )
         Surface(
             shape = RoundedCornerShape(20.dp),

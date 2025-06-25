@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.chezpaul.model.Commande
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,7 +26,8 @@ fun ResumeScreen(
     onValide: () -> Unit,
     commandesList: List<Commande>,
     onSupprimeTable: (Commande) -> Unit,
-    onModifieTable: (Commande) -> Unit
+    onModifieTable: (Commande) -> Unit,
+    onModifieGroupeTable: (Commande) -> Unit
 ) {
     val jauneMenu = Color(0xFFFFE066)
     Column(
@@ -36,13 +38,12 @@ fun ResumeScreen(
     ) {
         Text(
             "Résumé de la commande",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.White,
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 20.dp)
+            color = jauneMenu,
+            modifier = Modifier.padding(start = 24.dp, top = 36.dp, bottom = 12.dp)
         )
-
-        // CARD Commande en cours
+        // ... (reste du code inchangé)
         Card(
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
@@ -56,8 +57,27 @@ fun ResumeScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        if (commande.isGroupe == true) {
+                            Surface(
+                                color = jauneMenu,
+                                shape = RoundedCornerShape(6.dp),
+                                modifier = Modifier.padding(end = 8.dp)
+                            ) {
+                                Text(
+                                    "GROUPE",
+                                    color = Color(0xFF222222),
+                                    fontWeight = FontWeight.Black,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
                         Text(
-                            "Table : ${commande.numeroTable}",
+                            buildString {
+                                append("Table : ${commande.numeroTable}")
+                                if (commande.isGroupe == true && commande.nomGroupe != null) {
+                                    append(" (${commande.nomGroupe})")
+                                }
+                            },
                             color = jauneMenu,
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.titleMedium
@@ -70,7 +90,6 @@ fun ResumeScreen(
                         )
                     }
                     Spacer(Modifier.height(10.dp))
-
                     Text("Plats :", color = Color.White, style = MaterialTheme.typography.titleSmall)
                     if (commande.plats.isNotEmpty()) {
                         commande.plats.forEach { plat ->
@@ -117,16 +136,13 @@ fun ResumeScreen(
                 }
             }
         }
-
-        // TITRE Commandes ouvertes
+        // ... (reste du code inchangé)
         Text(
             "Commandes ouvertes :",
             style = MaterialTheme.typography.titleMedium,
             color = Color.White,
             modifier = Modifier.padding(bottom = 6.dp)
         )
-
-        // CARD liste commandes
         Card(
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
@@ -142,7 +158,6 @@ fun ResumeScreen(
                     LazyColumn {
                         items(commandesList, key = { it.numeroTable }) { cmd ->
                             var expanded by remember { mutableStateOf(false) }
-
                             Box(Modifier.fillMaxWidth()) {
                                 Column(
                                     Modifier
@@ -153,8 +168,27 @@ fun ResumeScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
+                                        if (cmd.isGroupe == true) {
+                                            Surface(
+                                                color = jauneMenu,
+                                                shape = RoundedCornerShape(6.dp),
+                                                modifier = Modifier.padding(end = 8.dp)
+                                            ) {
+                                                Text(
+                                                    "GROUPE",
+                                                    color = Color(0xFF222222),
+                                                    fontWeight = FontWeight.Black,
+                                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                                )
+                                            }
+                                        }
                                         Text(
-                                            "Table ${cmd.numeroTable} - ${cmd.nombreCouverts} couverts",
+                                            buildString {
+                                                append("Table ${cmd.numeroTable} - ${cmd.nombreCouverts} couverts")
+                                                if (cmd.isGroupe == true && cmd.nomGroupe != null) {
+                                                    append(" (${cmd.nomGroupe})")
+                                                }
+                                            },
                                             color = jauneMenu,
                                             fontWeight = FontWeight.SemiBold,
                                             modifier = Modifier.weight(1f)
@@ -173,7 +207,11 @@ fun ResumeScreen(
                                                 text = { Text("Modifier") },
                                                 onClick = {
                                                     expanded = false
-                                                    onModifieTable(cmd)
+                                                    if (cmd.isGroupe == true) {
+                                                        onModifieGroupeTable(cmd)
+                                                    } else {
+                                                        onModifieTable(cmd)
+                                                    }
                                                 },
                                                 leadingIcon = {
                                                     Icon(

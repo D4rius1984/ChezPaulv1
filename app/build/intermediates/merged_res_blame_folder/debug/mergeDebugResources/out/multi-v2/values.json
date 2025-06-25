@@ -4,22 +4,20 @@
             "outputFile": "com.chezpaul.app-mergeDebugResources-64:/values/values.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\Projects\\ChezPaul\\app\\src\\main\\res\\values\\styles.xml",
+                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\App V1+\\ChezPaulv1\\app\\src\\main\\res\\values\\colors.xml",
                     "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "127",
-                        "endLines": "20",
-                        "endColumns": "12",
-                        "endOffsets": "1256"
+                        "startLines": "10,12,4,8,2,3,6,7,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "624,818,244,522,63,147,341,426,711",
+                        "endColumns": "49,44,48,50,46,53,48,55,46",
+                        "endOffsets": "669,858,288,568,105,196,385,477,753"
                     },
                     "to": {
-                        "startLines": "5863",
-                        "startColumns": "4",
-                        "startOffsets": "400381",
-                        "endLines": "5881",
-                        "endColumns": "12",
-                        "endOffsets": "401168"
+                        "startLines": "545,546,547,548,549,550,551,552,553",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "28475,28525,28570,28619,28670,28717,28771,28820,28876",
+                        "endColumns": "49,44,48,50,46,53,48,55,46",
+                        "endOffsets": "28520,28565,28614,28665,28712,28766,28815,28871,28918"
                     }
                 },
                 {
@@ -97,23 +95,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\Projects\\ChezPaul\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1,5,2,6,7,3,4",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "18,246,67,294,336,133,179",
-                        "endColumns": "46,45,63,39,41,43,64",
-                        "endOffsets": "60,287,126,329,373,172,239"
-                    },
-                    "to": {
-                        "startLines": "1623,1625,1815,1823,1826,1835,1836",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "102379,102576,124062,124998,125142,125638,125682",
-                        "endColumns": "46,45,63,39,41,43,64",
-                        "endOffsets": "102421,102617,124121,125033,125179,125677,125742"
-                    }
-                },
-                {
                     "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.11.1\\transforms\\058205a1b9c53b5cdd0104fac1ef9149\\transformed\\lifecycle-viewmodel-2.7.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -164,6 +145,25 @@
                         "startOffsets": "91461,91501,92796,93087,93142,94638,94692,94744,94793,94854",
                         "endColumns": "39,46,42,54,46,53,51,48,60,49",
                         "endOffsets": "91496,91543,92834,93137,93184,94687,94739,94788,94849,94899"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\App V1+\\ChezPaulv1\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "127",
+                        "endLines": "20",
+                        "endColumns": "12",
+                        "endOffsets": "1256"
+                    },
+                    "to": {
+                        "startLines": "5863",
+                        "startColumns": "4",
+                        "startOffsets": "400381",
+                        "endLines": "5881",
+                        "endColumns": "12",
+                        "endOffsets": "401168"
                     }
                 },
                 {
@@ -370,6 +370,23 @@
                     }
                 },
                 {
+                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\App V1+\\ChezPaulv1\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1,5,2,6,7,3,4",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "18,246,67,294,336,133,179",
+                        "endColumns": "46,45,63,39,41,43,64",
+                        "endOffsets": "60,287,126,329,373,172,239"
+                    },
+                    "to": {
+                        "startLines": "1623,1625,1815,1823,1826,1835,1836",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "102379,102576,124062,124998,125142,125638,125682",
+                        "endColumns": "46,45,63,39,41,43,64",
+                        "endOffsets": "102421,102617,124121,125033,125179,125677,125742"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.11.1\\transforms\\d6b0402a9cfed041f40adeace22801a3\\transformed\\jetified-foundation-release\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3",
@@ -384,23 +401,6 @@
                         "startOffsets": "125527,125583",
                         "endColumns": "55,54",
                         "endOffsets": "125578,125633"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\Projects\\ChezPaul\\app\\src\\main\\res\\values\\colors.xml",
-                    "from": {
-                        "startLines": "10,12,4,8,2,3,6,7,11",
-                        "startColumns": "4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "624,818,244,522,63,147,341,426,711",
-                        "endColumns": "49,44,48,50,46,53,48,55,46",
-                        "endOffsets": "669,858,288,568,105,196,385,477,753"
-                    },
-                    "to": {
-                        "startLines": "545,546,547,548,549,550,551,552,553",
-                        "startColumns": "4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "28475,28525,28570,28619,28670,28717,28771,28820,28876",
-                        "endColumns": "49,44,48,50,46,53,48,55,46",
-                        "endOffsets": "28520,28565,28614,28665,28712,28766,28815,28871,28918"
                     }
                 },
                 {
