@@ -43,7 +43,6 @@ fun ResumeScreen(
             color = jauneMenu,
             modifier = Modifier.padding(start = 24.dp, top = 36.dp, bottom = 12.dp)
         )
-        // ... (reste du code inchangé)
         Card(
             shape = RoundedCornerShape(20.dp),
             colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
@@ -136,7 +135,6 @@ fun ResumeScreen(
                 }
             }
         }
-        // ... (reste du code inchangé)
         Text(
             "Commandes ouvertes :",
             style = MaterialTheme.typography.titleMedium,
@@ -155,8 +153,12 @@ fun ResumeScreen(
                 if (commandesList.isEmpty()) {
                     Text("Aucune commande ouverte.", color = Color.Gray)
                 } else {
+                    // --- TRI PAR NUMERO DE TABLE ICI ---
+                    val sortedCommandes = commandesList.sortedBy {
+                        it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE
+                    }
                     LazyColumn {
-                        items(commandesList, key = { it.numeroTable }) { cmd ->
+                        items(sortedCommandes, key = { it.numeroTable }) { cmd ->
                             var expanded by remember { mutableStateOf(false) }
                             Box(Modifier.fillMaxWidth()) {
                                 Column(

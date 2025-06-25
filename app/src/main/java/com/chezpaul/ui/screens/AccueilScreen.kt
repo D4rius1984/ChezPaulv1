@@ -2,6 +2,8 @@ package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalDrink
@@ -128,27 +130,41 @@ fun AccueilScreen(
         }
         Spacer(Modifier.height(22.dp))
 
-        // CARD : Tables ouvertes (liste mini)
+        // CARD : Tables ouvertes (liste mini, maintenant scrollable)
         DashboardCard {
             Column {
                 Text("Tables ouvertes (${commandesList.size})", color = Color.White, style = MaterialTheme.typography.titleMedium)
                 Spacer(Modifier.height(8.dp))
-                commandesList.forEach { cmd ->
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 210.dp) // Limite visuelle, adaptatif
+                ) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text(
-                            "Table ${cmd.numeroTable} • ${cmd.nombreCouverts} cvts",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        if (cmd.plats.any { it.contientRavigote || it.nom.contains("tête de veau", true) }) {
-                            Text("⚡", color = jauneMenu, style = MaterialTheme.typography.bodyMedium)
+                        items(commandesList) { cmd ->
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    "Table ${cmd.numeroTable} • ${cmd.nombreCouverts} cvts",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                if (cmd.plats.any { it.contientRavigote || it.nom.contains("tête de veau", true) }) {
+                                    Text("⚡", color = jauneMenu, style = MaterialTheme.typography.bodyMedium)
+                                }
+                            }
+                            Divider(
+                                color = Color(0x33222222),
+                                thickness = 0.7.dp,
+                                modifier = Modifier.padding(vertical = 2.dp)
+                            )
                         }
                     }
-                    Divider(color = Color(0x33222222), thickness = 0.7.dp, modifier = Modifier.padding(vertical = 2.dp))
                 }
             }
         }
