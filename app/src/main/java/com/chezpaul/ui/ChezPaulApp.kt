@@ -65,6 +65,7 @@ fun ChezPaulApp() {
                                     mainViewModel.commandes.add(commandeEnCours!!)
                                     commandeEnCours = null
                                     showResume = false
+                                    selectedRoute = "tables" // <-- On atterrit bien sur ResumeScreen
                                 }
                             },
                             onSupprimeTable = { commandeASupprimer ->
@@ -76,7 +77,12 @@ fun ChezPaulApp() {
                                 showResume = false // Reviens à l’écran de commande
                                 selectedRoute = "commandes"
                             },
-                            onModifieGroupeTable = { /* À compléter pour groupes si besoin */ }
+                            onModifieGroupeTable = { commandeAModifier ->
+                                commandeEnCours = commandeAModifier
+                                mainViewModel.commandes.remove(commandeAModifier)
+                                showResume = false
+                                selectedRoute = "groupes"
+                            }
                         )
                     }
                 }
@@ -93,15 +99,21 @@ fun ChezPaulApp() {
                         showResume = false
                         selectedRoute = "commandes"
                     },
-                    onModifieGroupeTable = { /* idem, groupes */ }
+                    onModifieGroupeTable = { commandeAModifier ->
+                        commandeEnCours = commandeAModifier
+                        mainViewModel.commandes.remove(commandeAModifier)
+                        showResume = false
+                        selectedRoute = "groupes"
+                    }
                 )
-                // Modif ici : on passe la lambda pour ajouter à la liste des commandes
                 "groupes" -> GroupeCommandeScreen(
+                    commande = commandeEnCours,
                     onCommandeValidee = { commandeGroupe ->
                         mainViewModel.commandes.removeAll { it.numeroTable == commandeGroupe.numeroTable }
                         mainViewModel.commandes.add(commandeGroupe)
-                        // Optionnel : revenir à ResumeScreen ou Tables après validation
-                        // selectedRoute = "tables"
+                        commandeEnCours = null
+                        showResume = false
+                        selectedRoute = "tables" // <-- Après validation d’un groupe, ResumeScreen !
                     }
                 )
                 "settings" -> SettingsScreen(

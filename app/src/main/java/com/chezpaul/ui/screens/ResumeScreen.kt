@@ -153,7 +153,6 @@ fun ResumeScreen(
                 if (commandesList.isEmpty()) {
                     Text("Aucune commande ouverte.", color = Color.Gray)
                 } else {
-                    // --- TRI PAR NUMERO DE TABLE ICI ---
                     val sortedCommandes = commandesList.sortedBy {
                         it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE
                     }

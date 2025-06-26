@@ -16,27 +16,29 @@ fun MainNavigation() {
     var modifierTableActive by remember { mutableStateOf(false) }
     var modifierGroupeActive by remember { mutableStateOf(false) }
 
+    // --- Bloc édition commande classique ---
     if (modifierTableActive && vm.commandeEnEdition.value != null) {
         CommandeScreen(
             commande = vm.commandeEnEdition.value,
             onNext = {
                 vm.ajouterCommande(it)
-                vm.commandeEnEdition.value = null
-                modifierTableActive = false
+                modifierTableActive = false // IMPORTANT : d'abord !
                 selectedRoute = "tables"
+                vm.commandeEnEdition.value = null
             }
         )
         return
     }
 
+    // --- Bloc édition commande groupe ---
     if (modifierGroupeActive && vm.commandeGroupeEnEdition.value != null) {
         GroupeCommandeScreen(
             commande = vm.commandeGroupeEnEdition.value,
             onCommandeValidee = {
                 vm.ajouterCommande(it)
-                vm.commandeGroupeEnEdition.value = null
-                modifierGroupeActive = false
+                modifierGroupeActive = false // IMPORTANT : d'abord !
                 selectedRoute = "tables"
+                vm.commandeGroupeEnEdition.value = null
             }
         )
         return
@@ -62,10 +64,12 @@ fun MainNavigation() {
                     onModifieTable = { cmd ->
                         vm.editerCommande(cmd)
                         modifierTableActive = true
+                        selectedRoute = "ajouter"   // <-- Ajouté ici
                     },
                     onModifieGroupeTable = { cmd ->
                         vm.editerCommandeGroupe(cmd)
                         modifierGroupeActive = true
+                        selectedRoute = "groupes"   // <-- Ajouté ici
                     }
                 )
                 "ajouter" -> CommandeScreen(
