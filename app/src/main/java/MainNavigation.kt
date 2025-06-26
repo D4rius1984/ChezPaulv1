@@ -55,7 +55,7 @@ fun MainNavigation() {
     ) { padding ->
         Box(Modifier.padding(padding)) {
             when (selectedRoute) {
-                "accueil" -> AccueilScreen()
+                "accueil" -> AccueilScreen(commandesList = vm.commandes)
                 "tables" -> ResumeScreen(
                     commande = null,
                     onValide = {},
