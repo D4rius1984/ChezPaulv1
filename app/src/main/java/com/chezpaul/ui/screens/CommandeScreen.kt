@@ -47,7 +47,7 @@ fun CommandeScreen(
     var platsSelectionnes by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
     var boissonsSelectionnees by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
 
-    // ✅ Initialiser la sélection si commande existante
+    // Initialiser la sélection si commande existante
     LaunchedEffect(Unit) {
         commande?.let {
             platsSelectionnes = it.plats.associate { plat -> plat.nom to plat.quantite }
@@ -55,11 +55,21 @@ fun CommandeScreen(
         }
     }
 
-    // ✅ Etat pour badge Ravigote
+    // Etat pour badge Ravigote
     val hasRavigote = platsSelectionnes.any { (nom, quantite) ->
         val plat = platsData.find { it.nom == nom }
         plat?.contientRavigote == true && quantite > 0
     }
+
+    // Calcul du total des plats hors cervelle
+    val totalPlatsHorsCervelle = platsSelectionnes.entries
+        .filter { (nom, _) -> nom.lowercase() != "cervelle" }
+        .sumOf { it.value }
+
+    val nbCouvertsInt = couverts.toIntOrNull() ?: 0
+
+    val peutAjouterPlat = totalPlatsHorsCervelle < nbCouvertsInt
+    val boutonValiderActif = totalPlatsHorsCervelle == nbCouvertsInt && numeroTable.isNotBlank()
 
     Column(
         modifier = Modifier
@@ -195,7 +205,7 @@ fun CommandeScreen(
                             }
                         }
 
-                        // ✅ Badge animé Ravigote
+                        // Badge animé Ravigote
                         AnimatedVisibility(
                             visible = hasRavigote,
                             enter = fadeIn() + scaleIn(initialScale = 0.8f),
@@ -340,12 +350,21 @@ fun CommandeScreen(
                                             Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                         }
                                         Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
-                                        IconButton(onClick = {
-                                            platsSelectionnes = platsSelectionnes.toMutableMap().also {
-                                                it[plat.nom] = count + 1
+                                        IconButton(
+                                            enabled = peutAjouterPlat,
+                                            onClick = {
+                                                if (peutAjouterPlat) {
+                                                    platsSelectionnes = platsSelectionnes.toMutableMap().also {
+                                                        it[plat.nom] = count + 1
+                                                    }
+                                                }
                                             }
-                                        }) {
-                                            Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Add,
+                                                contentDescription = "Ajouter",
+                                                tint = if (peutAjouterPlat) jauneMenu else Color.Gray
+                                            )
                                         }
                                     }
                                 }
@@ -354,12 +373,14 @@ fun CommandeScreen(
                     }
                 }
             }
+            // FIN Surface + Column des plats
+            // --- ACCOLADE manquante ajoutée ici ---
 
             Button(
                 onClick = {
                     val newCommande = Commande(
                         numeroTable = numeroTable,
-                        nombreCouverts = couverts.toInt(),
+                        nombreCouverts = nbCouvertsInt,
                         plats = platsSelectionnes.map { (nom, quantite) ->
                             val platConfig = platsData.find { it.nom == nom }
                             Plat(
@@ -382,12 +403,13 @@ fun CommandeScreen(
                     commandeViewModel.validerCommande(newCommande)
                     onNext(newCommande)
                 },
+                enabled = boutonValiderActif,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = jauneMenu,
+                    containerColor = if (boutonValiderActif) jauneMenu else Color.Gray,
                     contentColor = Color.Black
                 )
             ) {
