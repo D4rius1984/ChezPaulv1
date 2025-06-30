@@ -8,6 +8,12 @@ class CommandeViewModel : ViewModel() {
     private val _commandesList = mutableStateOf<List<Commande>>(emptyList())
     val commandesList = _commandesList
 
+    // Etat pour résultat validation (true = ok, false = erreur)
+    val validerCommandeResult = mutableStateOf(true)
+
+    // Constante nom cervelle (pour éviter string "magique")
+    private val nomCervelle = "cervelle"
+
     // Ajouter une nouvelle commande
     fun ajouterCommande(cmd: Commande) {
         _commandesList.value = _commandesList.value + cmd
@@ -25,14 +31,31 @@ class CommandeViewModel : ViewModel() {
         _commandesList.value = _commandesList.value.filterNot { it.numeroTable == cmd.numeroTable }
     }
 
-    // Valider une commande : ajouter à la liste si pas encore présente
+    // Validation : 1 couvert = 1 plat sauf cervelle illimitée
+    fun verifierPlatsSelonCouverts(cmd: Commande): Boolean {
+        val nbCouverts = cmd.nombreCouverts
+
+        // Somme des plats hors cervelle
+        val totalPlats = cmd.plats
+            .filter { it.nom.lowercase() != nomCervelle }
+            .sumOf { it.quantite }
+
+        return totalPlats == nbCouverts
+    }
+
+    // Valider une commande : ajoute/modifie seulement si la validation passe
     fun validerCommande(cmd: Commande) {
-        // Si déjà présente, on la modifie ; sinon, on l'ajoute
-        val existe = _commandesList.value.any { it.numeroTable == cmd.numeroTable }
-        if (existe) {
-            modifierCommande(cmd)
-        } else {
-            ajouterCommande(cmd)
+        val estValide = verifierPlatsSelonCouverts(cmd)
+        validerCommandeResult.value = estValide
+
+        if (estValide) {
+            val existe = _commandesList.value.any { it.numeroTable == cmd.numeroTable }
+            if (existe) {
+                modifierCommande(cmd)
+            } else {
+                ajouterCommande(cmd)
+            }
         }
+        // Sinon ne fait rien (à l'UI d'afficher un message)
     }
 }
