@@ -12,20 +12,31 @@ class BoissonViewModel : ViewModel() {
     private val _boissons = MutableLiveData<List<BoissonConfig>>()
     val boissons: LiveData<List<BoissonConfig>> get() = _boissons
 
-    // Fonction pour charger les boissons filtrées selon isGroupe ou isNonGroupe
-    fun loadBoissons(isGroupe: Boolean) {
-        val filteredBoissons = if (isGroupe) {
-            boissonsList.filter { it.isGroupe }
-        } else {
-            boissonsList.filter { it.isNonGroupe }
-        }
-        _boissons.value = filteredBoissons
+    // Etat d'activation pour chaque boisson
+    private val _boissonsActivationState = MutableLiveData<Map<String, Boolean>>(emptyMap())
+    val boissonsActivationState: LiveData<Map<String, Boolean>> get() = _boissonsActivationState
+
+    init {
+        loadBoissons() // Charger les boissons initiales
     }
 
-    // Ajouter une boisson
-    fun addBoisson(boisson: BoissonConfig) {
-        val currentBoissons = _boissons.value?.toMutableList() ?: mutableListOf()
-        currentBoissons.add(boisson)
-        _boissons.value = currentBoissons
+    private fun loadBoissons() {
+        _boissons.value = boissonsList // Liste statique des boissons
+        // Initialiser les états d'activation à true pour toutes les boissons par défaut
+        val initialState = boissonsList.associate { it.nom to true }
+        _boissonsActivationState.value = initialState
+    }
+
+    // Fonction pour activer/désactiver une boisson
+    fun toggleBoissonActivation(boissonNom: String, isActivated: Boolean) {
+        // Mettre à jour l'état d'activation pour la boisson
+        val updatedState = _boissonsActivationState.value?.toMutableMap() ?: mutableMapOf()
+        updatedState[boissonNom] = isActivated
+        _boissonsActivationState.value = updatedState
+    }
+
+    // Fonction pour récupérer l'état d'activation d'une boisson
+    fun getBoissonActivationState(boissonNom: String): Boolean {
+        return _boissonsActivationState.value?.get(boissonNom) ?: true // Retourne true par défaut
     }
 }

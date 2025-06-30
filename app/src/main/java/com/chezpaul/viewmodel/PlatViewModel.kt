@@ -12,9 +12,9 @@ class PlatViewModel : ViewModel() {
     private val _plats = MutableLiveData<List<PlatConfig>>()
     val plats: LiveData<List<PlatConfig>> get() = _plats
 
-    // Variable pour suivre si la ravigote est nécessaire
-    private val _ravigoteVisible = MutableLiveData<Boolean>(false)
-    val ravigoteVisible: LiveData<Boolean> get() = _ravigoteVisible
+    // Etat d'activation pour chaque plat
+    private val _platsActivationState = MutableLiveData<Map<String, Boolean>>(emptyMap())
+    val platsActivationState: LiveData<Map<String, Boolean>> get() = _platsActivationState
 
     init {
         loadPlats() // Charger les plats initiaux
@@ -22,28 +22,21 @@ class PlatViewModel : ViewModel() {
 
     private fun loadPlats() {
         _plats.value = platsData // Liste statique des plats
+        // Initialiser les états d'activation à true pour tous les plats par défaut
+        val initialState = platsData.associate { it.nom to true }
+        _platsActivationState.value = initialState
     }
 
-    // Ajouter un plat
-    fun addPlat(plat: PlatConfig) {
-        val currentPlats = _plats.value?.toMutableList() ?: mutableListOf()
-        currentPlats.add(plat)
-        _plats.value = currentPlats
+    // Fonction pour activer/désactiver un plat
+    fun togglePlatActivation(platNom: String, isActivated: Boolean) {
+        // Mettre à jour l'état d'activation pour le plat
+        val updatedState = _platsActivationState.value?.toMutableMap() ?: mutableMapOf()
+        updatedState[platNom] = isActivated
+        _platsActivationState.value = updatedState
     }
 
-    // Fonction pour vérifier la nécessité de la ravigote
-    fun updateRavigoteVisibility(platsSelectionnes: Map<String, Int>) {
-        val platsAvecRavigote = platsSelectionnes.keys.any { key ->
-            key == "Tdv" || key == "Ldb ravigote"
-        }
-        _ravigoteVisible.value = platsAvecRavigote
-    }
-
-    // Fonction pour filtrer les plats selon isGroupe
-    fun loadPlatsFiltrés(isGroupe: Boolean) {
-        val filteredPlats = platsData.filter {
-            if (isGroupe) it.isGroupe else it.isNonGroupe
-        }
-        _plats.value = filteredPlats
+    // Fonction pour récupérer l'état d'activation d'un plat
+    fun getPlatActivationState(platNom: String): Boolean {
+        return _platsActivationState.value?.get(platNom) ?: true // Retourne true par défaut
     }
 }
