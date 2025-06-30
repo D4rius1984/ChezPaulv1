@@ -153,19 +153,35 @@ fun CommandeScreen(
                             shape = RoundedCornerShape(10.dp)
                         ) {
                             Text(
-                                "Table $numeroTable  $couverts cv",
+                                "Table $numeroTable",
                                 style = MaterialTheme.typography.labelLarge,
                                 color = jauneMenu,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
-                        Spacer(Modifier.width(10.dp))
+                        Spacer(Modifier.width(8.dp)) // Espace entre les deux badges
+                        Surface(
+                            color = jauneMenu.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Text(
+                                "$couverts cv",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = jauneMenu,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            )
+                        }
+
+                    Spacer(Modifier.width(10.dp))
                         Surface(
                             color = orangeMenu.copy(alpha = 0.2f),
                             shape = RoundedCornerShape(10.dp)
                         ) {
-                            IconButton(onClick = { showRemarqueDialog = true }) {
+                            IconButton(onClick = { showRemarqueDialog = true },
+                                modifier = Modifier.size(32.dp)
+                            ) {
                                 Icon(Icons.Default.Edit, contentDescription = "Remarque", tint = jauneMenu)
                             }
                         }
@@ -258,15 +274,15 @@ fun CommandeScreen(
                                                         }
                                                     }
                                                 }) {
-                                                    Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = Color.White)
+                                                    Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                                 }
-                                                Text(count.toString(), color = Color.White, modifier = Modifier.padding(horizontal = 8.dp))
+                                                Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                                 IconButton(onClick = {
                                                     boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
                                                         it[boisson.nom] = count + 1
                                                     }
                                                 }) {
-                                                    Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = Color.White)
+                                                    Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                                 }
                                             }
                                         }
@@ -292,15 +308,15 @@ fun CommandeScreen(
                                                 }
                                             }
                                         }) {
-                                            Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = Color.White)
+                                            Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                         }
-                                        Text(count.toString(), color = Color.White, modifier = Modifier.padding(horizontal = 8.dp))
+                                        Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                         IconButton(onClick = {
                                             platsSelectionnes = platsSelectionnes.toMutableMap().also {
                                                 it[plat.nom] = count + 1
                                             }
                                         }) {
-                                            Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = Color.White)
+                                            Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                         }
                                     }
                                 }
