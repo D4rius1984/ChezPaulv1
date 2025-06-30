@@ -14,15 +14,11 @@ class BoissonViewModel : ViewModel() {
 
     // Fonction pour charger les boissons filtrées selon isGroupe ou isNonGroupe
     fun loadBoissons(isGroupe: Boolean) {
-        // Filtrer les boissons selon isGroupe ou isNonGroupe
         val filteredBoissons = if (isGroupe) {
-            // Filtrer les boissons spécifiques aux groupes
             boissonsList.filter { it.isGroupe }
         } else {
-            // Filtrer les boissons spécifiques aux commandes normales
             boissonsList.filter { it.isNonGroupe }
         }
-
         _boissons.value = filteredBoissons
     }
 

@@ -1,8 +1,6 @@
 package com.chezpaul.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalDrink
 import androidx.compose.material.icons.filled.People
@@ -11,11 +9,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
 import com.chezpaul.model.CategorieBoisson
+import com.chezpaul.ui.components.*
+import com.chezpaul.ui.theme.ChezPaulColors
 
 @Composable
 fun AccueilScreen(
@@ -30,7 +29,7 @@ fun AccueilScreen(
         CategorieBoisson.BIERES to "Bières",
         CategorieBoisson.SOFTS to "Softs"
     )
-    // Compte en utilisant les enums (plus d’erreur d’accent)
+    // Compte en utilisant les enums (plus d'erreur d'accent)
     val boissonsParCategorie = categories.associate { (catEnum, _) ->
         catEnum to commandesList.flatMap { it.boissons }
             .filter { it.categorie == catEnum }
@@ -40,51 +39,54 @@ fun AccueilScreen(
         commande.plats.any { it.contientRavigote || it.nom.contains("tête de veau", ignoreCase = true) }
     }
 
-    val jauneMenu = Color(0xFFFFE066) // Jaune du menu
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFF23190e))
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(
-            "Accueil",
-            style = MaterialTheme.typography.headlineSmall,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 20.dp)
-        )
-
+    ChezPaulScreen(title = "Accueil") {
         // CARD : Total couverts
-        DashboardCard {
+        ChezPaulCard {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.People, contentDescription = null, tint = jauneMenu, modifier = Modifier.size(34.dp))
+                Icon(
+                    Icons.Default.People,
+                    contentDescription = null,
+                    tint = ChezPaulColors.JauneMenu,
+                    modifier = Modifier.size(34.dp)
+                )
                 Spacer(Modifier.width(18.dp))
                 Column {
-                    Text("Couverts totaux", color = Color.White, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Couverts totaux",
+                        color = ChezPaulColors.TexteBlanc,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Text(
                         "$totalCouverts",
-                        color = jauneMenu,
+                        color = ChezPaulColors.JauneMenu,
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
+
         Spacer(Modifier.height(18.dp))
 
         // CARD : Boissons par catégorie
-        DashboardCard {
+        ChezPaulCard {
             Column {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.LocalDrink, contentDescription = null, tint = jauneMenu, modifier = Modifier.size(28.dp))
+                    Icon(
+                        Icons.Default.LocalDrink,
+                        contentDescription = null,
+                        tint = ChezPaulColors.JauneMenu,
+                        modifier = Modifier.size(28.dp)
+                    )
                     Spacer(Modifier.width(10.dp))
-                    Text("Boissons commandées", color = Color.White, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Boissons commandées",
+                        color = ChezPaulColors.TexteBlanc,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
                 Spacer(Modifier.height(8.dp))
                 categories.forEach { (catEnum, catAffichage) ->
@@ -92,10 +94,10 @@ fun AccueilScreen(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(catAffichage, color = Color.White)
+                        Text(catAffichage, color = ChezPaulColors.TexteBlanc)
                         Text(
                             "${boissonsParCategorie[catEnum] ?: 0}",
-                            color = jauneMenu,
+                            color = ChezPaulColors.JauneMenu,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -103,33 +105,48 @@ fun AccueilScreen(
                 }
             }
         }
+
         Spacer(Modifier.height(18.dp))
 
         // CARD : Ravigote
-        DashboardCard {
+        ChezPaulCard {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(Icons.Default.Star, contentDescription = null, tint = jauneMenu, modifier = Modifier.size(30.dp))
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = null,
+                    tint = ChezPaulColors.JauneMenu,
+                    modifier = Modifier.size(30.dp)
+                )
                 Spacer(Modifier.width(14.dp))
                 Column {
-                    Text("Tables avec ravigote", color = Color.White, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        "Tables avec ravigote",
+                        color = ChezPaulColors.TexteBlanc,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                     Text(
                         "$nombreRavigotes",
-                        color = jauneMenu,
+                        color = ChezPaulColors.JauneMenu,
                         style = MaterialTheme.typography.displaySmall,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
+
         Spacer(Modifier.height(22.dp))
 
         // CARD : Tables ouvertes (liste mini)
-        DashboardCard {
+        ChezPaulCard {
             Column {
-                Text("Tables ouvertes (${commandesList.size})", color = Color.White, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    "Tables ouvertes (${commandesList.size})",
+                    color = ChezPaulColors.TexteBlanc,
+                    style = MaterialTheme.typography.titleMedium
+                )
                 Spacer(Modifier.height(8.dp))
                 commandesList.forEach { cmd ->
                     Row(
@@ -137,35 +154,30 @@ fun AccueilScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            "Table ${cmd.numeroTable} • ${cmd.nombreCouverts} cvts",
-                            color = Color.White,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "Table ${cmd.numeroTable} • ${cmd.nombreCouverts} cvts",
+                                color = ChezPaulColors.TexteBlanc,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            if (cmd.isGroupe) {
+                                Spacer(Modifier.width(8.dp))
+                                ChezPaulBadge(
+                                    text = "Groupe",
+                                    backgroundColor = ChezPaulColors.JauneMenu,
+                                    textColor = ChezPaulColors.TexteNoir
+                                )
+                            }
+                        }
                         if (cmd.plats.any { it.contientRavigote || it.nom.contains("tête de veau", true) }) {
-                            Text("⚡", color = jauneMenu, style = MaterialTheme.typography.bodyMedium)
+                            Text("⚡", color = ChezPaulColors.JauneMenu, style = MaterialTheme.typography.bodyMedium)
                         }
                     }
-                    HorizontalDivider(color = Color(0x33222222), thickness = 0.7.dp, modifier = Modifier.padding(vertical = 2.dp))
+                    ChezPaulDivider(modifier = Modifier.padding(vertical = 2.dp))
                 }
             }
         }
-    }
-}
-
-// --------- Utilitaire card dashboard style ---------
-@Composable
-fun DashboardCard(content: @Composable ColumnScope.() -> Unit) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
-        elevation = CardDefaults.cardElevation(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Column(
-            modifier = Modifier.padding(18.dp),
-            content = content
-        )
     }
 }

@@ -33,10 +33,8 @@ class PlatViewModel : ViewModel() {
 
     // Fonction pour vérifier la nécessité de la ravigote
     fun updateRavigoteVisibility(platsSelectionnes: Map<String, Int>) {
-        // Vérifie si un plat contenant de la ravigote est sélectionné
         val platsAvecRavigote = platsSelectionnes.keys.any { key ->
-            // Vérifie si le plat contient de la ravigote
-            key == "Tdv" || key == "Ldb ravigote"  // Tu peux ajuster cette condition selon tes besoins
+            key == "Tdv" || key == "Ldb ravigote"
         }
         _ravigoteVisible.value = platsAvecRavigote
     }

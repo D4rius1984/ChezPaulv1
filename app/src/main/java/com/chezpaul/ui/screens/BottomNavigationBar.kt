@@ -1,4 +1,3 @@
-// Fichier: BottomNavigationBar.kt
 package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.background
@@ -13,12 +12,14 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.chezpaul.ui.navigation.BottomNavItem
+import com.chezpaul.ui.theme.ChezPaulColors
 
 data class BottomNavItem(
     val label: String,
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val icon: ImageVector,
     val route: String
 )
 
@@ -28,17 +29,13 @@ fun BottomNavigationBar(
     onItemSelected: (String) -> Unit,
     onAddClick: () -> Unit
 ) {
-    val marronChezPaul = Color(0xFF18100B)
-    val jauneChezPaul = Color(0xFFFFD600)
-    val blanc = Color.White
-
     NavigationBar(
-        containerColor = marronChezPaul,
+        containerColor = ChezPaulColors.FondPrincipal,
         tonalElevation = 6.dp,
         modifier = Modifier
             .fillMaxWidth()
             .height(70.dp)
-            .background(marronChezPaul)
+            .background(ChezPaulColors.FondPrincipal)
     ) {
         val items = listOf(
             BottomNavItem("Accueil", Icons.Filled.Home, "accueil"),
@@ -59,8 +56,8 @@ fun BottomNavigationBar(
                 ) {
                     FloatingActionButton(
                         onClick = onAddClick,
-                        containerColor = jauneChezPaul,
-                        contentColor = marronChezPaul,
+                        containerColor = ChezPaulColors.JauneMenu,
+                        contentColor = ChezPaulColors.TexteNoir,
                         modifier = Modifier.size(62.dp),
                         elevation = FloatingActionButtonDefaults.elevation(0.dp)
                     ) {
@@ -79,21 +76,21 @@ fun BottomNavigationBar(
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
-                            tint = if (selectedRoute == item.route) jauneChezPaul else blanc
+                            tint = if (selectedRoute == item.route) ChezPaulColors.JauneMenu else ChezPaulColors.TexteBlanc
                         )
                     },
                     label = {
                         Text(
                             item.label,
-                            color = if (selectedRoute == item.route) jauneChezPaul else blanc
+                            color = if (selectedRoute == item.route) ChezPaulColors.JauneMenu else ChezPaulColors.TexteBlanc
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = jauneChezPaul,
-                        selectedTextColor = jauneChezPaul,
-                        unselectedIconColor = blanc,
-                        unselectedTextColor = blanc,
-                        indicatorColor = marronChezPaul
+                        selectedIconColor = ChezPaulColors.JauneMenu,
+                        selectedTextColor = ChezPaulColors.JauneMenu,
+                        unselectedIconColor = ChezPaulColors.TexteBlanc,
+                        unselectedTextColor = ChezPaulColors.TexteBlanc,
+                        indicatorColor = ChezPaulColors.FondPrincipal
                     )
                 )
             }
