@@ -3,65 +3,69 @@ package com.chezpaul.model
 data class BoissonConfig(
     val nom: String,
     val categorie: CategorieBoisson,
-    val isGroupe: Boolean,       // Boisson spécifique pour groupe
-    val isNonGroupe: Boolean     // Bois spécifique pour commande normale
+    val isGroupe: Boolean,
+    val isNonGroupe: Boolean
 )
 
 val boissonsList = listOf(
     // Apéros
-    BoissonConfig("Kir", CategorieBoisson.APEROS, false, true),
-    BoissonConfig("Communard", CategorieBoisson.APEROS, false, true),
-    BoissonConfig("Ricard", CategorieBoisson.APEROS, false, true),
-    BoissonConfig("Whisky", CategorieBoisson.APEROS, false, true),
-    BoissonConfig("Pastis", CategorieBoisson.APEROS, false, true),
+    BoissonConfig("Kir", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Communard", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Ricard", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Whisky", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Pastis", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true),
+
     // Digestifs
-    BoissonConfig("Chartreuse jaune", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Chartreuse verte", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Genepi", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Genereuse", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Verveine", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Menthe", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Poire", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Mandarine", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Abricot", CategorieBoisson.DIGESTIFS, false, true),
-    BoissonConfig("Marc", CategorieBoisson.DIGESTIFS, false, true),
+    BoissonConfig("Chartreuse jaune", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Chartreuse verte", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Genepi", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Genereuse", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Verveine", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Menthe", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Poire", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Mandarine", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Abricot", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Marc", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true),
+
     // Bières
-    BoissonConfig("Blonde", CategorieBoisson.BIERES, false, true),
-    BoissonConfig("Blanche", CategorieBoisson.BIERES, false, true),
-    BoissonConfig("Sans alcool", CategorieBoisson.BIERES, false, true),
-    BoissonConfig("Ambree", CategorieBoisson.BIERES, false, true),
-    BoissonConfig("IPA", CategorieBoisson.BIERES, false, true),
-    BoissonConfig("Speciale", CategorieBoisson.BIERES, false, true),
+    BoissonConfig("Blonde", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Blanche", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Sans alcool", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Ambree", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("IPA", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Speciale", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true),
+
     // Softs
-    BoissonConfig("Sirop", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Limonade", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Ice Tea", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Coca", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Orange", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("ACE", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Fraise", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Badoit", CategorieBoisson.SOFTS, false, true),
-    BoissonConfig("Evian", CategorieBoisson.SOFTS, false, true),
-    // Vins directs
-    BoissonConfig("Montagnieu BTL", CategorieBoisson.VINS, false, true),
-    BoissonConfig("CDR BTL", CategorieBoisson.VINS, false, true),
-    // Vins sous-catégories
-    BoissonConfig("Brouilly Pot", CategorieBoisson.VINS, true, true),
-    BoissonConfig("Brouilly Filette", CategorieBoisson.VINS, false, true),
-    BoissonConfig("Brouilly Verre", CategorieBoisson.VINS, false, true),
-    BoissonConfig("CDR Pot", CategorieBoisson.VINS, true, true),
-    BoissonConfig("CDR Filette", CategorieBoisson.VINS, false, true),
-    BoissonConfig("CDR Verre", CategorieBoisson.VINS, false, true),
-    BoissonConfig("Blanc Pot", CategorieBoisson.VINS, true, true),
-    BoissonConfig("Blanc Filette", CategorieBoisson.VINS, false, true),
-    BoissonConfig("Blanc Verre", CategorieBoisson.VINS, false, true),
-    BoissonConfig("Rose Pot", CategorieBoisson.VINS, true, true),
-    BoissonConfig("Rose Filette", CategorieBoisson.VINS, false, true),
-    BoissonConfig("Rose Verre", CategorieBoisson.VINS, false, true),
-    // Nouveaux cafés
-    BoissonConfig("Expresso", CategorieBoisson.CAFES, true, true),
-    BoissonConfig("Allongé", CategorieBoisson.CAFES, true, true),
-    BoissonConfig("Double", CategorieBoisson.CAFES, false, true),
-    BoissonConfig("Crème", CategorieBoisson.CAFES, false, true),
-    BoissonConfig("Thé", CategorieBoisson.CAFES, false, true)
+    BoissonConfig("Sirop", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Limonade", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Ice Tea", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Coca", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Orange", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("ACE", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Fraise", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Badoit", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Evian", CategorieBoisson.SOFTS, isGroupe = false, isNonGroupe = true),
+
+    // Vins
+    BoissonConfig("Montagnieu BTL", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("CDR BTL", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Brouilly Pot", CategorieBoisson.VINS, isGroupe = true, isNonGroupe = true),
+    BoissonConfig("Brouilly Filette", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Brouilly Verre", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("CDR Pot", CategorieBoisson.VINS, isGroupe = true, isNonGroupe = true),
+    BoissonConfig("CDR Filette", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("CDR Verre", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Blanc Pot", CategorieBoisson.VINS, isGroupe = true, isNonGroupe = true),
+    BoissonConfig("Blanc Filette", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Blanc Verre", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Rose Pot", CategorieBoisson.VINS, isGroupe = true, isNonGroupe = true),
+    BoissonConfig("Rose Filette", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Rose Verre", CategorieBoisson.VINS, isGroupe = false, isNonGroupe = true),
+
+    // Cafés
+    BoissonConfig("Expresso", CategorieBoisson.CAFES, isGroupe = true, isNonGroupe = true),
+    BoissonConfig("Allongé", CategorieBoisson.CAFES, isGroupe = true, isNonGroupe = true),
+    BoissonConfig("Double", CategorieBoisson.CAFES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Crème", CategorieBoisson.CAFES, isGroupe = false, isNonGroupe = true),
+    BoissonConfig("Thé", CategorieBoisson.CAFES, isGroupe = false, isNonGroupe = true)
 )

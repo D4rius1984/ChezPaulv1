@@ -10,16 +10,13 @@ class CommandeViewModel : ViewModel() {
 
     // Ajouter une nouvelle commande
     fun ajouterCommande(cmd: Commande) {
-        // Check if the cmd is being passed correctly and add to the list
         _commandesList.value = _commandesList.value + cmd
     }
 
     // Modifier une commande existante
     fun modifierCommande(cmd: Commande) {
-        // Compare by numeroTable and replace the existing one
         _commandesList.value = _commandesList.value.map { commande ->
-            if (commande.numeroTable == cmd.numeroTable) cmd
-            else commande
+            if (commande.numeroTable == cmd.numeroTable) cmd else commande
         }
     }
 
@@ -28,8 +25,14 @@ class CommandeViewModel : ViewModel() {
         _commandesList.value = _commandesList.value.filterNot { it.numeroTable == cmd.numeroTable }
     }
 
-    // Valider une commande (add your logic here)
+    // Valider une commande : ajouter à la liste si pas encore présente
     fun validerCommande(cmd: Commande) {
-        // Placeholder for the actual validation logic
+        // Si déjà présente, on la modifie ; sinon, on l'ajoute
+        val existe = _commandesList.value.any { it.numeroTable == cmd.numeroTable }
+        if (existe) {
+            modifierCommande(cmd)
+        } else {
+            ajouterCommande(cmd)
+        }
     }
 }

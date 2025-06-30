@@ -12,6 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.Commande
 import com.chezpaul.ui.screens.*
+import com.chezpaul.ui.screens.BottomNavigationBar
+import com.chezpaul.ui.components.ChezPaulScreen
+import com.chezpaul.ui.theme.ChezPaulColors
+import com.chezpaul.ui.theme.ChezPaulTheme
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.BottomNavViewModel
 
@@ -29,96 +33,104 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
     // Observer la route sélectionnée via le ViewModel
     selectedRoute = viewModel.selectedRoute.value
 
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(
-                selectedRoute = selectedRoute,
-                onItemSelected = { route ->
-                    if (route == "ajouter") {
-                        // Quand on clique sur +, on va à commandes
+    ChezPaulTheme {
+        Scaffold(
+            bottomBar = {
+                BottomNavigationBar(
+                    selectedRoute = selectedRoute,
+                    onItemSelected = { route ->
+                        if (route == "ajouter") {
+                            // Quand on clique sur +, on va à commandes
+                            commandeEnCours = null
+                            showResume = false
+                            viewModel.selectRoute("commandes")
+                        } else {
+                            viewModel.selectRoute(route)
+                        }
+                    },
+                    onAddClick = {
+                        // Quand on clique sur le bouton +
                         commandeEnCours = null
                         showResume = false
                         viewModel.selectRoute("commandes")
-                    } else {
-                        viewModel.selectRoute(route)
                     }
-                },
-                onAddClick = {
-                    // Quand on clique sur le bouton +
-                    commandeEnCours = null
-                    showResume = false
-                    viewModel.selectRoute("commandes")
-                }
-            )
-        }
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            when (selectedRoute) {
-                "accueil" -> AccueilScreen(commandesList = commandeViewModel.commandesList.value)  // Utilisation de .value ici
-
-                "commandes" -> {
-                    if (!showResume) {
-                        CommandeScreen(
-                            commande = commandeEnCours,
-                            onNext = { nouvelleCommande ->
-                                commandeEnCours = nouvelleCommande
-                                showResume = true
-                            }
-                        )
-                    } else {
-                        ResumeScreen(
-                            commande = commandeEnCours,
-                            commandesList = commandeViewModel.commandesList.value,  // Utilisation de .value ici
-                            onValide = {
-                                if (commandeEnCours != null) {
-                                    // Si c'est une modif, retire l'ancienne commande pour éviter les doublons
-                                    commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter { commande -> commande.numeroTable != commandeEnCours!!.numeroTable }
-                                    commandeViewModel.commandesList.value = commandeViewModel.commandesList.value + commandeEnCours!!
-                                    commandeEnCours = null
-                                    showResume = false
-                                    // Retour à l'accueil après validation
-                                    viewModel.selectRoute("accueil")
-                                }
-                            },
-                            onSupprimeTable = { commandeASupprimer ->
-                                // Supprimer la commande de la liste
-                                commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter { it != commandeASupprimer }
-                            },
-                            onModifieTable = { commandeAModifier ->
-                                // Relancer le flow de commande en conservant la commande existante
-                                commandeEnCours = commandeAModifier
-                                showResume = false // Reviens à l'écran de commande
-                                viewModel.selectRoute("commandes")
-                            },
-                            isInCommandeFlow = true // Passer en mode "commande" si nécessaire
-                        )
-                    }
-                }
-
-                "tables" -> ResumeScreen(
-                    commande = null,
-                    commandesList = commandeViewModel.commandesList.value,  // Utilisation de .value ici
-                    onValide = {},
-                    onSupprimeTable = { commandeASupprimer ->
-                        // Supprimer la commande de la liste
-                        commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter { it != commandeASupprimer }
-                    },
-                    onModifieTable = { commandeAModifier ->
-                        // Lorsque l'on modifie, on charge la commande en cours
-                        commandeEnCours = commandeAModifier
-                        showResume = false
-                        viewModel.selectRoute("commandes")
-                    },
-                    isInCommandeFlow = false // Dans "tables", on n'est pas dans le flow de commande
                 )
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                when (selectedRoute) {
+                    "accueil" -> AccueilScreen(commandesList = commandeViewModel.commandesList.value)
 
-                "groupes" -> GroupesScreen()
+                    "commandes" -> {
+                        if (!showResume) {
+                            CommandeScreen(
+                                commande = commandeEnCours,
+                                onNext = { nouvelleCommande ->
+                                    commandeEnCours = nouvelleCommande
+                                    showResume = true
+                                }
+                            )
+                        } else {
+                            ResumeScreen(
+                                commande = commandeEnCours,
+                                commandesList = commandeViewModel.commandesList.value,
+                                onValide = {
+                                    if (commandeEnCours != null) {
+                                        // Si c'est une modif, retire l'ancienne commande pour éviter les doublons
+                                        commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter { commande ->
+                                            commande.numeroTable != commandeEnCours!!.numeroTable
+                                        }
+                                        commandeViewModel.commandesList.value = commandeViewModel.commandesList.value + commandeEnCours!!
+                                        commandeEnCours = null
+                                        showResume = false
+                                        // Retour à l'accueil après validation
+                                        viewModel.selectRoute("accueil")
+                                    }
+                                },
+                                onSupprimeTable = { commandeASupprimer ->
+                                    // Supprimer la commande de la liste
+                                    commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter {
+                                        it != commandeASupprimer
+                                    }
+                                },
+                                onModifieTable = { commandeAModifier ->
+                                    // Relancer le flow de commande en conservant la commande existante
+                                    commandeEnCours = commandeAModifier
+                                    showResume = false // Reviens à l'écran de commande
+                                    viewModel.selectRoute("commandes")
+                                },
+                                isInCommandeFlow = true // Passer en mode "commande" si nécessaire
+                            )
+                        }
+                    }
 
-                "settings" -> SettingsScreen(viewModel = commandeViewModel)
+                    "tables" -> ResumeScreen(
+                        commande = null,
+                        commandesList = commandeViewModel.commandesList.value,
+                        onValide = {},
+                        onSupprimeTable = { commandeASupprimer ->
+                            // Supprimer la commande de la liste
+                            commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter {
+                                it != commandeASupprimer
+                            }
+                        },
+                        onModifieTable = { commandeAModifier ->
+                            // Lorsque l'on modifie, on charge la commande en cours
+                            commandeEnCours = commandeAModifier
+                            showResume = false
+                            viewModel.selectRoute("commandes")
+                        },
+                        isInCommandeFlow = false // Dans "tables", on n'est pas dans le flow de commande
+                    )
+
+                    "groupes" -> GroupesScreen()
+
+                    "settings" -> SettingsScreen(viewModel = commandeViewModel)
+                }
             }
         }
     }
@@ -127,7 +139,9 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
 // ---- Ecran Groupes temporaire (à personnaliser plus tard) ----
 @Composable
 fun GroupesScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Écran Groupes (à faire)")
+    ChezPaulScreen(title = "Groupes") {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Écran Groupes (à faire)", color = ChezPaulColors.TexteBlanc)
+        }
     }
 }

@@ -1,12 +1,11 @@
-// PlatsData.kt
 package com.chezpaul.model
 
 data class PlatConfig(
     val nom: String,
     val abrv: String,
     val contientRavigote: Boolean,
-    val isGroupe: Boolean,       // Plat spécifique pour groupe
-    val isNonGroupe: Boolean     // Plat spécifique pour commande normale
+    val isGroupe: Boolean,
+    val isNonGroupe: Boolean
 )
 
 val platsData = listOf(
@@ -23,7 +22,6 @@ val platsData = listOf(
     PlatConfig("Poulet", "Poulet", false, false, true),
     PlatConfig("Boudin", "Boudin", false, false, true),
     PlatConfig("Piece du B", "Piece du B", false, false, true),
-    PlatConfig("Végétarien", "Végétarien", false, true, true),
-    PlatConfig("Cervelle", "Cervelle", false, true, false),
-    // Exemple de plat spécifique aux groupes
+    PlatConfig("Végétarien", "Vegetarien", false, true, true),
+    PlatConfig("Cervelle", "Cervelle", false, true, false)
 )
