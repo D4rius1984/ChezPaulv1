@@ -1,5 +1,9 @@
 [
     {
+        "merged": "com.chezpaul.app-debug-66:/drawable_logo_chez_paul_petit.png.flat",
+        "source": "com.chezpaul.app-main-68:/drawable/logo_chez_paul_petit.png"
+    },
+    {
         "merged": "com.chezpaul.app-debug-66:/drawable_logo.png.flat",
         "source": "com.chezpaul.app-main-68:/drawable/logo.png"
     }

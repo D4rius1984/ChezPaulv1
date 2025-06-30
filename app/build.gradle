@@ -27,7 +27,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion '1.5.11' // OK pour Kotlin 1.9.23/Compose 2024.04.00
+        kotlinCompilerExtensionVersion '1.5.11' // Compatible avec Kotlin 1.9.23 / Compose 2024.04.00
     }
 
     kotlinOptions {
@@ -41,16 +41,19 @@ android {
 }
 
 dependencies {
+    // Core dependencies
     implementation "androidx.core:core-ktx:1.13.1"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
     implementation "androidx.activity:activity-compose:1.9.0"
+
+    // Compose BOM (version compatible avec Compose 2024)
     implementation platform('androidx.compose:compose-bom:2024.04.00')
 
-    // Compose modules (aucune version explicitée !)
+    // Compose modules
     implementation "androidx.compose.ui:ui"
     implementation "androidx.compose.ui:ui-tooling-preview"
     implementation "androidx.compose.ui:ui-text"
-    implementation "androidx.compose.material3:material3"
+    implementation "androidx.compose.material3:material3:1.1.0" // Mise à jour vers Material3
     implementation "androidx.compose.material:material-icons-extended"
     implementation "androidx.navigation:navigation-compose"
     implementation "androidx.compose.runtime:runtime-livedata"
@@ -58,11 +61,10 @@ dependencies {
     implementation "androidx.compose.foundation:foundation-layout"
     implementation "androidx.navigation:navigation-compose:2.7.7"
 
-
-    // Matériel (thème classique Android)
+    // Google Material (thème classique Android)
     implementation "com.google.android.material:material:1.7.0"
 
-    // Debug
+    // Debug dependencies
     debugImplementation "androidx.compose.ui:ui-tooling"
     debugImplementation "androidx.compose.ui:ui-test-manifest"
 }

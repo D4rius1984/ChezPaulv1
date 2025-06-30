@@ -1,13 +1,13 @@
 package com.chezpaul.ui.screens
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,11 +17,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.TabRowDefaults // <-- Ajout pour l'indicateur
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
+import androidx.compose.animation.core.tween
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.ui.platform.LocalFocusManager
 import com.chezpaul.model.Commande
 import com.chezpaul.model.Plat
 import com.chezpaul.model.Boisson
+import com.chezpaul.model.platsData
+import com.chezpaul.model.boissonsList
 import com.chezpaul.model.CategorieBoisson
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,7 +36,7 @@ fun CommandeScreen(
     onNext: (Commande) -> Unit
 ) {
     val jauneMenu = Color(0xFFFFE066)
-    val orangeMenu = Color(0xFFEDA637) // Orange du menu web
+    val orangeMenu = Color(0xFFEDA637)
     var selectedTab by remember { mutableStateOf(0) }
     val tabTitles = listOf("Plats", "Boissons")
 
@@ -39,94 +44,25 @@ fun CommandeScreen(
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
     var infosConfirmees by remember { mutableStateOf(false) }
 
-    // --- PLATS ---
-    data class PlatConfig(val nom: String, val abrv: String, val contientRavigote: Boolean)
-    val platsData = listOf(
-        PlatConfig("Tablier", "Tablier", false),
-        PlatConfig("Tete de veau", "Tdv", true),
-        PlatConfig("Saucisson", "Saucisson", false),
-        PlatConfig("Civet", "Civet", false),
-        PlatConfig("Quenelle", "Quenelle", false),
-        PlatConfig("Langue de boeuf ravigote", "Ldb ravigote", true),
-        PlatConfig("Langue de boeuf piquante", "Ldb piquante", false),
-        PlatConfig("Andouillette", "Andouillette", false),
-        PlatConfig("Cote cochon", "Cote cochon", false),
-        PlatConfig("Blanquette", "Blanquette", false),
-        PlatConfig("Poulet", "Poulet", false),
-        PlatConfig("Boudin", "Boudin", false),
-        PlatConfig("Piece du B", "Piece du B", false)
-    )
-    var platsSelectionnes by remember {
-        mutableStateOf(
-            platsData.associate { it.abrv to 0 }.toMutableMap()
-        )
-    }
+    // Remarque corrigée
+    var remarqueText by remember { mutableStateOf(commande?.remarque ?: "") }
+    var showRemarqueDialog by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
-    // --- BOISSONS ---
-    data class BoissonConfig(val nom: String, val categorie: CategorieBoisson)
-    val boissonsList = listOf(
-        // Apéros
-        BoissonConfig("Kir", CategorieBoisson.APEROS),
-        BoissonConfig("Communard", CategorieBoisson.APEROS),
-        BoissonConfig("Ricard", CategorieBoisson.APEROS),
-        // Digestifs
-        BoissonConfig("Chartreuse jaune", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Chartreuse verte", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Genepi", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Verveine", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Menthe", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Poire", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Mandarine", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Abricot", CategorieBoisson.DIGESTIFS),
-        BoissonConfig("Marc", CategorieBoisson.DIGESTIFS),
-        // Bières
-        BoissonConfig("Blonde", CategorieBoisson.BIERES),
-        BoissonConfig("Blanche", CategorieBoisson.BIERES),
-        BoissonConfig("Sans alcool", CategorieBoisson.BIERES),
-        BoissonConfig("Ambree", CategorieBoisson.BIERES),
-        BoissonConfig("IPA", CategorieBoisson.BIERES),
-        BoissonConfig("Speciale", CategorieBoisson.BIERES),
-        // Softs
-        BoissonConfig("Sirop", CategorieBoisson.SOFTS),
-        BoissonConfig("Limonade", CategorieBoisson.SOFTS),
-        BoissonConfig("Ice Tea", CategorieBoisson.SOFTS),
-        BoissonConfig("Biere sans alcool", CategorieBoisson.SOFTS),
-        BoissonConfig("Orange", CategorieBoisson.SOFTS),
-        BoissonConfig("ACE", CategorieBoisson.SOFTS),
-        BoissonConfig("Fraise", CategorieBoisson.SOFTS),
-        BoissonConfig("Eau", CategorieBoisson.SOFTS),
-        // Vins directs
-        BoissonConfig("Montagnieu BTL", CategorieBoisson.VINS),
-        BoissonConfig("CDR BTL", CategorieBoisson.VINS),
-        // Vins sous-catégories
-        BoissonConfig("Brouilly Pot", CategorieBoisson.VINS),
-        BoissonConfig("Brouilly Filette", CategorieBoisson.VINS),
-        BoissonConfig("Brouilly Verre", CategorieBoisson.VINS),
-        BoissonConfig("CDR Pot", CategorieBoisson.VINS),
-        BoissonConfig("CDR Filette", CategorieBoisson.VINS),
-        BoissonConfig("CDR Verre", CategorieBoisson.VINS),
-        BoissonConfig("Blanc Pot", CategorieBoisson.VINS),
-        BoissonConfig("Blanc Filette", CategorieBoisson.VINS),
-        BoissonConfig("Blanc Verre", CategorieBoisson.VINS),
-        BoissonConfig("Rose Pot", CategorieBoisson.VINS),
-        BoissonConfig("Rose Filette", CategorieBoisson.VINS),
-        BoissonConfig("Rose Verre", CategorieBoisson.VINS)
-    )
-    var boissonsSelectionnees by remember {
-        mutableStateOf(
-            boissonsList.associate { it.nom to 0 }.toMutableMap()
-        )
-    }
+    // Utilisation d'un state immutable pour les collections
+    var platsSelectionnes by remember { mutableStateOf(mapOf<String, Int>()) }
+    var boissonsSelectionnees by remember { mutableStateOf(mapOf<String, Int>()) }
 
     val ravigoteVisible = (platsSelectionnes["Tdv"] ?: 0) > 0 || (platsSelectionnes["Ldb ravigote"] ?: 0) > 0
     val totalPlats = platsSelectionnes.values.sum()
     val nbCouverts = couverts.toIntOrNull() ?: 0
 
-    // --- UI ---
+    var isGroupe by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF222222))
+            .background(Color(0xFF23190e))
             .padding(16.dp)
     ) {
         Text(
@@ -136,6 +72,7 @@ fun CommandeScreen(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 20.dp)
         )
+
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = Color(0xFF292929),
@@ -170,7 +107,33 @@ fun CommandeScreen(
                             cursorColor = orangeMenu
                         )
                     )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Groupe",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Switch(
+                            checked = isGroupe,
+                            onCheckedChange = { isGroupe = it },
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = jauneMenu,
+                                uncheckedThumbColor = Color.Gray,
+                                checkedTrackColor = orangeMenu,
+                                uncheckedTrackColor = Color(0xFF292929)
+                            )
+                        )
+                    }
+
                     Spacer(Modifier.height(12.dp))
+
                     Button(
                         onClick = {
                             if (numeroTable.isNotBlank() && couverts.isNotBlank() && nbCouverts > 0) {
@@ -188,6 +151,7 @@ fun CommandeScreen(
                         Text("Confirmer la table", fontWeight = FontWeight.Bold)
                     }
                 } else {
+                    // Affichage de la remarque
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -199,20 +163,84 @@ fun CommandeScreen(
                             shape = RoundedCornerShape(10.dp)
                         ) {
                             Text(
-                                "Table $numeroTable  ${couverts} cv",
+                                "Table $numeroTable  $couverts cv",
                                 style = MaterialTheme.typography.labelLarge,
                                 color = jauneMenu,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
+                        Spacer(Modifier.width(12.dp))
+                        // Badge remarque, icône stylo seule (plus de texte)
+                        Surface(
+                            color = orangeMenu.copy(alpha = 0.23f),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            IconButton(
+                                onClick = { showRemarqueDialog = true },
+                                modifier = Modifier.size(32.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Edit,
+                                    contentDescription = "Remarque",
+                                    tint = jauneMenu
+                                )
+                            }
+                        }
                     }
+
+                    // Boite de dialogue animée pour la remarque (champ auto-focus)
+                    if (showRemarqueDialog) {
+                        AnimatedVisibility(
+                            visible = showRemarqueDialog,
+                            enter = fadeIn(animationSpec = tween(250)) + scaleIn(initialScale = 0.8f, animationSpec = tween(250)),
+                            exit = fadeOut(animationSpec = tween(200)) + scaleOut(targetScale = 0.7f, animationSpec = tween(200))
+                        ) {
+                            AlertDialog(
+                                onDismissRequest = {
+                                    showRemarqueDialog = false
+                                    focusManager.clearFocus()
+                                },
+                                title = { Text("Remarque pour la table", color = orangeMenu) },
+                                text = {
+                                    OutlinedTextField(
+                                        value = remarqueText,
+                                        onValueChange = { remarqueText = it },
+                                        label = { Text("Ajouter/modifier une remarque") },
+                                        singleLine = false,
+                                        modifier = Modifier.fillMaxWidth()
+                                            .fillMaxWidth()
+                                            .background(Color(0xFF292929), RoundedCornerShape(8.dp)), // Fond gris foncé
+                                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                                            focusedBorderColor = orangeMenu,      // Bordure quand le champ est focalisé
+                                            unfocusedBorderColor = Color.Gray,    // Bordure quand le champ n'est pas focalisé
+                                            focusedLabelColor = orangeMenu,       // Couleur de l'étiquette quand le champ est focalisé
+                                            unfocusedLabelColor = Color.Gray,     // Couleur de l'étiquette quand le champ n'est pas focalisé
+                                            cursorColor = orangeMenu,             // Couleur du curseur
+                                        )
+                                    )
+                                },
+                                confirmButton = {
+                                    TextButton(
+                                        onClick = {
+                                            showRemarqueDialog = false
+                                            focusManager.clearFocus()
+                                        }
+                                    ) { Text("OK", color = orangeMenu) }
+                                },
+                                containerColor = Color(0xFF292929),
+                                tonalElevation = 10.dp,
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                        }
+                    }
+
                     TabRow(
                         selectedTabIndex = selectedTab,
                         containerColor = Color.Transparent,
                         contentColor = orangeMenu,
                         indicator = { tabPositions ->
-                            TabRowDefaults.Indicator(
+                            TabRowDefaults.SecondaryIndicator(
                                 modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
                                 color = orangeMenu
                             )
@@ -231,12 +259,18 @@ fun CommandeScreen(
                     if (selectedTab == 0) {
                         Text("Plats :", color = Color.White, style = MaterialTheme.typography.titleSmall)
                         Spacer(Modifier.height(6.dp))
+
+                        // Filtrage des plats en fonction de isGroupe
+                        val platsFiltres = platsData.filter {
+                            if (isGroupe) it.isGroupe else it.isNonGroupe
+                        }
+
                         LazyColumn(
                             modifier = Modifier
                                 .weight(1f, fill = false)
                                 .fillMaxWidth()
                         ) {
-                            itemsIndexed(platsData) { _, config ->
+                            itemsIndexed(platsFiltres) { _, config ->
                                 val nomPlat = config.abrv
                                 Row(
                                     modifier = Modifier
@@ -249,10 +283,11 @@ fun CommandeScreen(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         IconButton(
                                             onClick = {
-                                                if ((platsSelectionnes[nomPlat] ?: 0) > 0) {
-                                                    platsSelectionnes = platsSelectionnes.toMutableMap().also {
-                                                        it[nomPlat] = (it[nomPlat] ?: 0) - 1
-                                                    }
+                                                val currentQty = platsSelectionnes[nomPlat] ?: 0
+                                                if (currentQty > 0) {
+                                                    platsSelectionnes = platsSelectionnes.toMutableMap().apply {
+                                                        put(nomPlat, currentQty - 1)
+                                                    }.toMap()
                                                 }
                                             }
                                         ) {
@@ -266,9 +301,10 @@ fun CommandeScreen(
                                         IconButton(
                                             onClick = {
                                                 if (totalPlats < nbCouverts) {
-                                                    platsSelectionnes = platsSelectionnes.toMutableMap().also {
-                                                        it[nomPlat] = (it[nomPlat] ?: 0) + 1
-                                                    }
+                                                    val currentQty = platsSelectionnes[nomPlat] ?: 0
+                                                    platsSelectionnes = platsSelectionnes.toMutableMap().apply {
+                                                        put(nomPlat, currentQty + 1)
+                                                    }.toMap()
                                                 }
                                             }
                                         ) {
@@ -303,11 +339,13 @@ fun CommandeScreen(
                         Spacer(Modifier.height(14.dp))
                         Button(
                             onClick = {
-                                val platsCommandes = platsData.mapNotNull { config ->
+                                val platsCommandes = platsFiltres.mapNotNull { config ->
                                     val qte = platsSelectionnes[config.abrv] ?: 0
                                     if (qte > 0) Plat(config.nom, qte, config.contientRavigote) else null
                                 }
-                                val boissonsCommandes = boissonsList.mapNotNull { config ->
+                                val boissonsCommandes = boissonsList.filter {
+                                    if (isGroupe) it.isGroupe else it.isNonGroupe
+                                }.mapNotNull { config ->
                                     val qte = boissonsSelectionnees[config.nom] ?: 0
                                     if (qte > 0) Boisson(config.nom, qte, config.categorie) else null
                                 }
@@ -316,7 +354,8 @@ fun CommandeScreen(
                                         numeroTable = numeroTable,
                                         nombreCouverts = nbCouverts,
                                         plats = platsCommandes,
-                                        boissons = boissonsCommandes
+                                        boissons = boissonsCommandes,
+                                        remarque = remarqueText
                                     )
                                 )
                             },
@@ -333,20 +372,26 @@ fun CommandeScreen(
                             Text("Valider la sélection", fontWeight = FontWeight.Bold)
                         }
                     } else {
+                        // Section Boissons - filtrage par catégorie ET par isGroupe
                         Text("Boissons :", color = Color.White, style = MaterialTheme.typography.titleSmall)
                         Spacer(Modifier.height(6.dp))
+
+                        // Filtrage des boissons en fonction de isGroupe (comme pour les plats)
+                        val boissonsFiltrees = boissonsList.filter {
+                            if (isGroupe) it.isGroupe else it.isNonGroupe
+                        }
 
                         val categoriesOrdre = listOf(
                             CategorieBoisson.APEROS,
                             CategorieBoisson.BIERES,
                             CategorieBoisson.SOFTS,
                             CategorieBoisson.DIGESTIFS,
-                            CategorieBoisson.VINS
+                            CategorieBoisson.VINS,
+                            CategorieBoisson.CAFES
                         )
                         val boissonsParCategorie = categoriesOrdre.associateWith { cat ->
-                            boissonsList.filter { it.categorie == cat }
+                            boissonsFiltrees.filter { it.categorie == cat }
                         }
-
                         LazyColumn(
                             modifier = Modifier
                                 .weight(1f, fill = false)
@@ -363,6 +408,8 @@ fun CommandeScreen(
                                                 CategorieBoisson.SOFTS -> "Softs"
                                                 CategorieBoisson.DIGESTIFS -> "Digestifs"
                                                 CategorieBoisson.VINS -> "Vins"
+                                                CategorieBoisson.CAFES -> "Cafés"
+                                                else -> "Autres"
                                             },
                                             style = MaterialTheme.typography.titleSmall,
                                             color = jauneMenu,
@@ -384,9 +431,9 @@ fun CommandeScreen(
                                                 IconButton(
                                                     onClick = {
                                                         if (quantite > 0) {
-                                                            boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
-                                                                it[nomBoisson] = (it[nomBoisson] ?: 0) - 1
-                                                            }
+                                                            boissonsSelectionnees = boissonsSelectionnees.toMutableMap().apply {
+                                                                put(nomBoisson, quantite - 1)
+                                                            }.toMap()
                                                         }
                                                     }
                                                 ) {
@@ -395,9 +442,9 @@ fun CommandeScreen(
                                                 Text(quantite.toString(), color = jauneMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                                 IconButton(
                                                     onClick = {
-                                                        boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
-                                                            it[nomBoisson] = (it[nomBoisson] ?: 0) + 1
-                                                        }
+                                                        boissonsSelectionnees = boissonsSelectionnees.toMutableMap().apply {
+                                                            put(nomBoisson, quantite + 1)
+                                                        }.toMap()
                                                     }
                                                 ) {
                                                     Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
@@ -411,11 +458,13 @@ fun CommandeScreen(
                         Spacer(Modifier.height(14.dp))
                         Button(
                             onClick = {
-                                val platsCommandes = platsData.mapNotNull { config ->
+                                val platsCommandes = platsData.filter {
+                                    if (isGroupe) it.isGroupe else it.isNonGroupe
+                                }.mapNotNull { config ->
                                     val qte = platsSelectionnes[config.abrv] ?: 0
                                     if (qte > 0) Plat(config.nom, qte, config.contientRavigote) else null
                                 }
-                                val boissonsCommandes = boissonsList.mapNotNull { config ->
+                                val boissonsCommandes = boissonsFiltrees.mapNotNull { config ->
                                     val qte = boissonsSelectionnees[config.nom] ?: 0
                                     if (qte > 0) Boisson(config.nom, qte, config.categorie) else null
                                 }
@@ -424,7 +473,8 @@ fun CommandeScreen(
                                         numeroTable = numeroTable,
                                         nombreCouverts = nbCouverts,
                                         plats = platsCommandes,
-                                        boissons = boissonsCommandes
+                                        boissons = boissonsCommandes,
+                                        remarque = remarqueText
                                     )
                                 )
                             },

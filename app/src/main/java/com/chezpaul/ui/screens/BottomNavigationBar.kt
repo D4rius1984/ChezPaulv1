@@ -28,7 +28,7 @@ fun BottomNavigationBar(
     onItemSelected: (String) -> Unit,
     onAddClick: () -> Unit
 ) {
-    val marronChezPaul = Color(0xFF23190e)
+    val marronChezPaul = Color(0xFF18100B)
     val jauneChezPaul = Color(0xFFFFD600)
     val blanc = Color.White
 

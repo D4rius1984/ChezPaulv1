@@ -62,23 +62,42 @@ fun ChezPaulApp() {
                             commandesList = mainViewModel.commandes,
                             onValide = {
                                 if (commandeEnCours != null) {
+                                    // Si c’est une modif, retire l’ancienne commande pour éviter les doublons
+                                    mainViewModel.commandes.removeAll { it.numeroTable == commandeEnCours!!.numeroTable }
                                     mainViewModel.commandes.add(commandeEnCours!!)
                                     commandeEnCours = null
                                     showResume = false
                                 }
-                            }
+                            },
+                            onSupprimeTable = { commandeASupprimer ->
+                                mainViewModel.commandes.remove(commandeASupprimer) // Supprimer la commande de la liste
+                            },
+                            onModifieTable = { commandeAModifier ->
+                                // Relancer le flow de commande en conservant la commande existante
+                                commandeEnCours = commandeAModifier
+                                showResume = false // Reviens à l’écran de commande
+                                selectedRoute = "commandes"
+                            },
+                            isInCommandeFlow = true // Passer en mode "commande" si nécessaire
                         )
                     }
                 }
                 "tables" -> ResumeScreen(
                     commande = null,
                     commandesList = mainViewModel.commandes,
-                    onValide = {}
+                    onValide = {},
+                    onSupprimeTable = { commandeASupprimer ->
+                        mainViewModel.commandes.remove(commandeASupprimer) // Supprimer la commande de la liste
+                    },
+                    onModifieTable = { commandeAModifier ->
+                        commandeEnCours = commandeAModifier
+                        showResume = false
+                        selectedRoute = "commandes"
+                    },
+                    isInCommandeFlow = false // Dans "tables", on n'est pas dans le flow de commande
                 )
                 "groupes" -> GroupesScreen()
-                "settings" -> SettingsScreen(
-                    viewModel = mainViewModel
-                )
+                "settings" -> SettingsScreen(viewModel = mainViewModel)
                 "accueil" -> AccueilScreen(commandesList = mainViewModel.commandes)
             }
         }

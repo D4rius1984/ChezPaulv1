@@ -45,7 +45,7 @@ fun AccueilScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF222222))
+            .background(Color(0xFF23190e))
             .padding(16.dp),
         verticalArrangement = Arrangement.Top
     ) {
@@ -146,7 +146,7 @@ fun AccueilScreen(
                             Text("⚡", color = jauneMenu, style = MaterialTheme.typography.bodyMedium)
                         }
                     }
-                    Divider(color = Color(0x33222222), thickness = 0.7.dp, modifier = Modifier.padding(vertical = 2.dp))
+                    HorizontalDivider(color = Color(0x33222222), thickness = 0.7.dp, modifier = Modifier.padding(vertical = 2.dp))
                 }
             }
         }

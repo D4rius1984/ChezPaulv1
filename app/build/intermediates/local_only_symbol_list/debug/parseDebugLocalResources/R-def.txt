@@ -10,6 +10,7 @@ color colorSecondary
 color colorSecondaryVariant
 color colorSurface
 drawable logo
+drawable logo_chez_paul_petit
 string app_name
 string boissons
 string nouvelle_commande
