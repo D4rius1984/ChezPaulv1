@@ -13,7 +13,7 @@ class BoissonViewModel : ViewModel() {
     val boissons: LiveData<List<BoissonConfig>> get() = _boissons
 
     // Etat d'activation pour chaque boisson
-    private val _boissonsActivationState = MutableLiveData<Map<String, Boolean>>(emptyMap())
+    private val _boissonsActivationState = MutableLiveData<Map<String, Boolean>>()
     val boissonsActivationState: LiveData<Map<String, Boolean>> get() = _boissonsActivationState
 
     init {
@@ -23,20 +23,30 @@ class BoissonViewModel : ViewModel() {
     private fun loadBoissons() {
         _boissons.value = boissonsList // Liste statique des boissons
         // Initialiser les états d'activation à true pour toutes les boissons par défaut
-        val initialState = boissonsList.associate { it.nom to true }
-        _boissonsActivationState.value = initialState
+        _boissonsActivationState.value = boissonsList.associate { it.nom to true }
     }
 
-    // Fonction pour activer/désactiver une boisson
+    // Fonction pour activer/désactiver une boisson - simplifiée
     fun toggleBoissonActivation(boissonNom: String, isActivated: Boolean) {
-        // Mettre à jour l'état d'activation pour la boisson
-        val updatedState = _boissonsActivationState.value?.toMutableMap() ?: mutableMapOf()
-        updatedState[boissonNom] = isActivated
-        _boissonsActivationState.value = updatedState
+        val currentState = _boissonsActivationState.value ?: emptyMap()
+        _boissonsActivationState.value = currentState.toMutableMap().apply {
+            this[boissonNom] = isActivated
+        }
     }
 
     // Fonction pour récupérer l'état d'activation d'une boisson
     fun getBoissonActivationState(boissonNom: String): Boolean {
         return _boissonsActivationState.value?.get(boissonNom) ?: true // Retourne true par défaut
+    }
+
+    // Sauvegarder l'état d'activation des boissons
+    fun updateBoissonActivation(updatedState: Map<String, Boolean>) {
+        _boissonsActivationState.value = updatedState
+    }
+
+    // **NOUVELLE MÉTHODE** - Réinitialise toutes les boissons (pour fin de service)
+    fun resetAllBoissons() {
+        // Remet toutes les boissons à leur état par défaut (activées)
+        _boissonsActivationState.value = boissonsList.associate { it.nom to true }
     }
 }

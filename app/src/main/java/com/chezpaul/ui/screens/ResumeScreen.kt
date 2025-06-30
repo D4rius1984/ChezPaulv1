@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
+import com.chezpaul.ui.theme.ChezPaulColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +44,7 @@ fun ResumeScreen(
         Text(
             "Résumé de la commande",
             style = MaterialTheme.typography.headlineSmall,
-            color = Color.White,
+            color = ChezPaulColors.JauneMenu,  // Changé de 'tint' à 'color'
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 20.dp)
         )

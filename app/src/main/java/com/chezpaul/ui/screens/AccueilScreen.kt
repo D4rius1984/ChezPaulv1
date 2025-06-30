@@ -1,5 +1,6 @@
 package com.chezpaul.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalDrink
@@ -9,8 +10,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.chezpaul.R
 import com.chezpaul.model.Commande
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.ui.components.*
@@ -39,7 +42,28 @@ fun AccueilScreen(
         commande.plats.any { it.contientRavigote || it.nom.contains("tête de veau", ignoreCase = true) }
     }
 
-    ChezPaulScreen(title = "Accueil") {
+    ChezPaulScreen(title = "") { // Titre vide pour gérer nous-mêmes le header
+        // Header compact avec logo à côté d'Accueil
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 12.dp)
+        ) {
+            Text(
+                "Accueil",
+                color = ChezPaulColors.JauneMenu,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.logo_chez_paul_petit),
+                contentDescription = "Logo Chez Paul",
+                modifier = Modifier.size(32.dp)
+            )
+        }
+
         // CARD : Total couverts
         ChezPaulCard {
             Row(

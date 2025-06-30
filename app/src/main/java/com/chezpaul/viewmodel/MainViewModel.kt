@@ -1,21 +1,17 @@
 package com.chezpaul.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.chezpaul.model.Commande
 
 class MainViewModel(
-    private val commandeViewModel: CommandeViewModel // Injection du CommandeViewModel
+    private val commandeViewModel: CommandeViewModel,
+    private val settingsViewModel: SettingsViewModel // Injection du SettingsViewModel
 ) : ViewModel() {
 
-    var isDarkTheme = mutableStateOf(false)
-    var platsSpeciauxState = mutableStateOf(false)
-    var ravigoteNotif = mutableStateOf(false)
-
-    fun resetAll() {
-        platsSpeciauxState.value = false
-        ravigoteNotif.value = false
-    }
+    // Délégation vers SettingsViewModel pour éviter la redondance
+    val isDarkTheme = settingsViewModel.isDarkTheme
+    val platsSpeciauxState = settingsViewModel.platsSpeciauxState
+    val ravigoteNotif = settingsViewModel.ravigoteNotif
 
     // Ajouter une commande
     fun ajouterCommande(cmd: Commande) {
@@ -25,5 +21,10 @@ class MainViewModel(
     // Supprimer une commande
     fun supprimerCommande(cmd: Commande) {
         commandeViewModel.supprimerCommande(cmd)
+    }
+
+    // Délégation vers SettingsViewModel
+    fun resetAllSettings() {
+        settingsViewModel.resetAll()
     }
 }

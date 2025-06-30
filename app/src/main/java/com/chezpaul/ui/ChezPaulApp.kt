@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -16,14 +17,27 @@ import com.chezpaul.ui.screens.BottomNavigationBar
 import com.chezpaul.ui.components.ChezPaulScreen
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.ui.theme.ChezPaulTheme
+import com.chezpaul.ui.screens.MenuModificationScreen
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.BottomNavViewModel
+import com.chezpaul.viewmodel.BoissonViewModel
+import com.chezpaul.viewmodel.PlatViewModel
+import com.chezpaul.viewmodel.SettingsViewModel
+import com.chezpaul.viewmodel.PrinterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChezPaulApp(viewModel: BottomNavViewModel) {
-    // Initialisation de commandeViewModel via viewModel() pour obtenir le ViewModel
+    // Initialisation des ViewModels
     val commandeViewModel: CommandeViewModel = viewModel()
+    val platViewModel: PlatViewModel = viewModel()
+    val boissonViewModel: BoissonViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = viewModel()
+    val printerViewModel: PrinterViewModel = viewModel()
+
+    // Observer les états d'activation depuis les ViewModels
+    val platsActivationState by platViewModel.platsActivationState.observeAsState(emptyMap())
+    val boissonsActivationState by boissonViewModel.boissonsActivationState.observeAsState(emptyMap())
 
     // Définir "accueil" comme route par défaut
     var selectedRoute by remember { mutableStateOf(viewModel.selectedRoute.value) }
@@ -72,7 +86,9 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                                 onNext = { nouvelleCommande ->
                                     commandeEnCours = nouvelleCommande
                                     showResume = true
-                                }
+                                },
+                                platsActivationState = platsActivationState,
+                                boissonsActivationState = boissonsActivationState
                             )
                         } else {
                             ResumeScreen(
@@ -129,11 +145,22 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
 
                     "groupes" -> GroupesScreen()
 
-                    "settings" -> SettingsScreen(viewModel = commandeViewModel)
+                    "settings" -> SettingsScreen(
+                        settingsViewModel = settingsViewModel,
+                        printerViewModel = printerViewModel,
+                        commandeViewModel = commandeViewModel,
+                        platViewModel = platViewModel,
+                        boissonViewModel = boissonViewModel
+                    )
 
-                    // Ajout de la route "modifier" pour ouvrir MenuModificationScreen
                     "modifier" -> {
-                        MenuModificationScreen() // Ouvre MenuModificationScreen
+                        MenuModificationScreen(
+                            platViewModel = platViewModel,
+                            boissonViewModel = boissonViewModel,
+                            onValidate = {
+                                viewModel.selectRoute("accueil")
+                            }
+                        )
                     }
                 }
             }

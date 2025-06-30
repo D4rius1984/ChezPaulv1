@@ -1,0 +1,151 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.chezpaul"
+4    android:versionCode="1"
+5    android:versionName="1.3" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <!-- Permissions réseau nécessaires -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:4:3-65
+12-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:4:20-62
+13    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+13-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:5:3-77
+13-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:5:20-74
+14    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+14-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:6:3-74
+14-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:6:20-71
+15
+16    <permission
+16-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9884291fab6288caf5eab621586880ed\transformed\core-1.13.1\AndroidManifest.xml:22:5-24:47
+17        android:name="com.chezpaul.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+17-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9884291fab6288caf5eab621586880ed\transformed\core-1.13.1\AndroidManifest.xml:23:9-81
+18        android:protectionLevel="signature" />
+18-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9884291fab6288caf5eab621586880ed\transformed\core-1.13.1\AndroidManifest.xml:24:9-44
+19
+20    <uses-permission android:name="com.chezpaul.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+20-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9884291fab6288caf5eab621586880ed\transformed\core-1.13.1\AndroidManifest.xml:26:5-97
+20-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9884291fab6288caf5eab621586880ed\transformed\core-1.13.1\AndroidManifest.xml:26:22-94
+21
+22    <application
+22-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:8:3-25:17
+23        android:allowBackup="true"
+23-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:9:7-33
+24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+24-->[androidx.core:core:1.13.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9884291fab6288caf5eab621586880ed\transformed\core-1.13.1\AndroidManifest.xml:28:18-86
+25        android:debuggable="true"
+26        android:extractNativeLibs="false"
+27        android:icon="@mipmap/ic_launcher_round"
+27-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:13:7-47
+28        android:label="Chez Paul"
+28-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:10:7-32
+29        android:supportsRtl="true"
+29-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:12:7-33
+30        android:testOnly="true"
+31        android:theme="@style/Theme.ChezPaul"
+31-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:11:7-44
+32        android:usesCleartextTraffic="true" > <!-- Modification ici -->
+32-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:14:7-42
+33
+34        <activity
+34-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:16:5-23:16
+35            android:name="com.chezpaul.ui.MainActivity"
+35-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:17:9-52
+36            android:exported="true" >
+36-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:18:9-32
+37            <intent-filter>
+37-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:19:7-22:23
+38                <action android:name="android.intent.action.MAIN" />
+38-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:20:9-61
+38-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:20:17-58
+39
+40                <category android:name="android.intent.category.LAUNCHER" />
+40-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:21:9-69
+40-->C:\Users\Lenovo\Documents\Android dev\Projects\App V1+\ChezPaul\app\src\main\AndroidManifest.xml:21:19-66
+41            </intent-filter>
+42        </activity>
+43
+44        <provider
+44-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+45            android:name="androidx.startup.InitializationProvider"
+45-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:25:13-67
+46            android:authorities="com.chezpaul.androidx-startup"
+46-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:26:13-68
+47            android:exported="false" >
+47-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:27:13-37
+48            <meta-data
+48-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+49                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+49-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:30:17-75
+50                android:value="androidx.startup" />
+50-->[androidx.emoji2:emoji2:1.3.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\cd634940704f89c8447497c7f54afff3\transformed\jetified-emoji2-1.3.0\AndroidManifest.xml:31:17-49
+51            <meta-data
+51-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\21231388a76f24be78516a6048a12853\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+52                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+52-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\21231388a76f24be78516a6048a12853\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+53                android:value="androidx.startup" />
+53-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\21231388a76f24be78516a6048a12853\transformed\jetified-lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+54            <meta-data
+54-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+55                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+55-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+56                android:value="androidx.startup" />
+56-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+57        </provider>
+58
+59        <activity
+59-->[androidx.compose.ui:ui-test-manifest:1.6.5] C:\Users\Lenovo\.gradle\caches\8.13\transforms\5026b87f83e323f9bdf3868612d6dc97\transformed\jetified-ui-test-manifest-1.6.5\AndroidManifest.xml:23:9-25:39
+60            android:name="androidx.activity.ComponentActivity"
+60-->[androidx.compose.ui:ui-test-manifest:1.6.5] C:\Users\Lenovo\.gradle\caches\8.13\transforms\5026b87f83e323f9bdf3868612d6dc97\transformed\jetified-ui-test-manifest-1.6.5\AndroidManifest.xml:24:13-63
+61            android:exported="true" />
+61-->[androidx.compose.ui:ui-test-manifest:1.6.5] C:\Users\Lenovo\.gradle\caches\8.13\transforms\5026b87f83e323f9bdf3868612d6dc97\transformed\jetified-ui-test-manifest-1.6.5\AndroidManifest.xml:25:13-36
+62        <activity
+62-->[androidx.compose.ui:ui-tooling-android:1.6.5] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8a0fa8c800d756f4da6e1a8e89b09a48\transformed\jetified-ui-tooling-release\AndroidManifest.xml:23:9-25:39
+63            android:name="androidx.compose.ui.tooling.PreviewActivity"
+63-->[androidx.compose.ui:ui-tooling-android:1.6.5] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8a0fa8c800d756f4da6e1a8e89b09a48\transformed\jetified-ui-tooling-release\AndroidManifest.xml:24:13-71
+64            android:exported="true" />
+64-->[androidx.compose.ui:ui-tooling-android:1.6.5] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8a0fa8c800d756f4da6e1a8e89b09a48\transformed\jetified-ui-tooling-release\AndroidManifest.xml:25:13-36
+65
+66        <receiver
+66-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+67            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+67-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+68            android:directBootAware="false"
+68-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+69            android:enabled="true"
+69-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+70            android:exported="true"
+70-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+71            android:permission="android.permission.DUMP" >
+71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+72            <intent-filter>
+72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+73                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+73-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+73-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+74            </intent-filter>
+75            <intent-filter>
+75-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+76                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+76-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+76-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+77            </intent-filter>
+78            <intent-filter>
+78-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+79                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+79-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+79-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+80            </intent-filter>
+81            <intent-filter>
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+82                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\8cc29488e3ce10acc9c3e4e856be28c2\transformed\jetified-profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+83            </intent-filter>
+84        </receiver>
+85    </application>
+86
+87</manifest>

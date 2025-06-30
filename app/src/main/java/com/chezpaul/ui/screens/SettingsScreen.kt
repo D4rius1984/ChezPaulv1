@@ -1,68 +1,48 @@
 package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.ui.components.*
 import com.chezpaul.ui.theme.ChezPaulColors
+import com.chezpaul.viewmodel.SettingsViewModel
+import com.chezpaul.viewmodel.PrinterViewModel
 import com.chezpaul.viewmodel.CommandeViewModel
+import com.chezpaul.viewmodel.PlatViewModel
+import com.chezpaul.viewmodel.BoissonViewModel
 
 @Composable
-fun SettingsScreen(viewModel: CommandeViewModel) {
-    var tdvDispo by remember { mutableStateOf(false) }
-    var notifRavigote by remember { mutableStateOf(false) }
-    var isDarkMode by remember { mutableStateOf(true) }
+fun SettingsScreen(
+    settingsViewModel: SettingsViewModel,
+    printerViewModel: PrinterViewModel,
+    commandeViewModel: CommandeViewModel? = null,
+    platViewModel: PlatViewModel? = null,
+    boissonViewModel: BoissonViewModel? = null
+) {
+    val context = LocalContext.current
+
+    val isPrinterEnabled by printerViewModel.isPrinterEnabled
+    val printerName by printerViewModel.printerName
+    val printerIP by printerViewModel.printerIP
+    val connectionStatus by printerViewModel.connectionStatus
+    val lastPingResult by printerViewModel.lastPingResult
+    val debugText by printerViewModel.debugText
+    val isLoading by printerViewModel.isLoading
+    val isScanning by printerViewModel.isScanning
+    val foundPrinters by printerViewModel.foundPrinters
+    val scanProgress by printerViewModel.scanProgress
 
     ChezPaulScreen(title = "Paramètres") {
+        // Section Service
         ChezPaulCard {
-            // Section Apparence
-            Text(
-                "Apparence",
-                color = ChezPaulColors.JauneMenu,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        "Thème sombre",
-                        color = ChezPaulColors.TexteBlanc,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        "Active le mode sombre pour toute l'application",
-                        color = ChezPaulColors.TexteGris,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                Switch(
-                    checked = isDarkMode,
-                    onCheckedChange = { isDarkMode = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = ChezPaulColors.JauneMenu,
-                        uncheckedThumbColor = ChezPaulColors.TexteGris,
-                        checkedTrackColor = ChezPaulColors.OrangeMenu.copy(alpha = 0.5f),
-                        uncheckedTrackColor = ChezPaulColors.FondCard
-                    )
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ChezPaulCard {
-            // Section Service
             Text(
                 "Service",
                 color = ChezPaulColors.JauneMenu,
@@ -71,86 +51,50 @@ fun SettingsScreen(viewModel: CommandeViewModel) {
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { /* Action fin de service */ }
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
+                    ) {
+                        settingsViewModel.closeService(
+                            context = context,
+                            commandeViewModel = commandeViewModel,
+                            platViewModel = platViewModel,
+                            boissonViewModel = boissonViewModel,
+                            printerViewModel = printerViewModel
+                        )
+                    }
+                    .padding(vertical = 12.dp)
             ) {
-                Column {
-                    Text(
-                        "Fin de service",
-                        color = ChezPaulColors.TexteBlanc,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        "Clôture le service en cours",
-                        color = ChezPaulColors.TexteGris,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
                 Text(
-                    "→",
-                    color = ChezPaulColors.JauneMenu,
-                    style = MaterialTheme.typography.headlineSmall
+                    "Fin de service",
+                    color = ChezPaulColors.TexteBlanc,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    "Clôture le service et réinitialise toutes les données",
+                    color = ChezPaulColors.TexteGris,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // Section Imprimante
         ChezPaulCard {
-            // Section Archivage
             Text(
-                "Archivage",
+                "Imprimante réseau",
                 color = ChezPaulColors.JauneMenu,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(12.dp))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { /* Action export */ }
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        "Exporter commandes (.csv)",
-                        color = ChezPaulColors.TexteBlanc,
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        "Génère un fichier de toutes les commandes du service",
-                        color = ChezPaulColors.TexteGris,
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-                Text(
-                    "↓",
-                    color = ChezPaulColors.JauneMenu,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ChezPaulCard {
-            // Section Menu du jour
-            Text(
-                "Menu du jour",
-                color = ChezPaulColors.JauneMenu,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
+            // Activation de l'imprimante
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -158,19 +102,19 @@ fun SettingsScreen(viewModel: CommandeViewModel) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        "Tête de veau dispo (manuel)",
+                        "Activer l'imprimante",
                         color = ChezPaulColors.TexteBlanc,
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        "Afficher/masquer le plat dans la prise de commande",
+                        "Connexion réseau vers imprimante thermique",
                         color = ChezPaulColors.TexteGris,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
                 Switch(
-                    checked = tdvDispo,
-                    onCheckedChange = { tdvDispo = it },
+                    checked = isPrinterEnabled,
+                    onCheckedChange = { printerViewModel.isPrinterEnabled.value = it },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = ChezPaulColors.JauneMenu,
                         uncheckedThumbColor = ChezPaulColors.TexteGris,
@@ -179,100 +123,295 @@ fun SettingsScreen(viewModel: CommandeViewModel) {
                     )
                 )
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            if (isPrinterEnabled) {
+                Spacer(modifier = Modifier.height(16.dp))
 
-        ChezPaulCard {
-            // Section Notifications
-            Text(
-                "Notifications",
-                color = ChezPaulColors.JauneMenu,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
+                // Configuration de l'imprimante
+                Column {
                     Text(
-                        "Notif ravigote",
-                        color = ChezPaulColors.TexteBlanc,
-                        style = MaterialTheme.typography.bodyLarge
+                        "Configuration",
+                        color = ChezPaulColors.JauneMenu,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
                     )
-                    Text(
-                        "Avertir quand une ravigote est sélectionnée",
-                        color = ChezPaulColors.TexteGris,
-                        style = MaterialTheme.typography.bodySmall
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    var tempPrinterName by remember { mutableStateOf(printerName) }
+                    var tempPrinterIP by remember { mutableStateOf(printerIP) }
+
+                    OutlinedTextField(
+                        value = tempPrinterName,
+                        onValueChange = { tempPrinterName = it },
+                        label = { Text("Nom de l'imprimante", color = ChezPaulColors.TexteGris) },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = ChezPaulColors.JauneMenu,
+                            unfocusedBorderColor = ChezPaulColors.TexteGris,
+                            focusedTextColor = ChezPaulColors.TexteBlanc,
+                            unfocusedTextColor = ChezPaulColors.TexteBlanc
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading && !isScanning
                     )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = tempPrinterIP,
+                        onValueChange = { tempPrinterIP = it },
+                        label = { Text("Adresse IP", color = ChezPaulColors.TexteGris) },
+                        placeholder = { Text("192.168.1.100", color = ChezPaulColors.TexteGris) },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = ChezPaulColors.JauneMenu,
+                            unfocusedBorderColor = ChezPaulColors.TexteGris,
+                            focusedTextColor = ChezPaulColors.TexteBlanc,
+                            unfocusedTextColor = ChezPaulColors.TexteBlanc
+                        ),
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !isLoading && !isScanning
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Button(
+                        onClick = {
+                            printerViewModel.addPrinter(tempPrinterName, tempPrinterIP)
+                        },
+                        enabled = !isLoading && !isScanning && tempPrinterName.isNotEmpty() && tempPrinterIP.isNotEmpty(),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = ChezPaulColors.JauneMenu,
+                            contentColor = ChezPaulColors.FondCard
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("Configurer l'imprimante")
+                    }
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    // Bouton scan réseau
+                    Button(
+                        onClick = {
+                            printerViewModel.scanNetworkForPrinters(context)
+                        },
+                        enabled = !isLoading && !isScanning,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = ChezPaulColors.OrangeMenu,
+                            contentColor = ChezPaulColors.TexteBlanc
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            if (isScanning) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    color = ChezPaulColors.TexteBlanc,
+                                    strokeWidth = 2.dp
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text("Scan en cours... ${scanProgress}%")
+                            } else {
+                                Text("🔍 Scanner le réseau")
+                            }
+                        }
+                    }
+
+                    // Affichage des imprimantes trouvées
+                    if (foundPrinters.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "Imprimantes trouvées:",
+                                color = ChezPaulColors.JauneMenu,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            TextButton(
+                                onClick = { printerViewModel.clearScanResults() }
+                            ) {
+                                Text(
+                                    "Effacer",
+                                    color = ChezPaulColors.TexteGris,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+
+                        foundPrinters.forEach { printer ->
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable {
+                                        printerViewModel.selectPrinter(printer)
+                                        tempPrinterIP = printer.ip
+                                        tempPrinterName = printer.name
+                                    },
+                                colors = CardDefaults.cardColors(
+                                    containerColor = ChezPaulColors.FondCard.copy(alpha = 0.7f)
+                                )
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(12.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            printer.ip,
+                                            color = ChezPaulColors.TexteBlanc,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                        Text(
+                                            "Port ${printer.port}",
+                                            color = ChezPaulColors.TexteGris,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                    Text(
+                                        "Temps de réponse: ${printer.responseTime}",
+                                        color = ChezPaulColors.TexteGris,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (printerIP.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Statut de connexion
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                "Statut:",
+                                color = ChezPaulColors.TexteGris,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (isLoading) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        color = ChezPaulColors.JauneMenu,
+                                        strokeWidth = 2.dp
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                                Text(
+                                    if (isLoading) "Test en cours..." else connectionStatus,
+                                    color = ChezPaulColors.JauneMenu,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Boutons de test
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = { printerViewModel.pingPrinter(context) },
+                                enabled = !isLoading && !isScanning,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = ChezPaulColors.OrangeMenu,
+                                    contentColor = ChezPaulColors.TexteBlanc
+                                ),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Ping")
+                            }
+
+                            Button(
+                                onClick = { printerViewModel.testPrinterConnection(context) },
+                                enabled = !isLoading && !isScanning,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = ChezPaulColors.JauneMenu,
+                                    contentColor = ChezPaulColors.FondCard
+                                ),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Test TCP")
+                            }
+
+                            Button(
+                                onClick = { printerViewModel.resetPrinter() },
+                                enabled = !isLoading && !isScanning,
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = ChezPaulColors.TexteGris,
+                                    contentColor = ChezPaulColors.TexteBlanc
+                                ),
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Reset")
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // Test d'envoi de texte
+                        var tempDebugText by remember { mutableStateOf(debugText) }
+
+                        OutlinedTextField(
+                            value = tempDebugText,
+                            onValueChange = { tempDebugText = it },
+                            label = { Text("Texte de test", color = ChezPaulColors.TexteGris) },
+                            placeholder = { Text("Test d'impression...", color = ChezPaulColors.TexteGris) },
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = ChezPaulColors.JauneMenu,
+                                unfocusedBorderColor = ChezPaulColors.TexteGris,
+                                focusedTextColor = ChezPaulColors.TexteBlanc,
+                                unfocusedTextColor = ChezPaulColors.TexteBlanc
+                            ),
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = !isLoading && !isScanning
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Button(
+                            onClick = {
+                                printerViewModel.sendDebugText(tempDebugText, context)
+                                printerViewModel.debugText.value = tempDebugText
+                            },
+                            enabled = !isLoading && !isScanning && tempDebugText.isNotEmpty(),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = ChezPaulColors.JauneMenu,
+                                contentColor = ChezPaulColors.FondCard
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Envoyer vers imprimante")
+                        }
+
+                        if (lastPingResult.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                "Résultat: $lastPingResult",
+                                color = ChezPaulColors.TexteGris,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 }
-                Switch(
-                    checked = notifRavigote,
-                    onCheckedChange = { notifRavigote = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = ChezPaulColors.JauneMenu,
-                        uncheckedThumbColor = ChezPaulColors.TexteGris,
-                        checkedTrackColor = ChezPaulColors.OrangeMenu.copy(alpha = 0.5f),
-                        uncheckedTrackColor = ChezPaulColors.FondCard
-                    )
-                )
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        ChezPaulCard {
-            // Section Historique
-            Text(
-                "Historique des services",
-                color = ChezPaulColors.JauneMenu,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Column {
-                ServiceHistoryItem("29/06/2025", "234€", 45)
-                ChezPaulDivider(modifier = Modifier.padding(vertical = 8.dp))
-                ServiceHistoryItem("28/06/2025", "567€", 78)
-                ChezPaulDivider(modifier = Modifier.padding(vertical = 8.dp))
-                ServiceHistoryItem("27/06/2025", "432€", 62)
-            }
-        }
-    }
-}
-
-@Composable
-private fun ServiceHistoryItem(date: String, total: String, couverts: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { /* Voir détails */ }
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(
-                "Date : $date",
-                color = ChezPaulColors.TexteBlanc,
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                "$couverts couverts",
-                color = ChezPaulColors.TexteGris,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-        Text(
-            total,
-            color = ChezPaulColors.JauneMenu,
-            fontWeight = FontWeight.Bold,
-            style = MaterialTheme.typography.bodyLarge
-        )
     }
 }

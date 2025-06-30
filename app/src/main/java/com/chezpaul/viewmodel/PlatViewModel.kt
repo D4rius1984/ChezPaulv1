@@ -12,8 +12,8 @@ class PlatViewModel : ViewModel() {
     private val _plats = MutableLiveData<List<PlatConfig>>()
     val plats: LiveData<List<PlatConfig>> get() = _plats
 
-    // Etat d'activation pour chaque plat
-    private val _platsActivationState = MutableLiveData<Map<String, Boolean>>(emptyMap())
+    // Etat d'activation pour chaque plat - changé en Map pour cohérence
+    private val _platsActivationState = MutableLiveData<Map<String, Boolean>>()
     val platsActivationState: LiveData<Map<String, Boolean>> get() = _platsActivationState
 
     init {
@@ -23,20 +23,30 @@ class PlatViewModel : ViewModel() {
     private fun loadPlats() {
         _plats.value = platsData // Liste statique des plats
         // Initialiser les états d'activation à true pour tous les plats par défaut
-        val initialState = platsData.associate { it.nom to true }
-        _platsActivationState.value = initialState
+        _platsActivationState.value = platsData.associate { it.nom to true }
     }
 
-    // Fonction pour activer/désactiver un plat
+    // Fonction pour activer/désactiver un plat - corrigée
     fun togglePlatActivation(platNom: String, isActivated: Boolean) {
-        // Mettre à jour l'état d'activation pour le plat
-        val updatedState = _platsActivationState.value?.toMutableMap() ?: mutableMapOf()
-        updatedState[platNom] = isActivated
-        _platsActivationState.value = updatedState
+        val currentState = _platsActivationState.value ?: emptyMap()
+        _platsActivationState.value = currentState.toMutableMap().apply {
+            this[platNom] = isActivated
+        }
     }
 
     // Fonction pour récupérer l'état d'activation d'un plat
     fun getPlatActivationState(platNom: String): Boolean {
         return _platsActivationState.value?.get(platNom) ?: true // Retourne true par défaut
+    }
+
+    // Sauvegarder l'état d'activation des plats
+    fun updatePlatActivation(updatedState: Map<String, Boolean>) {
+        _platsActivationState.value = updatedState
+    }
+
+    // **NOUVELLE MÉTHODE** - Réinitialise tous les plats (pour fin de service)
+    fun resetAllPlats() {
+        // Remet tous les plats à leur état par défaut (activés)
+        _platsActivationState.value = platsData.associate { it.nom to true }
     }
 }

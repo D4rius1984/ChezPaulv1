@@ -58,4 +58,10 @@ class CommandeViewModel : ViewModel() {
         }
         // Sinon ne fait rien (à l'UI d'afficher un message)
     }
+
+    // **NOUVELLE MÉTHODE** - Réinitialise toutes les commandes (pour fin de service)
+    fun resetAllCommandes() {
+        _commandesList.value = emptyList()
+        validerCommandeResult.value = true
+    }
 }

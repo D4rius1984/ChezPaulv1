@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorBackground">#FFEECC</color>
+    <color name="colorError">#D32F2F</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#000000</color>
+    <color name="colorPrimary">#F4A300</color>
+    <color name="colorPrimaryVariant">#E69500</color>
+    <color name="colorSecondary">#B7950B</color>
+    <color name="colorSecondaryVariant">#F1C232</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <string name="app_name">Chez Paul</string>
+    <string name="boissons">Boissons</string>
+    <string name="nouvelle_commande">Nouvelle commande</string>
+    <string name="plats">Plats</string>
+    <string name="resume">Résumé</string>
+    <string name="valider">Valider</string>
+    <string name="valider_commande">Valider la commande</string>
+    <style name="Theme.ChezPaul" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+
+        
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimaryVariant</item>
+
+        
+        <item name="android:textColorPrimary">@color/colorOnPrimary</item>
+        <item name="android:textColorSecondary">@color/colorOnSecondary</item>
+
+        
+        
+    </style>
+</resources>
