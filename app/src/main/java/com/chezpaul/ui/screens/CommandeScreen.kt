@@ -47,6 +47,14 @@ fun CommandeScreen(
     var platsSelectionnes by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
     var boissonsSelectionnees by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
 
+    // ✅ Initialiser la sélection si commande existante
+    LaunchedEffect(Unit) {
+        commande?.let {
+            platsSelectionnes = it.plats.associate { plat -> plat.nom to plat.quantite }
+            boissonsSelectionnees = it.boissons.associate { boisson -> boisson.nom to boisson.quantite }
+        }
+    }
+
     // ✅ Etat pour badge Ravigote
     val hasRavigote = platsSelectionnes.any { (nom, quantite) ->
         val plat = platsData.find { it.nom == nom }
