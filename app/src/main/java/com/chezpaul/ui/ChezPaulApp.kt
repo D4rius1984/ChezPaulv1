@@ -103,7 +103,7 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                                     showResume = false // Reviens à l'écran de commande
                                     viewModel.selectRoute("commandes")
                                 },
-                                isInCommandeFlow = true // Passer en mode "commande" si nécessaire
+                                isInCommandeFlow = true
                             )
                         }
                     }
@@ -124,12 +124,17 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                             showResume = false
                             viewModel.selectRoute("commandes")
                         },
-                        isInCommandeFlow = false // Dans "tables", on n'est pas dans le flow de commande
+                        isInCommandeFlow = false
                     )
 
                     "groupes" -> GroupesScreen()
 
                     "settings" -> SettingsScreen(viewModel = commandeViewModel)
+
+                    // Ajout de la route "modifier" pour ouvrir MenuModificationScreen
+                    "modifier" -> {
+                        MenuModificationScreen() // Ouvre MenuModificationScreen
+                    }
                 }
             }
         }

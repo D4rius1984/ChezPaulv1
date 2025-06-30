@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Groups
+import androidx.compose.material.icons.filled.Edit // Icône de stylo pour "Modifier"
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.automirrored.filled.List
@@ -40,7 +40,7 @@ fun BottomNavigationBar(
             BottomNavItem("Accueil", Icons.Filled.Home, "accueil"),
             BottomNavItem("Tables", Icons.AutoMirrored.Filled.List, "tables"),
             BottomNavItem("Ajouter", Icons.Filled.Add, "ajouter"),
-            BottomNavItem("Groupes", Icons.Filled.Groups, "groupes"),
+            BottomNavItem("Modifier", Icons.Filled.Edit, "modifier"), // Remplacer "Groupes" par "Modifier"
             BottomNavItem("Paramètres", Icons.Filled.Settings, "settings")
         )
 
