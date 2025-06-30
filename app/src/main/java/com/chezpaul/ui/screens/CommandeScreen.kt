@@ -42,22 +42,69 @@ fun CommandeScreen(
 
     var numeroTable by remember { mutableStateOf(commande?.numeroTable ?: "") }
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
-    var infosConfirmees by remember { mutableStateOf(false) }
+    var infosConfirmees by remember { mutableStateOf(commande != null) } // Auto-confirmer si c'est une modification
 
     // Remarque corrigée
     var remarqueText by remember { mutableStateOf(commande?.remarque ?: "") }
     var showRemarqueDialog by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    // Utilisation d'un state immutable pour les collections
-    var platsSelectionnes by remember { mutableStateOf(mapOf<String, Int>()) }
-    var boissonsSelectionnees by remember { mutableStateOf(mapOf<String, Int>()) }
+    // Initialisation des plats sélectionnés avec les valeurs existantes
+    var platsSelectionnes by remember {
+        mutableStateOf(
+            if (commande != null) {
+                // Convertir les plats de la commande en Map avec les abréviations comme clés
+                val platsMap = mutableMapOf<String, Int>()
+                commande.plats.forEach { plat ->
+                    // Trouver l'abréviation correspondante au nom du plat
+                    val platConfig = platsData.find { it.nom == plat.nom }
+                    if (platConfig != null) {
+                        platsMap[platConfig.abrv] = plat.quantite
+                    }
+                }
+                platsMap.toMap()
+            } else {
+                mapOf<String, Int>()
+            }
+        )
+    }
+
+    // Initialisation des boissons sélectionnées avec les valeurs existantes
+    var boissonsSelectionnees by remember {
+        mutableStateOf(
+            if (commande != null) {
+                val boissonsMap = mutableMapOf<String, Int>()
+                commande.boissons.forEach { boisson ->
+                    boissonsMap[boisson.nom] = boisson.quantite
+                }
+                boissonsMap.toMap()
+            } else {
+                mapOf<String, Int>()
+            }
+        )
+    }
 
     val ravigoteVisible = (platsSelectionnes["Tdv"] ?: 0) > 0 || (platsSelectionnes["Ldb ravigote"] ?: 0) > 0
     val totalPlats = platsSelectionnes.values.sum()
     val nbCouverts = couverts.toIntOrNull() ?: 0
 
-    var isGroupe by remember { mutableStateOf(false) }
+    // Déterminer automatiquement si c'est un groupe en fonction des plats/boissons existants
+    var isGroupe by remember {
+        mutableStateOf(
+            if (commande != null) {
+                // Vérifier si la commande existante contient des plats/boissons de groupe
+                val hasGroupePlats = commande.plats.any { plat ->
+                    platsData.find { it.nom == plat.nom }?.isGroupe == true
+                }
+                val hasGroupeBoissons = commande.boissons.any { boisson ->
+                    boissonsList.find { it.nom == boisson.nom }?.isGroupe == true
+                }
+                hasGroupePlats || hasGroupeBoissons
+            } else {
+                false
+            }
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -122,7 +169,14 @@ fun CommandeScreen(
                         )
                         Switch(
                             checked = isGroupe,
-                            onCheckedChange = { isGroupe = it },
+                            onCheckedChange = {
+                                isGroupe = it
+                                // Réinitialiser les sélections si on change le mode
+                                if (commande == null) {
+                                    platsSelectionnes = mapOf()
+                                    boissonsSelectionnees = mapOf()
+                                }
+                            },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = jauneMenu,
                                 uncheckedThumbColor = Color.Gray,
@@ -190,49 +244,49 @@ fun CommandeScreen(
                     }
 
                     // Boite de dialogue animée pour la remarque (champ auto-focus)
-                    if (showRemarqueDialog) {
-                        AnimatedVisibility(
-                            visible = showRemarqueDialog,
-                            enter = fadeIn(animationSpec = tween(250)) + scaleIn(initialScale = 0.8f, animationSpec = tween(250)),
-                            exit = fadeOut(animationSpec = tween(200)) + scaleOut(targetScale = 0.7f, animationSpec = tween(200))
-                        ) {
-                            AlertDialog(
-                                onDismissRequest = {
-                                    showRemarqueDialog = false
-                                    focusManager.clearFocus()
-                                },
-                                title = { Text("Remarque pour la table", color = orangeMenu) },
-                                text = {
-                                    OutlinedTextField(
-                                        value = remarqueText,
-                                        onValueChange = { remarqueText = it },
-                                        label = { Text("Ajouter/modifier une remarque") },
-                                        singleLine = false,
-                                        modifier = Modifier.fillMaxWidth()
-                                            .fillMaxWidth()
-                                            .background(Color(0xFF292929), RoundedCornerShape(8.dp)), // Fond gris foncé
-                                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                                            focusedBorderColor = orangeMenu,      // Bordure quand le champ est focalisé
-                                            unfocusedBorderColor = Color.Gray,    // Bordure quand le champ n'est pas focalisé
-                                            focusedLabelColor = orangeMenu,       // Couleur de l'étiquette quand le champ est focalisé
-                                            unfocusedLabelColor = Color.Gray,     // Couleur de l'étiquette quand le champ n'est pas focalisé
-                                            cursorColor = orangeMenu,             // Couleur du curseur
-                                        )
+                    AnimatedVisibility(
+                        visible = showRemarqueDialog,
+                        enter = fadeIn(animationSpec = tween(250)) + scaleIn(initialScale = 0.8f, animationSpec = tween(250)),
+                        exit = fadeOut(animationSpec = tween(200)) + scaleOut(targetScale = 0.7f, animationSpec = tween(200))
+                    ) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                showRemarqueDialog = false
+                                focusManager.clearFocus()
+                            },
+                            title = { Text("Remarque pour la table", color = orangeMenu) },
+                            text = {
+                                OutlinedTextField(
+                                    value = remarqueText,
+                                    onValueChange = { remarqueText = it },
+                                    label = { Text("Ajouter/modifier une remarque") },
+                                    singleLine = false,
+                                    modifier = Modifier.fillMaxWidth()
+                                        .fillMaxWidth()
+                                        .background(Color(0xFF292929), RoundedCornerShape(8.dp)), // Fond gris foncé
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = orangeMenu,
+                                        unfocusedBorderColor = Color.Gray,
+                                        focusedLabelColor = orangeMenu,
+                                        unfocusedLabelColor = Color.Gray,
+                                        cursorColor = orangeMenu,
+                                        focusedTextColor = Color.White,
+                                        unfocusedTextColor = Color.White
                                     )
-                                },
-                                confirmButton = {
-                                    TextButton(
-                                        onClick = {
-                                            showRemarqueDialog = false
-                                            focusManager.clearFocus()
-                                        }
-                                    ) { Text("OK", color = orangeMenu) }
-                                },
-                                containerColor = Color(0xFF292929),
-                                tonalElevation = 10.dp,
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                        }
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(
+                                    onClick = {
+                                        showRemarqueDialog = false
+                                        focusManager.clearFocus()
+                                    }
+                                ) { Text("OK", color = orangeMenu) }
+                            },
+                            containerColor = Color(0xFF292929),
+                            tonalElevation = 10.dp,
+                            shape = RoundedCornerShape(16.dp)
+                        )
                     }
 
                     TabRow(
@@ -355,7 +409,8 @@ fun CommandeScreen(
                                         nombreCouverts = nbCouverts,
                                         plats = platsCommandes,
                                         boissons = boissonsCommandes,
-                                        remarque = remarqueText
+                                        remarque = remarqueText,
+                                        isGroupe = isGroupe
                                     )
                                 )
                             },
@@ -409,7 +464,6 @@ fun CommandeScreen(
                                                 CategorieBoisson.DIGESTIFS -> "Digestifs"
                                                 CategorieBoisson.VINS -> "Vins"
                                                 CategorieBoisson.CAFES -> "Cafés"
-                                                else -> "Autres"
                                             },
                                             style = MaterialTheme.typography.titleSmall,
                                             color = jauneMenu,
@@ -474,7 +528,8 @@ fun CommandeScreen(
                                         nombreCouverts = nbCouverts,
                                         plats = platsCommandes,
                                         boissons = boissonsCommandes,
-                                        remarque = remarqueText
+                                        remarque = remarqueText,
+                                        isGroupe = isGroupe
                                     )
                                 )
                             },

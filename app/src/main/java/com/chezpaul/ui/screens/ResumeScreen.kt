@@ -1,11 +1,14 @@
 package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,7 +30,8 @@ fun ResumeScreen(
     isInCommandeFlow: Boolean // Nouveau paramètre pour gérer le flow
 ) {
     val jauneMenu = Color(0xFFFFE066)
-    var expanded by remember { mutableStateOf(false) }
+    val bottomSheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
     var selectedCommande by remember { mutableStateOf<Commande?>(null) }
 
     Column(
@@ -72,6 +76,22 @@ fun ResumeScreen(
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleMedium
                             )
+                            // Badge Groupe si nécessaire
+                            if (commande.isGroupe == true) {
+                                Spacer(Modifier.width(12.dp))
+                                Surface(
+                                    color = jauneMenu,
+                                    shape = RoundedCornerShape(6.dp)
+                                ) {
+                                    Text(
+                                        "Groupe",
+                                        color = Color(0xFF222222),
+                                        fontWeight = FontWeight.Bold,
+                                        style = MaterialTheme.typography.labelSmall,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                    )
+                                }
+                            }
                         }
                         Spacer(Modifier.height(10.dp))
 
@@ -102,6 +122,14 @@ fun ResumeScreen(
                         } else {
                             Text("Aucune boisson", color = Color.Gray)
                         }
+
+                        // Affichage des remarques
+                        if (!commande.remarque.isNullOrBlank()) {
+                            Spacer(Modifier.height(8.dp))
+                            Text("Remarque :", color = Color.White, style = MaterialTheme.typography.titleSmall)
+                            Text(commande.remarque, color = Color.White)
+                        }
+
                         Spacer(Modifier.height(18.dp))
                         Button(
                             onClick = onValide,
@@ -156,40 +184,40 @@ fun ResumeScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier.fillMaxWidth()
                                     ) {
-                                        Text(
-                                            "Table ${cmd.numeroTable} - ${cmd.nombreCouverts} couverts",
-                                            color = jauneMenu,
-                                            fontWeight = FontWeight.SemiBold,
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
                                             modifier = Modifier.weight(1f)
-                                        )
+                                        ) {
+                                            Text(
+                                                "Table ${cmd.numeroTable} - ${cmd.nombreCouverts} couverts",
+                                                color = jauneMenu,
+                                                fontWeight = FontWeight.SemiBold
+                                            )
+                                            // Badge Groupe si nécessaire
+                                            if (cmd.isGroupe == true) {
+                                                Spacer(Modifier.width(8.dp))
+                                                Surface(
+                                                    color = jauneMenu,
+                                                    shape = RoundedCornerShape(4.dp)
+                                                ) {
+                                                    Text(
+                                                        "Groupe",
+                                                        color = Color(0xFF222222),
+                                                        fontWeight = FontWeight.Bold,
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                                    )
+                                                }
+                                            }
+                                        }
                                         IconButton(onClick = {
-                                            expanded = !expanded
                                             selectedCommande = cmd
+                                            showBottomSheet = true
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.MoreVert,
-                                                contentDescription = "Options"
-                                            )
-                                        }
-                                        DropdownMenu(
-                                            expanded = expanded && selectedCommande == cmd,
-                                            onDismissRequest = { expanded = false }
-                                        ) {
-                                            DropdownMenuItem(
-                                                text = { Text("Supprimer") },
-                                                onClick = {
-                                                    expanded = false
-                                                    // Supprime la commande
-                                                    onSupprimeTable(cmd)
-                                                }
-                                            )
-                                            DropdownMenuItem(
-                                                text = { Text("Modifier") },
-                                                onClick = {
-                                                    expanded = false
-                                                    // Relance le flow de commande avec les informations actuelles
-                                                    onModifieTable(cmd)
-                                                }
+                                                contentDescription = "Options",
+                                                tint = Color.White
                                             )
                                         }
                                     }
@@ -202,14 +230,26 @@ fun ResumeScreen(
                                             Text("⚡ Ravigote", color = jauneMenu)
                                         }
                                     } else {
-                                        Text("Aucun plat", color = Color.Gray)
+                                        Text("Plats : Aucun plat", color = Color.Gray)
                                     }
                                     if (cmd.boissons.isNotEmpty()) {
                                         Text(
                                             "Boissons : " + cmd.boissons.joinToString { "${it.nom} x${it.quantite}" },
                                             color = Color.White
                                         )
+                                    } else {
+                                        Text("Boissons : Aucune boisson", color = Color.Gray)
                                     }
+
+                                    // Affichage des remarques dans la liste
+                                    if (!cmd.remarque.isNullOrBlank()) {
+                                        Text(
+                                            "Remarque : ${cmd.remarque}",
+                                            color = Color.White.copy(alpha = 0.8f),
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+
                                     HorizontalDivider(
                                         modifier = Modifier.padding(vertical = 4.dp),
                                         thickness = 0.7.dp,
@@ -219,6 +259,103 @@ fun ResumeScreen(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+
+    // Bottom Sheet Modal
+    if (showBottomSheet && selectedCommande != null) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+                selectedCommande = null
+            },
+            sheetState = bottomSheetState,
+            containerColor = Color(0xFF292929),
+            contentColor = Color.White,
+            dragHandle = {
+                Surface(
+                    modifier = Modifier
+                        .padding(vertical = 11.dp)
+                        .size(width = 32.dp, height = 4.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color(0xFF666666)
+                ) {}
+            }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                // Titre de la commande
+                Text(
+                    text = "Table ${selectedCommande!!.numeroTable}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = jauneMenu,
+                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
+                )
+
+                HorizontalDivider(
+                    thickness = 0.5.dp,
+                    color = Color(0x33FFFFFF),
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Option Modifier
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showBottomSheet = false
+                            onModifieTable(selectedCommande!!)
+                            selectedCommande = null
+                        }
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Modifier",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color.White
+                    )
+                }
+
+                // Option Supprimer
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            showBottomSheet = false
+                            onSupprimeTable(selectedCommande!!)
+                            selectedCommande = null
+                        }
+                        .padding(horizontal = 24.dp, vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = null,
+                        tint = Color(0xFFFF6B6B),
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Supprimer",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color(0xFFFF6B6B)
+                    )
                 }
             }
         }

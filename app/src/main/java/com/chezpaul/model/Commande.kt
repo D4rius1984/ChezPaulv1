@@ -5,5 +5,6 @@ data class Commande(
     val nombreCouverts: Int,
     val plats: List<Plat>,
     val boissons: List<Boisson>,
-    val remarque: String? = null
+    val remarque: String? = null,
+    val isGroupe: Boolean = false
 )
