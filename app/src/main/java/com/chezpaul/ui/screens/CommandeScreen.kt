@@ -34,21 +34,24 @@ fun CommandeScreen(
     val orangeMenu = Color(0xFFEDA637)
     val commandeViewModel: CommandeViewModel = viewModel()
 
-    // Etat pour l'écran d'initialisation
     var initDone by remember { mutableStateOf(commande != null) }
 
-    // Champs initiaux
     var numeroTable by remember { mutableStateOf(commande?.numeroTable ?: "") }
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
     var isGroupe by remember { mutableStateOf(commande?.isGroupe ?: false) }
 
-    // Champs commande
     var selectedTab by remember { mutableIntStateOf(1) }
     val tabTitles = listOf("Plats", "Boissons")
     var remarqueText by remember { mutableStateOf(commande?.remarque ?: "") }
     var showRemarqueDialog by remember { mutableStateOf(false) }
     var platsSelectionnes by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
     var boissonsSelectionnees by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
+
+    // ✅ Etat pour badge Ravigote
+    val hasRavigote = platsSelectionnes.any { (nom, quantite) ->
+        val plat = platsData.find { it.nom == nom }
+        plat?.contientRavigote == true && quantite > 0
+    }
 
     Column(
         modifier = Modifier
@@ -133,7 +136,6 @@ fun CommandeScreen(
                 }
             }
         } else {
-            // 🔥 Ajout des filtres
             val platsFiltres = platsData.filter { if (isGroupe) it.isGroupe else it.isNonGroupe }
             val boissonsFiltres = boissonsList.filter { if (isGroupe) it.isGroupe else it.isNonGroupe }
 
@@ -160,7 +162,7 @@ fun CommandeScreen(
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
-                        Spacer(Modifier.width(8.dp)) // Espace entre les deux badges
+                        Spacer(Modifier.width(8.dp))
                         Surface(
                             color = jauneMenu.copy(alpha = 0.15f),
                             shape = RoundedCornerShape(10.dp)
@@ -173,8 +175,7 @@ fun CommandeScreen(
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
-
-                    Spacer(Modifier.width(10.dp))
+                        Spacer(Modifier.width(10.dp))
                         Surface(
                             color = orangeMenu.copy(alpha = 0.2f),
                             shape = RoundedCornerShape(10.dp)
@@ -183,6 +184,26 @@ fun CommandeScreen(
                                 modifier = Modifier.size(32.dp)
                             ) {
                                 Icon(Icons.Default.Edit, contentDescription = "Remarque", tint = jauneMenu)
+                            }
+                        }
+
+                        // ✅ Badge animé Ravigote
+                        AnimatedVisibility(
+                            visible = hasRavigote,
+                            enter = fadeIn() + scaleIn(initialScale = 0.8f),
+                            exit = fadeOut() + scaleOut(targetScale = 0.7f)
+                        ) {
+                            Surface(
+                                color = orangeMenu.copy(alpha = 0.3f),
+                                shape = RoundedCornerShape(10.dp),
+                                modifier = Modifier.padding(start = 8.dp)
+                            ) {
+                                Text(
+                                    "Ravigote ⚡",
+                                    color = orangeMenu,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                )
                             }
                         }
                     }
