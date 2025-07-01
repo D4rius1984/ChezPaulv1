@@ -30,13 +30,12 @@ import com.chezpaul.viewmodel.CommandeViewModel
 fun CommandeScreen(
     commande: Commande? = null,
     onNext: (Commande) -> Unit = {},
-    platsActivationState: Map<String, Boolean>, // Ajout pour l'état des plats
-    boissonsActivationState: Map<String, Boolean> // Ajout pour l'état des boissons
+    platsActivationState: Map<String, Boolean>,
+    boissonsActivationState: Map<String, Boolean>
 ) {
     val jauneMenu = Color(0xFFFFE066)
     val orangeMenu = Color(0xFFEDA637)
     val commandeViewModel: CommandeViewModel = viewModel()
-
 
     var initDone by remember { mutableStateOf(commande != null) }
 
@@ -52,10 +51,15 @@ fun CommandeScreen(
     var boissonsSelectionnees by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
 
     // Initialiser la sélection si commande existante
-    LaunchedEffect(Unit) {
-        commande?.let {
-            platsSelectionnes = it.plats.associate { plat -> plat.nom to plat.quantite }
-            boissonsSelectionnees = it.boissons.associate { boisson -> boisson.nom to boisson.quantite }
+    LaunchedEffect(commande) {
+        if (commande != null) {
+            numeroTable = commande.numeroTable
+            couverts = commande.nombreCouverts.toString()
+            isGroupe = commande.isGroupe
+            remarqueText = commande.remarque ?: ""
+            platsSelectionnes = commande.plats.associate { plat -> plat.nom to plat.quantite }
+            boissonsSelectionnees = commande.boissons.associate { boisson -> boisson.nom to boisson.quantite }
+            initDone = true
         }
     }
 
@@ -94,7 +98,7 @@ fun CommandeScreen(
             .padding(12.dp)
     ) {
         Text(
-            "Commande",
+            if (commande != null) "Modifier commande" else "Commande",
             style = MaterialTheme.typography.headlineSmall,
             color = jauneMenu,
             fontWeight = FontWeight.Bold,
@@ -305,18 +309,18 @@ fun CommandeScreen(
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             IconButton(onClick = {
                                                 if (count > 0) {
-                                                    boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
-                                                        it[boisson.nom] = count - 1
-                                                    }
+                                                    val newMap = boissonsSelectionnees.toMutableMap()
+                                                    newMap[boisson.nom] = count - 1
+                                                    boissonsSelectionnees = newMap
                                                 }
                                             }) {
                                                 Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                             }
                                             Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                             IconButton(onClick = {
-                                                boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
-                                                    it[boisson.nom] = count + 1
-                                                }
+                                                val newMap = boissonsSelectionnees.toMutableMap()
+                                                newMap[boisson.nom] = count + 1
+                                                boissonsSelectionnees = newMap
                                             }) {
                                                 Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                             }
@@ -339,28 +343,28 @@ fun CommandeScreen(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         IconButton(onClick = {
                                             if (count > 0) {
-                                                platsSelectionnes = platsSelectionnes.toMutableMap().also {
-                                                    it[plat.nom] = count - 1
-                                                }
+                                                val newMap = platsSelectionnes.toMutableMap()
+                                                newMap[plat.nom] = count - 1
+                                                platsSelectionnes = newMap
                                             }
                                         }) {
                                             Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                         }
                                         Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                         IconButton(
-                                            enabled = peutAjouterPlat,
+                                            enabled = peutAjouterPlat || plat.nom.lowercase() == "cervelle",
                                             onClick = {
-                                                if (peutAjouterPlat) {
-                                                    platsSelectionnes = platsSelectionnes.toMutableMap().also {
-                                                        it[plat.nom] = count + 1
-                                                    }
+                                                if (peutAjouterPlat || plat.nom.lowercase() == "cervelle") {
+                                                    val newMap = platsSelectionnes.toMutableMap()
+                                                    newMap[plat.nom] = count + 1
+                                                    platsSelectionnes = newMap
                                                 }
                                             }
                                         ) {
                                             Icon(
                                                 Icons.Default.Add,
                                                 contentDescription = "Ajouter",
-                                                tint = if (peutAjouterPlat) jauneMenu else Color.Gray
+                                                tint = if (peutAjouterPlat || plat.nom.lowercase() == "cervelle") jauneMenu else Color.Gray
                                             )
                                         }
                                     }
@@ -376,7 +380,7 @@ fun CommandeScreen(
                     val newCommande = Commande(
                         numeroTable = numeroTable,
                         nombreCouverts = nbCouvertsInt,
-                        plats = platsSelectionnes.map { (nom, quantite) ->
+                        plats = platsSelectionnes.filter { it.value > 0 }.map { (nom, quantite) ->
                             val platConfig = platsData.find { it.nom == nom }
                             Plat(
                                 nom = nom,
@@ -384,7 +388,7 @@ fun CommandeScreen(
                                 contientRavigote = platConfig?.contientRavigote ?: false
                             )
                         },
-                        boissons = boissonsSelectionnees.map { (nom, quantite) ->
+                        boissons = boissonsSelectionnees.filter { it.value > 0 }.map { (nom, quantite) ->
                             val config = boissonsList.find { it.nom == nom }
                             Boisson(
                                 nom = nom,
@@ -392,7 +396,7 @@ fun CommandeScreen(
                                 categorie = config?.categorie ?: CategorieBoisson.SOFTS
                             )
                         },
-                        remarque = remarqueText,
+                        remarque = remarqueText.takeIf { it.isNotBlank() },
                         isGroupe = isGroupe
                     )
                     commandeViewModel.validerCommande(newCommande)

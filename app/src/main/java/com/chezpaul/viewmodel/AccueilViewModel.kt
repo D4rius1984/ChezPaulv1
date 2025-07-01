@@ -9,33 +9,33 @@ class AccueilViewModel(
     private val commandeViewModel: CommandeViewModel // Injection du CommandeViewModel
 ) : ViewModel() {
 
-    // Liste des commandes
+    // Liste des commandes - MAINTENANT UTILISÉ
     val commandesList: State<List<Commande>> = commandeViewModel.commandesList
 
-    // Calcul du total des couverts
+    // Calcul du total des couverts - MAINTENANT UTILISÉ
     val totalCouverts: Int
-        get() = commandesList.value.sumOf { it.nombreCouverts }
+        @Composable get() = commandesList.value.sumOf { it.nombreCouverts }
 
-    // Calcul des boissons par catégorie
+    // Calcul des boissons par catégorie - MAINTENANT UTILISÉ
     val boissonsParCategorie: Map<CategorieBoisson, Int>
-        get() {
+        @Composable get() {
             val categories = listOf(
-                CategorieBoisson.APEROS to "Apéros",
-                CategorieBoisson.VINS to "Vins",
-                CategorieBoisson.DIGESTIFS to "Digestifs",
-                CategorieBoisson.BIERES to "Bières",
-                CategorieBoisson.SOFTS to "Softs"
+                CategorieBoisson.APEROS,
+                CategorieBoisson.VINS,
+                CategorieBoisson.DIGESTIFS,
+                CategorieBoisson.BIERES,
+                CategorieBoisson.SOFTS
             )
-            return categories.associate { (catEnum, _) ->
-                catEnum to commandesList.value.flatMap { commande ->
+            return categories.associateWith { catEnum ->
+                commandesList.value.flatMap { commande ->
                     commande.boissons.filter { it.categorie == catEnum }
                 }.sumOf { it.quantite }
             }
         }
 
-    // Calcul du nombre de ravigotes
+    // Calcul du nombre de ravigotes - MAINTENANT UTILISÉ
     val nombreRavigotes: Int
-        get() = commandesList.value.count { commande ->
+        @Composable get() = commandesList.value.count { commande ->
             commande.plats.any { plat ->
                 plat.contientRavigote || plat.nom.contains("tête de veau", ignoreCase = true)
             }

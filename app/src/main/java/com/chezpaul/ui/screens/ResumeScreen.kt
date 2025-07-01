@@ -19,21 +19,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
 import com.chezpaul.ui.theme.ChezPaulColors
+import com.chezpaul.viewmodel.ResumeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResumeScreen(
+    resumeViewModel: ResumeViewModel,
     commande: Commande?,
     onValide: () -> Unit,
-    commandesList: List<Commande>,
     onSupprimeTable: (Commande) -> Unit,
     onModifieTable: (Commande) -> Unit,
     isInCommandeFlow: Boolean // Nouveau paramètre pour gérer le flow
 ) {
     val jauneMenu = Color(0xFFFFE066)
+
+    // Observer les données du ViewModel
+    val commandesList by resumeViewModel.commandesList
+    val showBottomSheet by resumeViewModel.showBottomSheet
+    val selectedCommande by resumeViewModel.selectedCommande
+
     val bottomSheetState = rememberModalBottomSheetState()
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedCommande by remember { mutableStateOf<Commande?>(null) }
 
     Column(
         modifier = Modifier
@@ -44,7 +49,7 @@ fun ResumeScreen(
         Text(
             "Résumé de la commande",
             style = MaterialTheme.typography.headlineSmall,
-            color = ChezPaulColors.JauneMenu,  // Changé de 'tint' à 'color'
+            color = ChezPaulColors.JauneMenu,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 20.dp)
         )
@@ -212,8 +217,7 @@ fun ResumeScreen(
                                             }
                                         }
                                         IconButton(onClick = {
-                                            selectedCommande = cmd
-                                            showBottomSheet = true
+                                            resumeViewModel.toggleBottomSheet(cmd)
                                         }) {
                                             Icon(
                                                 imageVector = Icons.Default.MoreVert,
@@ -269,8 +273,7 @@ fun ResumeScreen(
     if (showBottomSheet && selectedCommande != null) {
         ModalBottomSheet(
             onDismissRequest = {
-                showBottomSheet = false
-                selectedCommande = null
+                resumeViewModel.toggleBottomSheet(null)
             },
             sheetState = bottomSheetState,
             containerColor = Color(0xFF292929),
@@ -312,9 +315,10 @@ fun ResumeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            showBottomSheet = false
-                            onModifieTable(selectedCommande!!)
-                            selectedCommande = null
+                            selectedCommande?.let { commande ->
+                                resumeViewModel.toggleBottomSheet(null)
+                                onModifieTable(commande)
+                            }
                         }
                         .padding(horizontal = 24.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -338,9 +342,10 @@ fun ResumeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            showBottomSheet = false
-                            onSupprimeTable(selectedCommande!!)
-                            selectedCommande = null
+                            selectedCommande?.let { commande ->
+                                resumeViewModel.deleteCommande(commande)
+                                onSupprimeTable(commande)
+                            }
                         }
                         .padding(horizontal = 24.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically

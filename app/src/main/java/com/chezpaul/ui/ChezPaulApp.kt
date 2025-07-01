@@ -20,22 +20,28 @@ import com.chezpaul.viewmodel.BoissonViewModel
 import com.chezpaul.viewmodel.PlatViewModel
 import com.chezpaul.viewmodel.SettingsViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
+import com.chezpaul.viewmodel.AccueilViewModel
+import com.chezpaul.viewmodel.ResumeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChezPaulApp(viewModel: BottomNavViewModel) {
-    // Initialisation des ViewModels
+    // Initialisation des ViewModels principaux
     val commandeViewModel: CommandeViewModel = viewModel()
     val platViewModel: PlatViewModel = viewModel()
     val boissonViewModel: BoissonViewModel = viewModel()
     val settingsViewModel: SettingsViewModel = viewModel()
     val printerViewModel: PrinterViewModel = viewModel()
 
+    // ViewModels spécialisés qui dépendent du CommandeViewModel
+    val accueilViewModel = AccueilViewModel(commandeViewModel)
+    val resumeViewModel = ResumeViewModel(commandeViewModel)
+
     // Observer les états d'activation depuis les ViewModels
     val platsActivationState by platViewModel.platsActivationState.observeAsState(emptyMap())
     val boissonsActivationState by boissonViewModel.boissonsActivationState.observeAsState(emptyMap())
 
-    // Définir "accueil" comme route par défaut
+    // State pour la navigation et le flow de commande
     var selectedRoute by remember { mutableStateOf(viewModel.selectedRoute.value) }
     var commandeEnCours by remember { mutableStateOf<Commande?>(null) }
     var showResume by remember { mutableStateOf(false) }
@@ -50,7 +56,6 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     selectedRoute = selectedRoute,
                     onItemSelected = { route ->
                         if (route == "ajouter") {
-                            // Quand on clique sur +, on va à commandes
                             commandeEnCours = null
                             showResume = false
                             viewModel.selectRoute("commandes")
@@ -59,7 +64,6 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                         }
                     },
                     onAddClick = {
-                        // Quand on clique sur le bouton +
                         commandeEnCours = null
                         showResume = false
                         viewModel.selectRoute("commandes")
@@ -73,7 +77,9 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     .fillMaxSize()
             ) {
                 when (selectedRoute) {
-                    "accueil" -> AccueilScreen(commandesList = commandeViewModel.commandesList.value)
+                    "accueil" -> AccueilScreen(
+                        accueilViewModel = accueilViewModel
+                    )
 
                     "commandes" -> {
                         if (!showResume) {
@@ -88,31 +94,24 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                             )
                         } else {
                             ResumeScreen(
+                                resumeViewModel = resumeViewModel,
                                 commande = commandeEnCours,
-                                commandesList = commandeViewModel.commandesList.value,
                                 onValide = {
-                                    if (commandeEnCours != null) {
-                                        // Si c'est une modif, retire l'ancienne commande pour éviter les doublons
-                                        commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter { commande ->
-                                            commande.numeroTable != commandeEnCours!!.numeroTable
-                                        }
-                                        commandeViewModel.commandesList.value = commandeViewModel.commandesList.value + commandeEnCours!!
+                                    commandeEnCours?.let { commande ->
+                                        resumeViewModel.validateCommande(commande)
                                         commandeEnCours = null
                                         showResume = false
-                                        // Retour à l'accueil après validation
                                         viewModel.selectRoute("accueil")
                                     }
                                 },
                                 onSupprimeTable = { commandeASupprimer ->
-                                    // Supprimer la commande de la liste
-                                    commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter {
-                                        it != commandeASupprimer
-                                    }
+                                    resumeViewModel.deleteCommande(commandeASupprimer)
                                 },
                                 onModifieTable = { commandeAModifier ->
-                                    // Relancer le flow de commande en conservant la commande existante
+                                    // Supprimer l'ancienne version avant de modifier
+                                    resumeViewModel.deleteCommande(commandeAModifier)
                                     commandeEnCours = commandeAModifier
-                                    showResume = false // Reviens à l'écran de commande
+                                    showResume = false
                                     viewModel.selectRoute("commandes")
                                 },
                                 isInCommandeFlow = true
@@ -121,25 +120,21 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     }
 
                     "tables" -> ResumeScreen(
+                        resumeViewModel = resumeViewModel,
                         commande = null,
-                        commandesList = commandeViewModel.commandesList.value,
                         onValide = {},
                         onSupprimeTable = { commandeASupprimer ->
-                            // Supprimer la commande de la liste
-                            commandeViewModel.commandesList.value = commandeViewModel.commandesList.value.filter {
-                                it != commandeASupprimer
-                            }
+                            resumeViewModel.deleteCommande(commandeASupprimer)
                         },
                         onModifieTable = { commandeAModifier ->
-                            // Lorsque l'on modifie, on charge la commande en cours
+                            // Supprimer l'ancienne version avant de modifier
+                            resumeViewModel.deleteCommande(commandeAModifier)
                             commandeEnCours = commandeAModifier
                             showResume = false
                             viewModel.selectRoute("commandes")
                         },
                         isInCommandeFlow = false
                     )
-
-                    "groupes" -> GroupesScreen()
 
                     "settings" -> SettingsScreen(
                         settingsViewModel = settingsViewModel,
@@ -160,16 +155,6 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     }
                 }
             }
-        }
-    }
-}
-
-// ---- Ecran Groupes temporaire (à personnaliser plus tard) ----
-@Composable
-fun GroupesScreen() {
-    ChezPaulScreen(title = "Groupes") {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Écran Groupes (à faire)", color = ChezPaulColors.TexteBlanc)
         }
     }
 }

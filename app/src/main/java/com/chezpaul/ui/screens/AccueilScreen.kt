@@ -14,16 +14,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.R
-import com.chezpaul.model.Commande
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.ui.components.*
 import com.chezpaul.ui.theme.ChezPaulColors
+import com.chezpaul.viewmodel.AccueilViewModel
 
 @Composable
 fun AccueilScreen(
-    commandesList: List<Commande>
+    accueilViewModel: AccueilViewModel
 ) {
-    val totalCouverts = commandesList.sumOf { it.nombreCouverts }
+    // Observer les données depuis le ViewModel
+    val commandesList by accueilViewModel.commandesList
+    val totalCouverts = accueilViewModel.totalCouverts
+    val boissonsParCategorie = accueilViewModel.boissonsParCategorie
+    val nombreRavigotes = accueilViewModel.nombreRavigotes
+
     // Associe enum et label d'affichage
     val categories = listOf(
         CategorieBoisson.APEROS to "Apéros",
@@ -32,15 +37,6 @@ fun AccueilScreen(
         CategorieBoisson.BIERES to "Bières",
         CategorieBoisson.SOFTS to "Softs"
     )
-    // Compte en utilisant les enums (plus d'erreur d'accent)
-    val boissonsParCategorie = categories.associate { (catEnum, _) ->
-        catEnum to commandesList.flatMap { it.boissons }
-            .filter { it.categorie == catEnum }
-            .sumOf { it.quantite }
-    }
-    val nombreRavigotes = commandesList.count { commande ->
-        commande.plats.any { it.contientRavigote || it.nom.contains("tête de veau", ignoreCase = true) }
-    }
 
     ChezPaulScreen(title = "") { // Titre vide pour gérer nous-mêmes le header
         // Header compact avec logo à côté d'Accueil
