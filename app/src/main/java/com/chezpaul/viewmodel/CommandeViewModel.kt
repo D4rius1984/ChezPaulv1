@@ -11,8 +11,9 @@ class CommandeViewModel : ViewModel() {
     // Etat pour résultat validation (true = ok, false = erreur)
     val validerCommandeResult = mutableStateOf(true)
 
-    // Constante nom cervelle (pour éviter string "magique")
+    // Constantes pour les plats illimités
     private val nomCervelle = "cervelle"
+    private val nomStMarcelin = "st marcelin"
 
     // Ajouter une nouvelle commande
     fun ajouterCommande(cmd: Commande) {
@@ -31,16 +32,27 @@ class CommandeViewModel : ViewModel() {
         _commandesList.value = _commandesList.value.filterNot { it.numeroTable == cmd.numeroTable }
     }
 
-    // Validation : 1 couvert = 1 plat sauf cervelle illimitée
+    // Validation adaptée : permet boissons seules OU plats selon la règle 1 couvert = 1 plat
     fun verifierPlatsSelonCouverts(cmd: Commande): Boolean {
         val nbCouverts = cmd.nombreCouverts
+        val aDesPlats = cmd.plats.isNotEmpty()
+        val aDesBoissons = cmd.boissons.isNotEmpty()
 
-        // Somme des plats hors cervelle
-        val totalPlats = cmd.plats
-            .filter { it.nom.lowercase() != nomCervelle }
-            .sumOf { it.quantite }
+        // Cas 1: Seulement des boissons = toujours OK
+        if (!aDesPlats && aDesBoissons) {
+            return true
+        }
 
-        return totalPlats == nbCouverts
+        // Cas 2: Des plats (avec ou sans boissons) = vérifier la règle 1 couvert = 1 plat
+        if (aDesPlats) {
+            val totalPlats = cmd.plats
+                .filter { it.nom.lowercase() != nomCervelle && it.nom.lowercase() != nomStMarcelin }
+                .sumOf { it.quantite }
+            return totalPlats == nbCouverts
+        }
+
+        // Cas 3: Ni plats ni boissons = pas valide
+        return false
     }
 
     // Valider une commande : ajoute/modifie seulement si la validation passe

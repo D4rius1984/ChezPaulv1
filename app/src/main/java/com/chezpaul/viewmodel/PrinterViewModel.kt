@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.*
+import com.chezpaul.model.Commande
 
 class PrinterViewModel : ViewModel() {
     var isPrinterEnabled = mutableStateOf(false)
@@ -49,6 +50,81 @@ class PrinterViewModel : ViewModel() {
         } catch (e: Exception) {
             false
         }
+    }
+
+    // NOUVELLE MÉTHODE - Impression des commandes
+    fun printCommande(commande: Commande, context: Context) {
+        if (!isPrinterEnabled.value || printerIP.value.isEmpty()) {
+            Toast.makeText(context, "Imprimante non configurée", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val ticketText = formatTicket(commande)
+
+        isLoading.value = true
+        viewModelScope.launch {
+            try {
+                val result = withContext(Dispatchers.IO) {
+                    sendTextToPrinter(printerIP.value, ticketText)
+                }
+
+                if (result.success) {
+                    Toast.makeText(context, "✅ Impression réussie !", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(context, "❌ Impression impossible", Toast.LENGTH_SHORT).show()
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(context, "❌ Impression impossible", Toast.LENGTH_SHORT).show()
+            } finally {
+                isLoading.value = false
+            }
+        }
+    }
+
+    // NOUVELLE MÉTHODE - Formatage du ticket
+    private fun formatTicket(commande: Commande): String {
+        val builder = StringBuilder()
+
+        // Header
+        builder.append("\n")
+        builder.append("TABLE ${commande.numeroTable} - ${commande.nombreCouverts} COUVERTS")
+        if (commande.isGroupe) {
+            builder.append(" \"GROUPE\"")
+        }
+        builder.append("\n\n")
+
+        // Plats
+        if (commande.plats.isNotEmpty()) {
+            builder.append("PLATS :\n")
+            commande.plats.forEach { plat ->
+                builder.append("${plat.quantite} ${plat.nom}")
+                if (plat.contientRavigote) {
+                    builder.append(" (RAVIGOTE)")
+                }
+                builder.append("\n")
+            }
+            builder.append("\n")
+        }
+
+        // Boissons
+        if (commande.boissons.isNotEmpty()) {
+            builder.append("BOISSONS :\n")
+            commande.boissons.forEach { boisson ->
+                builder.append("${boisson.quantite} ${boisson.nom}\n")
+            }
+            builder.append("\n")
+        }
+
+        // Remarque
+        if (!commande.remarque.isNullOrBlank()) {
+            builder.append("REMARQUE : ${commande.remarque}\n\n")
+        }
+
+        // Footer
+        builder.append("****************MERCI LA CUISINE <3***************\n\n\n")
+
+        return builder.toString()
     }
 
     fun pingPrinter(context: Context? = null) {

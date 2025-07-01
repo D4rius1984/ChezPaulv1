@@ -90,7 +90,8 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                                     showResume = true
                                 },
                                 platsActivationState = platsActivationState,
-                                boissonsActivationState = boissonsActivationState
+                                boissonsActivationState = boissonsActivationState,
+                                printerViewModel = printerViewModel // Ajout du PrinterViewModel
                             )
                         } else {
                             ResumeScreen(

@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.filled.Print
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -21,9 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.*
 import com.chezpaul.viewmodel.CommandeViewModel
+import com.chezpaul.viewmodel.PrinterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
@@ -31,17 +34,25 @@ fun CommandeScreen(
     commande: Commande? = null,
     onNext: (Commande) -> Unit = {},
     platsActivationState: Map<String, Boolean>,
-    boissonsActivationState: Map<String, Boolean>
+    boissonsActivationState: Map<String, Boolean>,
+    printerViewModel: PrinterViewModel // Ajout du PrinterViewModel
 ) {
     val jauneMenu = Color(0xFFFFE066)
     val orangeMenu = Color(0xFFEDA637)
     val commandeViewModel: CommandeViewModel = viewModel()
+    val context = LocalContext.current
+
+    // Observer l'état de l'imprimante
+    val isPrinterEnabled by printerViewModel.isPrinterEnabled
+    val printerName by printerViewModel.printerName
+    val isLoading by printerViewModel.isLoading
 
     var initDone by remember { mutableStateOf(commande != null) }
 
     var numeroTable by remember { mutableStateOf(commande?.numeroTable ?: "") }
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
     var isGroupe by remember { mutableStateOf(commande?.isGroupe ?: false) }
+    var shouldPrint by remember { mutableStateOf(false) } // Switch pour l'impression
 
     var selectedTab by remember { mutableIntStateOf(1) }
     val tabTitles = listOf("Plats", "Boissons")
@@ -69,15 +80,27 @@ fun CommandeScreen(
         plat?.contientRavigote == true && quantite > 0
     }
 
-    // Calcul du total des plats hors cervelle
+    // Calcul du total des plats hors cervelle et st marcelin
     val totalPlatsHorsCervelle = platsSelectionnes.entries
-        .filter { (nom, _) -> nom.lowercase() != "cervelle" }
+        .filter { (nom, _) ->
+            nom.lowercase() != "cervelle" && nom.lowercase() != "st marcelin"
+        }
         .sumOf { it.value }
 
     val nbCouvertsInt = couverts.toIntOrNull() ?: 0
 
     val peutAjouterPlat = totalPlatsHorsCervelle < nbCouvertsInt
-    val boutonValiderActif = totalPlatsHorsCervelle == nbCouvertsInt && numeroTable.isNotBlank()
+
+    // Logique de validation : soit plats respectent la règle, soit juste des boissons, soit les deux
+    val aDesPlats = platsSelectionnes.any { it.value > 0 }
+    val aDesBoissons = boissonsSelectionnees.any { it.value > 0 }
+    val platsRespectentRegle = totalPlatsHorsCervelle == nbCouvertsInt
+
+    val boutonValiderActif = numeroTable.isNotBlank() && (
+            (!aDesPlats && aDesBoissons) ||  // Seulement boissons = OK
+                    (aDesPlats && platsRespectentRegle) ||  // Plats respectent la règle = OK
+                    (aDesPlats && aDesBoissons && platsRespectentRegle)  // Les deux = OK
+            )
 
     // Filtrer les plats et boissons selon l'activation ET le type de commande (groupe/non-groupe)
     val platsFiltres = platsData.filter { plat ->
@@ -145,6 +168,8 @@ fun CommandeScreen(
                         )
                     )
                     Spacer(Modifier.height(12.dp))
+
+                    // Switch Groupe
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -158,6 +183,54 @@ fun CommandeScreen(
                             )
                         )
                     }
+
+                    Spacer(Modifier.height(8.dp))
+
+                    // Switch Impression - NOUVEAU
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    Icons.Default.Print,
+                                    contentDescription = "Impression",
+                                    tint = if (isPrinterEnabled && printerName.isNotEmpty()) jauneMenu else Color.Gray,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(
+                                    "Imprimer en cuisine",
+                                    color = if (isPrinterEnabled && printerName.isNotEmpty()) jauneMenu else Color.Gray
+                                )
+                            }
+                            if (isPrinterEnabled && printerName.isNotEmpty()) {
+                                Text(
+                                    printerName,
+                                    color = Color.Gray,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            } else {
+                                Text(
+                                    "Aucune imprimante configurée",
+                                    color = Color.Gray,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                        Switch(
+                            checked = shouldPrint,
+                            onCheckedChange = { shouldPrint = it },
+                            enabled = isPrinterEnabled && printerName.isNotEmpty(),
+                            colors = SwitchDefaults.colors(
+                                checkedThumbColor = jauneMenu,
+                                checkedTrackColor = jauneMenu.copy(alpha = 0.5f),
+                                disabledCheckedThumbColor = Color.Gray,
+                                disabledUncheckedThumbColor = Color.Gray
+                            )
+                        )
+                    }
+
                     Spacer(Modifier.height(16.dp))
                     Button(
                         onClick = { initDone = true },
@@ -233,6 +306,33 @@ fun CommandeScreen(
                                         remarqueText.take(8) + if (remarqueText.length > 8) "..." else "",
                                         style = MaterialTheme.typography.labelLarge,
                                         color = jauneMenu,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                        // Badge Impression si activé
+                        if (shouldPrint && isPrinterEnabled && printerName.isNotEmpty()) {
+                            Spacer(Modifier.width(8.dp))
+                            Surface(
+                                color = orangeMenu.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Print,
+                                        contentDescription = "Impression activée",
+                                        tint = orangeMenu,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(Modifier.width(4.dp))
+                                    Text(
+                                        "Print",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = orangeMenu,
                                         fontWeight = FontWeight.Bold
                                     )
                                 }
@@ -352,9 +452,9 @@ fun CommandeScreen(
                                         }
                                         Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                         IconButton(
-                                            enabled = peutAjouterPlat || plat.nom.lowercase() == "cervelle",
+                                            enabled = peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin",
                                             onClick = {
-                                                if (peutAjouterPlat || plat.nom.lowercase() == "cervelle") {
+                                                if (peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin") {
                                                     val newMap = platsSelectionnes.toMutableMap()
                                                     newMap[plat.nom] = count + 1
                                                     platsSelectionnes = newMap
@@ -364,7 +464,7 @@ fun CommandeScreen(
                                             Icon(
                                                 Icons.Default.Add,
                                                 contentDescription = "Ajouter",
-                                                tint = if (peutAjouterPlat || plat.nom.lowercase() == "cervelle") jauneMenu else Color.Gray
+                                                tint = if (peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin") jauneMenu else Color.Gray
                                             )
                                         }
                                     }
@@ -373,6 +473,26 @@ fun CommandeScreen(
                         }
                     }
                 }
+            }
+
+            // Texte d'aide pour les règles de validation
+            if (initDone) {
+                Text(
+                    text = when {
+                        !aDesPlats && !aDesBoissons -> "Sélectionnez au moins des plats ou des boissons"
+                        aDesPlats && totalPlatsHorsCervelle != nbCouvertsInt ->
+                            "Règle: 1 plat = 1 couvert (${totalPlatsHorsCervelle}/${nbCouvertsInt}). Cervelle et St Marcelin illimités."
+                        !aDesPlats && aDesBoissons -> "Boissons seules: validation possible ✓"
+                        else -> "Prêt à valider ✓"
+                    },
+                    color = when {
+                        !aDesPlats && !aDesBoissons -> Color.Gray
+                        aDesPlats && totalPlatsHorsCervelle != nbCouvertsInt -> Color(0xFFFF6B6B)
+                        else -> jauneMenu
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
             }
 
             Button(
@@ -399,10 +519,16 @@ fun CommandeScreen(
                         remarque = remarqueText.takeIf { it.isNotBlank() },
                         isGroupe = isGroupe
                     )
+
+                    // Impression si demandée (non bloquant !)
+                    if (shouldPrint && isPrinterEnabled && printerName.isNotEmpty()) {
+                        printerViewModel.printCommande(newCommande, context)
+                    }
+
                     commandeViewModel.validerCommande(newCommande)
                     onNext(newCommande)
                 },
-                enabled = boutonValiderActif,
+                enabled = boutonValiderActif && !isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp),
@@ -412,7 +538,25 @@ fun CommandeScreen(
                     contentColor = Color.Black
                 )
             ) {
-                Text("Valider la sélection", fontWeight = FontWeight.Bold)
+                if (isLoading) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(16.dp),
+                            color = Color.Black,
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(Modifier.width(8.dp))
+                        Text("Impression...", fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    val buttonText = when {
+                        !aDesPlats && aDesBoissons -> "Valider (boissons uniquement)"
+                        aDesPlats && aDesBoissons -> "Valider (plats + boissons)"
+                        aDesPlats && !aDesBoissons -> "Valider (plats uniquement)"
+                        else -> "Valider la sélection"
+                    }
+                    Text(buttonText, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }

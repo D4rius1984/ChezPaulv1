@@ -24,5 +24,6 @@ val platsData = listOf(
     PlatConfig("Boudin", "Boudin", false, false, true, isActivated = true),
     PlatConfig("Piece du B", "Piece du B", false, false, true, isActivated = true),
     PlatConfig("Végétarien", "Vegetarien", false, true, true, isActivated = true),
-    PlatConfig("Cervelle", "Cervelle", false, true, false, isActivated = true)
+    PlatConfig("Cervelle", "Cervelle", false, true, true, isActivated = true),
+    PlatConfig("St Marcelin", "St Marcelin", false, true, true, isActivated = true),
 )
