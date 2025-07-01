@@ -22,6 +22,8 @@ import com.chezpaul.viewmodel.BoissonViewModel
 import com.chezpaul.viewmodel.PlatViewModel
 import com.chezpaul.model.BoissonConfig
 import com.chezpaul.model.PlatConfig
+import com.chezpaul.model.CategorieBoisson
+import com.chezpaul.model.displayName
 
 @Composable
 fun MenuModificationScreen(
@@ -34,6 +36,7 @@ fun MenuModificationScreen(
 
     // Onglets et leur état sélectionné
     var selectedTab by remember { mutableStateOf(0) } // 0 = Plats, 1 = Boissons
+    var isGroupePreview by remember { mutableStateOf(false) } // Toggle pour prévisualiser groupe/non-groupe
 
     // Observer les données et états depuis les ViewModels
     val plats by platViewModel.plats.observeAsState(emptyList())
@@ -49,42 +52,86 @@ fun MenuModificationScreen(
         isPlats: Boolean,
         items: List<Any>,
         activationState: Map<String, Boolean>,
-        toggleActivation: (String, Boolean) -> Unit
+        toggleActivation: (String, Boolean) -> Unit,
+        isGroupeMode: Boolean
     ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(12.dp)
         ) {
-            items(items) { item ->
-                // Casting explicite pour PlatConfig ou BoissonConfig
-                val itemName = if (isPlats) {
-                    (item as PlatConfig).nom
-                } else {
-                    (item as BoissonConfig).nom
+            if (isPlats) {
+                // Pour les plats, filtrer selon le mode groupe/non-groupe
+                val platsFiltres = items.map { it as PlatConfig }.filter { plat ->
+                    if (isGroupeMode) plat.isGroupe else plat.isNonGroupe
                 }
 
-                // Si l'élément n'a pas d'état, on assume qu'il est activé par défaut
-                val isActivated = activationState[itemName] ?: true
+                items(platsFiltres) { plat ->
+                    val isActivated = activationState[plat.nom] ?: true
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = itemName,
-                        modifier = Modifier.weight(1f),
-                        color = Color.White
-                    )
-                    Checkbox(
-                        checked = isActivated,
-                        onCheckedChange = { checked ->
-                            toggleActivation(itemName, checked)
-                        },
-                        colors = CheckboxDefaults.colors(checkedColor = jauneMenu)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = plat.nom,
+                            modifier = Modifier.weight(1f),
+                            color = Color.White
+                        )
+                        Checkbox(
+                            checked = isActivated,
+                            onCheckedChange = { checked ->
+                                toggleActivation(plat.nom, checked)
+                            },
+                            colors = CheckboxDefaults.colors(checkedColor = jauneMenu)
+                        )
+                    }
+                }
+            } else {
+                // Pour les boissons, filtrer selon le mode ET grouper par catégorie
+                val boissonsFiltrees = items.map { it as BoissonConfig }.filter { boisson ->
+                    if (isGroupeMode) boisson.isGroupe else boisson.isNonGroupe
+                }
+                val boissonsByCategory = boissonsFiltrees.groupBy { it.categorie }
+
+                boissonsByCategory.forEach { (categorie, boissonsDeCategorie) ->
+                    // Header de catégorie
+                    item {
+                        Text(
+                            text = categorie.displayName,
+                            color = jauneMenu,
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(vertical = 12.dp)
+                        )
+                    }
+
+                    // Boissons de cette catégorie
+                    items(boissonsDeCategorie) { boisson ->
+                        val isActivated = activationState[boisson.nom] ?: true
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = boisson.nom,
+                                modifier = Modifier.weight(1f),
+                                color = Color.White
+                            )
+                            Checkbox(
+                                checked = isActivated,
+                                onCheckedChange = { checked ->
+                                    toggleActivation(boisson.nom, checked)
+                                },
+                                colors = CheckboxDefaults.colors(checkedColor = jauneMenu)
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -121,6 +168,45 @@ fun MenuModificationScreen(
             )
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Switch pour prévisualiser le menu groupe/non-groupe
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Prévisualisation menu :",
+                color = Color.White,
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    "Non-groupe",
+                    color = if (!isGroupePreview) jauneMenu else Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Switch(
+                    checked = isGroupePreview,
+                    onCheckedChange = { isGroupePreview = it },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = jauneMenu,
+                        checkedTrackColor = jauneMenu.copy(alpha = 0.5f)
+                    )
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    "Groupe",
+                    color = if (isGroupePreview) jauneMenu else Color.Gray,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(12.dp))
 
         // Card layout for Plat and Boisson selections
@@ -141,7 +227,8 @@ fun MenuModificationScreen(
                         activationState = platsActivationState,
                         toggleActivation = { platNom, isActivated ->
                             platViewModel.togglePlatActivation(platNom, isActivated)
-                        }
+                        },
+                        isGroupeMode = isGroupePreview
                     )
                 } else {
                     generateItemList(
@@ -150,7 +237,8 @@ fun MenuModificationScreen(
                         activationState = boissonsActivationState,
                         toggleActivation = { boissonNom, isActivated ->
                             boissonViewModel.toggleBoissonActivation(boissonNom, isActivated)
-                        }
+                        },
+                        isGroupeMode = isGroupePreview
                     )
                 }
             }

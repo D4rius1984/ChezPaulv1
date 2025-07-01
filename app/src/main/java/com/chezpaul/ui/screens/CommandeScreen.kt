@@ -2,6 +2,7 @@ package com.chezpaul.ui.screens
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -74,9 +75,17 @@ fun CommandeScreen(
     val peutAjouterPlat = totalPlatsHorsCervelle < nbCouvertsInt
     val boutonValiderActif = totalPlatsHorsCervelle == nbCouvertsInt && numeroTable.isNotBlank()
 
-    // Filtrer les plats et boissons selon l'activation
-    val platsFiltres = platsData.filter { plat -> platsActivationState[plat.nom] ?: true }
-    val boissonsFiltres = boissonsList.filter { boisson -> boissonsActivationState[boisson.nom] ?: true }
+    // Filtrer les plats et boissons selon l'activation ET le type de commande (groupe/non-groupe)
+    val platsFiltres = platsData.filter { plat ->
+        val isActivated = platsActivationState[plat.nom] ?: true
+        val isAvailableForCurrentType = if (isGroupe) plat.isGroupe else plat.isNonGroupe
+        isActivated && isAvailableForCurrentType
+    }
+    val boissonsFiltres = boissonsList.filter { boisson ->
+        val isActivated = boissonsActivationState[boisson.nom] ?: true
+        val isAvailableForCurrentType = if (isGroupe) boisson.isGroupe else boisson.isNonGroupe
+        isActivated && isAvailableForCurrentType
+    }
 
     Column(
         modifier = Modifier
@@ -197,6 +206,50 @@ fun CommandeScreen(
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
+                        Spacer(Modifier.width(8.dp))
+                        // Badge Remarque cliquable
+                        Surface(
+                            color = jauneMenu.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.clickable { showRemarqueDialog = true }
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                Icon(
+                                    Icons.Default.Edit,
+                                    contentDescription = "Ajouter remarque",
+                                    tint = jauneMenu,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                if (remarqueText.isNotBlank()) {
+                                    Spacer(Modifier.width(6.dp))
+                                    Text(
+                                        remarqueText.take(8) + if (remarqueText.length > 8) "..." else "",
+                                        style = MaterialTheme.typography.labelLarge,
+                                        color = jauneMenu,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                        // Badge Ravigote si des plats avec ravigote sont sélectionnés
+                        if (hasRavigote) {
+                            Spacer(Modifier.width(8.dp))
+                            Surface(
+                                color = orangeMenu.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(
+                                    "⚡ Ravigote !",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = orangeMenu,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                )
+                            }
+                        }
                     }
 
                     TabRow(
@@ -223,38 +276,56 @@ fun CommandeScreen(
 
                     LazyColumn {
                         if (selectedTab == 1) {
-                            items(boissonsFiltres) { boisson ->
-                                val count = boissonsSelectionnees[boisson.nom] ?: 0
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp),
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(boisson.nom, color = Color.White, modifier = Modifier.weight(1f))
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        IconButton(onClick = {
-                                            if (count > 0) {
-                                                boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
-                                                    it[boisson.nom] = count - 1
+                            // Grouper les boissons par catégorie
+                            val boissonsByCategory = boissonsFiltres.groupBy { it.categorie }
+
+                            boissonsByCategory.forEach { (categorie, boissonsDeCategorie) ->
+                                // Header de catégorie
+                                item {
+                                    Text(
+                                        text = categorie.displayName,
+                                        color = orangeMenu,
+                                        fontWeight = FontWeight.Bold,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        modifier = Modifier.padding(vertical = 8.dp)
+                                    )
+                                }
+
+                                // Boissons de cette catégorie
+                                items(boissonsDeCategorie) { boisson ->
+                                    val count = boissonsSelectionnees[boisson.nom] ?: 0
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(boisson.nom, color = Color.White, modifier = Modifier.weight(1f))
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            IconButton(onClick = {
+                                                if (count > 0) {
+                                                    boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
+                                                        it[boisson.nom] = count - 1
+                                                    }
                                                 }
+                                            }) {
+                                                Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                             }
-                                        }) {
-                                            Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
-                                        }
-                                        Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
-                                        IconButton(onClick = {
-                                            boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
-                                                it[boisson.nom] = count + 1
+                                            Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
+                                            IconButton(onClick = {
+                                                boissonsSelectionnees = boissonsSelectionnees.toMutableMap().also {
+                                                    it[boisson.nom] = count + 1
+                                                }
+                                            }) {
+                                                Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                             }
-                                        }) {
-                                            Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                         }
                                     }
                                 }
                             }
                         } else {
+                            // Code existant pour les plats
                             items(platsFiltres) { plat ->
                                 val count = platsSelectionnes[plat.nom] ?: 0
                                 Row(
@@ -340,5 +411,50 @@ fun CommandeScreen(
                 Text("Valider la sélection", fontWeight = FontWeight.Bold)
             }
         }
+    }
+
+    // Dialog pour les remarques
+    if (showRemarqueDialog) {
+        AlertDialog(
+            onDismissRequest = { showRemarqueDialog = false },
+            title = {
+                Text("Remarque pour la table $numeroTable", color = jauneMenu)
+            },
+            text = {
+                OutlinedTextField(
+                    value = remarqueText,
+                    onValueChange = { remarqueText = it },
+                    label = { Text("Votre remarque") },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = jauneMenu,
+                        unfocusedBorderColor = Color.Gray,
+                        focusedLabelColor = jauneMenu,
+                        unfocusedLabelColor = Color.Gray,
+                        cursorColor = jauneMenu
+                    ),
+                    maxLines = 3
+                )
+            },
+            confirmButton = {
+                Button(
+                    onClick = { showRemarqueDialog = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = jauneMenu,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showRemarqueDialog = false }) {
+                    Text("Annuler", color = Color.Gray)
+                }
+            },
+            containerColor = Color(0xFF292929),
+            titleContentColor = jauneMenu,
+            textContentColor = Color.White
+        )
     }
 }
