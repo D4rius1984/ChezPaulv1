@@ -21,7 +21,8 @@ class AccueilViewModel(
         @Composable get() {
             val categories = listOf(
                 CategorieBoisson.APEROS,
-                CategorieBoisson.VINS,
+                CategorieBoisson.VINS_FONTAINE,
+                CategorieBoisson.VINS_BOUTEILLES,
                 CategorieBoisson.DIGESTIFS,
                 CategorieBoisson.BIERES,
                 CategorieBoisson.SOFTS

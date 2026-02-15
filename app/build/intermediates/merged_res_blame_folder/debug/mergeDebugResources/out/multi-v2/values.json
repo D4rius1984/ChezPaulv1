@@ -95,20 +95,22 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\App V1+\\ChezPaul\\app\\src\\main\\res\\values\\colors.xml",
+                    "source": "C:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\src\\main\\res\\values\\styles.xml",
                     "from": {
-                        "startLines": "10,12,4,8,2,3,6,7,11",
-                        "startColumns": "4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "624,818,244,522,63,147,341,426,711",
-                        "endColumns": "49,44,48,50,46,53,48,55,46",
-                        "endOffsets": "669,858,288,568,105,196,385,477,753"
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "127",
+                        "endLines": "20",
+                        "endColumns": "12",
+                        "endOffsets": "1256"
                     },
                     "to": {
-                        "startLines": "545,546,547,548,549,550,551,552,553",
-                        "startColumns": "4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "28475,28525,28570,28619,28670,28717,28771,28820,28876",
-                        "endColumns": "49,44,48,50,46,53,48,55,46",
-                        "endOffsets": "28520,28565,28614,28665,28712,28766,28815,28871,28918"
+                        "startLines": "5863",
+                        "startColumns": "4",
+                        "startOffsets": "400381",
+                        "endLines": "5881",
+                        "endColumns": "12",
+                        "endOffsets": "401168"
                     }
                 },
                 {
@@ -283,25 +285,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\App V1+\\ChezPaul\\app\\src\\main\\res\\values\\styles.xml",
-                    "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "127",
-                        "endLines": "20",
-                        "endColumns": "12",
-                        "endOffsets": "1256"
-                    },
-                    "to": {
-                        "startLines": "5863",
-                        "startColumns": "4",
-                        "startOffsets": "400381",
-                        "endLines": "5881",
-                        "endColumns": "12",
-                        "endOffsets": "401168"
-                    }
-                },
-                {
                     "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\ad75ecf2153223cfdb97ff32437e4a5f\\transformed\\recyclerview-1.1.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
@@ -318,6 +301,23 @@
                         "endLines": "410,921,922,923,931,932,933,1447,10824",
                         "endColumns": "55,58,47,55,74,75,71,65,24",
                         "endOffsets": "20921,54473,54521,54577,55263,55339,55411,91803,673150"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1,5,2,6,7,3,4",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "18,246,67,294,336,133,179",
+                        "endColumns": "46,45,63,39,41,43,64",
+                        "endOffsets": "60,287,126,329,373,172,239"
+                    },
+                    "to": {
+                        "startLines": "1623,1625,1815,1823,1826,1835,1836",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "102379,102576,124062,124998,125142,125638,125682",
+                        "endColumns": "46,45,63,39,41,43,64",
+                        "endOffsets": "102421,102617,124121,125033,125179,125677,125742"
                     }
                 },
                 {
@@ -354,23 +354,6 @@
                         "startOffsets": "91688,92839",
                         "endColumns": "53,66",
                         "endOffsets": "91737,92901"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Lenovo\\Documents\\Android dev\\Projects\\App V1+\\ChezPaul\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1,5,2,6,7,3,4",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "18,246,67,294,336,133,179",
-                        "endColumns": "46,45,63,39,41,43,64",
-                        "endOffsets": "60,287,126,329,373,172,239"
-                    },
-                    "to": {
-                        "startLines": "1623,1625,1815,1823,1826,1835,1836",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "102379,102576,124062,124998,125142,125638,125682",
-                        "endColumns": "46,45,63,39,41,43,64",
-                        "endOffsets": "102421,102617,124121,125033,125179,125677,125742"
                     }
                 },
                 {
@@ -475,6 +458,23 @@
                         "startOffsets": "91461,91501,92796,93087,93142,94638,94692,94744,94793,94854",
                         "endColumns": "39,46,42,54,46,53,51,48,60,49",
                         "endOffsets": "91496,91543,92834,93137,93184,94687,94739,94788,94849,94899"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\src\\main\\res\\values\\colors.xml",
+                    "from": {
+                        "startLines": "10,12,4,8,2,3,6,7,11",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "624,818,244,522,63,147,341,426,711",
+                        "endColumns": "49,44,48,50,46,53,48,55,46",
+                        "endOffsets": "669,858,288,568,105,196,385,477,753"
+                    },
+                    "to": {
+                        "startLines": "545,546,547,548,549,550,551,552,553",
+                        "startColumns": "4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "28475,28525,28570,28619,28670,28717,28771,28820,28876",
+                        "endColumns": "49,44,48,50,46,53,48,55,46",
+                        "endOffsets": "28520,28565,28614,28665,28712,28766,28815,28871,28918"
                     }
                 }
             ]

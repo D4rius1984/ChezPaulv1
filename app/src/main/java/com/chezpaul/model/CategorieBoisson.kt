@@ -5,7 +5,8 @@ enum class CategorieBoisson {
     DIGESTIFS,
     BIERES,
     SOFTS,
-    VINS,
+    VINS_FONTAINE,
+    VINS_BOUTEILLES,
     CAFES
 }
 
@@ -15,6 +16,7 @@ val CategorieBoisson.displayName: String
         CategorieBoisson.DIGESTIFS -> "Digestifs"
         CategorieBoisson.BIERES -> "Bières"
         CategorieBoisson.SOFTS -> "Softs"
-        CategorieBoisson.VINS -> "Vins"
+        CategorieBoisson.VINS_FONTAINE -> "Vins Fontaine"
+        CategorieBoisson.VINS_BOUTEILLES -> "Vins Bouteilles"
         CategorieBoisson.CAFES -> "Cafés"
     }

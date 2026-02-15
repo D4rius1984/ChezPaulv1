@@ -395,34 +395,51 @@ fun CommandeScreen(
                                     )
                                 }
 
-                                // Boissons de cette catégorie
-                                items(boissonsDeCategorie) { boisson ->
-                                    val count = boissonsSelectionnees[boisson.nom] ?: 0
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(vertical = 4.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        Text(boisson.nom, color = Color.White, modifier = Modifier.weight(1f))
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            IconButton(onClick = {
-                                                if (count > 0) {
-                                                    val newMap = boissonsSelectionnees.toMutableMap()
-                                                    newMap[boisson.nom] = count - 1
-                                                    boissonsSelectionnees = newMap
+                                // Grouper par sous-catégorie si présente
+                                val parSousCategorie = boissonsDeCategorie.groupBy { it.sousCategorie }
+
+                                parSousCategorie.forEach { (sousCat, boissons) ->
+                                    // Afficher le sous-header si une sous-catégorie existe
+                                    if (sousCat != null) {
+                                        item {
+                                            Text(
+                                                text = sousCat,
+                                                color = jauneMenu.copy(alpha = 0.7f),
+                                                fontWeight = FontWeight.SemiBold,
+                                                style = MaterialTheme.typography.bodyMedium,
+                                                modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 2.dp)
+                                            )
+                                        }
+                                    }
+
+                                    items(boissons) { boisson ->
+                                        val count = boissonsSelectionnees[boisson.nom] ?: 0
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(vertical = 4.dp),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.SpaceBetween
+                                        ) {
+                                            Text(boisson.nom, color = Color.White, modifier = Modifier.weight(1f))
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                IconButton(onClick = {
+                                                    if (count > 0) {
+                                                        val newMap = boissonsSelectionnees.toMutableMap()
+                                                        newMap[boisson.nom] = count - 1
+                                                        boissonsSelectionnees = newMap
+                                                    }
+                                                }) {
+                                                    Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
                                                 }
-                                            }) {
-                                                Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
-                                            }
-                                            Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
-                                            IconButton(onClick = {
-                                                val newMap = boissonsSelectionnees.toMutableMap()
-                                                newMap[boisson.nom] = count + 1
-                                                boissonsSelectionnees = newMap
-                                            }) {
-                                                Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
+                                                Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
+                                                IconButton(onClick = {
+                                                    val newMap = boissonsSelectionnees.toMutableMap()
+                                                    newMap[boisson.nom] = count + 1
+                                                    boissonsSelectionnees = newMap
+                                                }) {
+                                                    Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
+                                                }
                                             }
                                         }
                                     }

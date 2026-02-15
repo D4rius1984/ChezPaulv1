@@ -32,7 +32,8 @@ fun AccueilScreen(
     // Associe enum et label d'affichage
     val categories = listOf(
         CategorieBoisson.APEROS to "Apéros",
-        CategorieBoisson.VINS to "Vins",
+        CategorieBoisson.VINS_FONTAINE to "Vins Fontaine",
+        CategorieBoisson.VINS_BOUTEILLES to "Vins Bouteilles",
         CategorieBoisson.DIGESTIFS to "Digestifs",
         CategorieBoisson.BIERES to "Bières",
         CategorieBoisson.SOFTS to "Softs"
