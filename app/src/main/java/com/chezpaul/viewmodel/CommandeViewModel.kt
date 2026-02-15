@@ -15,16 +15,16 @@ class CommandeViewModel : ViewModel() {
     private val nomCervelle = "cervelle"
     private val nomStMarcelin = "st marcelin"
 
-    // Ajouter une nouvelle commande
+    // Ajouter une nouvelle commande (triée par numéro de table)
     fun ajouterCommande(cmd: Commande) {
-        _commandesList.value = _commandesList.value + cmd
+        _commandesList.value = (_commandesList.value + cmd).sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
     }
 
-    // Modifier une commande existante
+    // Modifier une commande existante (triée par numéro de table)
     fun modifierCommande(cmd: Commande) {
         _commandesList.value = _commandesList.value.map { commande ->
             if (commande.numeroTable == cmd.numeroTable) cmd else commande
-        }
+        }.sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
     }
 
     // Supprimer une commande
