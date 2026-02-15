@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocalDrink
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.TableBar
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -141,11 +142,31 @@ fun AccueilScreen(
         // CARD : Tables ouvertes (liste mini)
         ChezPaulCard {
             Column {
-                Text(
-                    "Tables ouvertes (${commandesList.size})",
-                    color = ChezPaulColors.TexteBlanc,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.TableBar,
+                        contentDescription = null,
+                        tint = ChezPaulColors.JauneMenu,
+                        modifier = Modifier.size(30.dp)
+                    )
+                    Spacer(Modifier.width(14.dp))
+                    Column {
+                        Text(
+                            "Tables ouvertes",
+                            color = ChezPaulColors.TexteBlanc,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            "${commandesList.size}",
+                            color = ChezPaulColors.JauneMenu,
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
                 Spacer(Modifier.height(8.dp))
                 commandesList.forEach { cmd ->
                     Row(
