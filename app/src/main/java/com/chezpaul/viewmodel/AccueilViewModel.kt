@@ -41,4 +41,25 @@ class AccueilViewModel(
                 plat.contientRavigote || plat.nom.contains("tête de veau", ignoreCase = true)
             }
         }
+
+    // Prix du menu par couvert
+    companion object {
+        const val PRIX_MENU = 32.0
+    }
+
+    // CA Plats = couverts qui ont des plats x 32€
+    val caPlats: Double
+        @Composable get() = commandesList.value
+            .filter { it.plats.isNotEmpty() }
+            .sumOf { it.nombreCouverts * PRIX_MENU }
+
+    // CA Boissons = somme de (quantité x prix) pour chaque boisson
+    val caBoissons: Double
+        @Composable get() = commandesList.value
+            .flatMap { it.boissons }
+            .sumOf { it.quantite * it.prix }
+
+    // CA Total
+    val caTotal: Double
+        @Composable get() = caPlats + caBoissons
 }

@@ -530,7 +530,8 @@ fun CommandeScreen(
                             Boisson(
                                 nom = nom,
                                 quantite = quantite,
-                                categorie = config?.categorie ?: CategorieBoisson.SOFTS
+                                categorie = config?.categorie ?: CategorieBoisson.SOFTS,
+                                prix = config?.prix ?: 0.0
                             )
                         },
                         remarque = remarqueText.takeIf { it.isNotBlank() },

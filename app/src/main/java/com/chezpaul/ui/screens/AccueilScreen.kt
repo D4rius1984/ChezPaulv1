@@ -2,6 +2,7 @@ package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Euro
 import androidx.compose.material.icons.filled.LocalDrink
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Star
@@ -10,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.CategorieBoisson
@@ -22,13 +22,11 @@ import com.chezpaul.viewmodel.AccueilViewModel
 fun AccueilScreen(
     accueilViewModel: AccueilViewModel
 ) {
-    // Observer les données depuis le ViewModel
     val commandesList by accueilViewModel.commandesList
     val totalCouverts = accueilViewModel.totalCouverts
     val boissonsParCategorie = accueilViewModel.boissonsParCategorie
     val nombreRavigotes = accueilViewModel.nombreRavigotes
 
-    // Associe enum et label d'affichage
     val categories = listOf(
         CategorieBoisson.APEROS to "Apéros",
         CategorieBoisson.VINS_FONTAINE to "Vins Fontaine",
@@ -40,36 +38,63 @@ fun AccueilScreen(
 
     ChezPaulScreen(title = "Accueil") {
 
-        // CARD : Total couverts
-        ChezPaulCard {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    Icons.Default.People,
-                    contentDescription = null,
-                    tint = ChezPaulColors.JauneMenu,
-                    modifier = Modifier.size(34.dp)
-                )
-                Spacer(Modifier.width(18.dp))
-                Column {
-                    Text(
-                        "Couverts totaux",
-                        color = ChezPaulColors.TexteBlanc,
-                        style = MaterialTheme.typography.titleMedium
+        // ROW : Couverts + Ravigote côte à côte
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            ChezPaulCard(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.People,
+                        contentDescription = null,
+                        tint = ChezPaulColors.JauneMenu,
+                        modifier = Modifier.size(32.dp)
                     )
-                    Text(
-                        "$totalCouverts",
-                        color = ChezPaulColors.JauneMenu,
-                        style = MaterialTheme.typography.displaySmall,
-                        fontWeight = FontWeight.Bold
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            "Couverts",
+                            color = ChezPaulColors.TexteBlanc,
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Text(
+                            "$totalCouverts",
+                            color = ChezPaulColors.JauneMenu,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+
+            ChezPaulCard(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.Star,
+                        contentDescription = null,
+                        tint = ChezPaulColors.JauneMenu,
+                        modifier = Modifier.size(32.dp)
                     )
+                    Spacer(Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            "Ravigote",
+                            color = ChezPaulColors.TexteBlanc,
+                            style = MaterialTheme.typography.titleSmall
+                        )
+                        Text(
+                            "$nombreRavigotes",
+                            color = ChezPaulColors.JauneMenu,
+                            style = MaterialTheme.typography.headlineLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
 
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(12.dp))
 
         // CARD : Boissons par catégorie
         ChezPaulCard {
@@ -79,7 +104,7 @@ fun AccueilScreen(
                         Icons.Default.LocalDrink,
                         contentDescription = null,
                         tint = ChezPaulColors.JauneMenu,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(26.dp)
                     )
                     Spacer(Modifier.width(10.dp))
                     Text(
@@ -101,45 +126,83 @@ fun AccueilScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    Spacer(Modifier.height(4.dp))
+                    Spacer(Modifier.height(3.dp))
                 }
             }
         }
 
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(12.dp))
 
-        // CARD : Ravigote
+        // CARD : Chiffre d'Affaires
         ChezPaulCard {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    Icons.Default.Star,
-                    contentDescription = null,
-                    tint = ChezPaulColors.JauneMenu,
-                    modifier = Modifier.size(30.dp)
-                )
-                Spacer(Modifier.width(14.dp))
-                Column {
+            Column {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Default.Euro,
+                        contentDescription = null,
+                        tint = ChezPaulColors.JauneMenu,
+                        modifier = Modifier.size(28.dp)
+                    )
+                    Spacer(Modifier.width(10.dp))
                     Text(
-                        "Tables avec ravigote",
+                        "Chiffre d'Affaires",
                         color = ChezPaulColors.TexteBlanc,
                         style = MaterialTheme.typography.titleMedium
                     )
+                    Spacer(Modifier.weight(1f))
                     Text(
-                        "$nombreRavigotes",
+                        "%.2f €".format(accueilViewModel.caTotal),
                         color = ChezPaulColors.JauneMenu,
-                        style = MaterialTheme.typography.displaySmall,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Plats (menu 32€)", color = ChezPaulColors.TexteBlanc)
+                    Text(
+                        "%.2f €".format(accueilViewModel.caPlats),
+                        color = ChezPaulColors.JauneMenu,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(Modifier.height(3.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Boissons", color = ChezPaulColors.TexteBlanc)
+                    Text(
+                        "%.2f €".format(accueilViewModel.caBoissons),
+                        color = ChezPaulColors.JauneMenu,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                Spacer(Modifier.height(3.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Ticket moyen", color = ChezPaulColors.TexteBlanc)
+                    Text(
+                        if (totalCouverts > 0) "%.2f €".format(accueilViewModel.caTotal / totalCouverts)
+                        else "— €",
+                        color = ChezPaulColors.JauneMenu,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
 
-        Spacer(Modifier.height(22.dp))
+        Spacer(Modifier.height(12.dp))
 
-        // CARD : Tables ouvertes (liste mini)
+        // CARD : Tables ouvertes
         ChezPaulCard {
             Column {
                 Row(
@@ -150,24 +213,23 @@ fun AccueilScreen(
                         Icons.Default.TableBar,
                         contentDescription = null,
                         tint = ChezPaulColors.JauneMenu,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(28.dp)
                     )
-                    Spacer(Modifier.width(14.dp))
-                    Column {
-                        Text(
-                            "Tables ouvertes",
-                            color = ChezPaulColors.TexteBlanc,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Text(
-                            "${commandesList.size}",
-                            color = ChezPaulColors.JauneMenu,
-                            style = MaterialTheme.typography.displaySmall,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                    Spacer(Modifier.width(10.dp))
+                    Text(
+                        "Tables ouvertes",
+                        color = ChezPaulColors.TexteBlanc,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(Modifier.weight(1f))
+                    Text(
+                        "${commandesList.size}",
+                        color = ChezPaulColors.JauneMenu,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(6.dp))
                 commandesList.forEach { cmd ->
                     Row(
                         Modifier.fillMaxWidth(),
@@ -195,7 +257,7 @@ fun AccueilScreen(
                             Text("⚡", color = ChezPaulColors.JauneMenu, style = MaterialTheme.typography.bodyMedium)
                         }
                     }
-                    ChezPaulDivider(modifier = Modifier.padding(vertical = 2.dp))
+                    ChezPaulDivider(modifier = Modifier.padding(vertical = 1.dp))
                 }
             }
         }

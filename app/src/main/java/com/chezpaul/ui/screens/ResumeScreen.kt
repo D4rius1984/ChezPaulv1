@@ -215,6 +215,16 @@ fun ResumeScreen(
                                                     )
                                                 }
                                             }
+                                            Spacer(Modifier.width(8.dp))
+                                            val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * 32.0 else 0.0
+                                            val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
+                                            val prixTotal = prixPlats + prixBoissons
+                                            Text(
+                                                "%.2f €".format(prixTotal),
+                                                color = Color.White,
+                                                fontWeight = FontWeight.Bold,
+                                                style = MaterialTheme.typography.bodyMedium
+                                            )
                                         }
                                         IconButton(onClick = {
                                             resumeViewModel.toggleBottomSheet(cmd)
