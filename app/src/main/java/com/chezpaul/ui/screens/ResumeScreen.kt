@@ -215,27 +215,26 @@ fun ResumeScreen(
                                                     )
                                                 }
                                             }
-                                            Spacer(Modifier.width(8.dp))
-                                            val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * 32.0 else 0.0
-                                            val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
-                                            val prixTotal = prixPlats + prixBoissons
-                                            val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0
-                                            Text(
-                                                "%.2f € · TM %.2f €".format(prixTotal, ticketMoyen),
-                                                color = Color.White,
-                                                fontWeight = FontWeight.Bold,
-                                                style = MaterialTheme.typography.bodyMedium
-                                            )
                                         }
-                                        IconButton(onClick = {
-                                            resumeViewModel.toggleBottomSheet(cmd)
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.Default.MoreVert,
-                                                contentDescription = "Options",
-                                                tint = Color.White
-                                            )
-                                        }
+                                        val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * 32.0 else 0.0
+                                        val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
+                                        val prixTotal = prixPlats + prixBoissons
+                                        val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0
+                                        Text(
+                                            "%.0f€ · TM %.0f€".format(prixTotal, ticketMoyen),
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            maxLines = 1
+                                        )
+                                        Icon(
+                                            imageVector = Icons.Default.MoreVert,
+                                            contentDescription = "Options",
+                                            tint = Color.White,
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .clickable { resumeViewModel.toggleBottomSheet(cmd) }
+                                        )
                                     }
                                     if (cmd.plats.isNotEmpty()) {
                                         Text(

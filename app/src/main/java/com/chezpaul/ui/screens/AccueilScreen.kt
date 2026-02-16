@@ -1,6 +1,8 @@
 package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Euro
 import androidx.compose.material.icons.filled.LocalDrink
@@ -230,34 +232,40 @@ fun AccueilScreen(
                     )
                 }
                 Spacer(Modifier.height(6.dp))
-                commandesList.forEach { cmd ->
-                    Row(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                Column(
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    commandesList.forEach { cmd ->
                         Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                "Table ${cmd.numeroTable} • ${cmd.nombreCouverts} cvts",
-                                color = ChezPaulColors.TexteBlanc,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            if (cmd.isGroupe) {
-                                Spacer(Modifier.width(8.dp))
-                                ChezPaulBadge(
-                                    text = "Groupe",
-                                    backgroundColor = ChezPaulColors.JauneMenu,
-                                    textColor = ChezPaulColors.TexteNoir
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    "Table ${cmd.numeroTable} • ${cmd.nombreCouverts} cvts",
+                                    color = ChezPaulColors.TexteBlanc,
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
+                                if (cmd.isGroupe) {
+                                    Spacer(Modifier.width(8.dp))
+                                    ChezPaulBadge(
+                                        text = "Groupe",
+                                        backgroundColor = ChezPaulColors.JauneMenu,
+                                        textColor = ChezPaulColors.TexteNoir
+                                    )
+                                }
+                            }
+                            if (cmd.plats.any { it.contientRavigote || it.nom.contains("tête de veau", true) }) {
+                                Text("⚡", color = ChezPaulColors.JauneMenu, style = MaterialTheme.typography.bodyMedium)
                             }
                         }
-                        if (cmd.plats.any { it.contientRavigote || it.nom.contains("tête de veau", true) }) {
-                            Text("⚡", color = ChezPaulColors.JauneMenu, style = MaterialTheme.typography.bodyMedium)
-                        }
+                        ChezPaulDivider(modifier = Modifier.padding(vertical = 1.dp))
                     }
-                    ChezPaulDivider(modifier = Modifier.padding(vertical = 1.dp))
                 }
             }
         }
