@@ -219,8 +219,9 @@ fun ResumeScreen(
                                             val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * 32.0 else 0.0
                                             val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
                                             val prixTotal = prixPlats + prixBoissons
+                                            val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0
                                             Text(
-                                                "%.2f €".format(prixTotal),
+                                                "%.2f € · TM %.2f €".format(prixTotal, ticketMoyen),
                                                 color = Color.White,
                                                 fontWeight = FontWeight.Bold,
                                                 style = MaterialTheme.typography.bodyMedium
