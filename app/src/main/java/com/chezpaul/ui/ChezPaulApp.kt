@@ -1,5 +1,6 @@
 package com.chezpaul.ui
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -41,6 +42,31 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
     val currentScreen by viewModel.selectedScreen
     var commandeEnCours by remember { mutableStateOf<Commande?>(null) }
     var showResume by remember { mutableStateOf(false) }
+
+    // Gestion du bouton retour Android
+    val canGoBack = currentScreen != Screen.Accueil || showResume
+    BackHandler(enabled = canGoBack) {
+        when {
+            // Si on est sur le résumé dans le flow commande → retour au formulaire
+            currentScreen == Screen.Commandes && showResume -> {
+                showResume = false
+            }
+            // Sous-écrans de l'historique → retour à l'historique
+            currentScreen is Screen.ServiceDetail || currentScreen == Screen.Stats -> {
+                viewModel.selectScreen(Screen.History)
+            }
+            // Historique → retour aux paramètres
+            currentScreen == Screen.History -> {
+                viewModel.selectScreen(Screen.Settings)
+            }
+            // Tout le reste → retour à l'Accueil
+            else -> {
+                commandeEnCours = null
+                showResume = false
+                viewModel.selectScreen(Screen.Accueil)
+            }
+        }
+    }
 
     ChezPaulTheme {
         Scaffold(
