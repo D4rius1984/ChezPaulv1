@@ -180,6 +180,21 @@ private fun AppNavigationContent(
             HistoryScreen(
                 commandeViewModel = commandeViewModel,
                 onBack = { onNavigate(Screen.Settings) },
+                onServiceClick = { serviceId -> onNavigate(Screen.ServiceDetail(serviceId)) },
+                onStatsClick = { onNavigate(Screen.Stats) },
+            )
+
+        is Screen.ServiceDetail ->
+            ServiceDetailScreen(
+                serviceId = (currentScreen as Screen.ServiceDetail).serviceId,
+                commandeViewModel = commandeViewModel,
+                onBack = { onNavigate(Screen.History) },
+            )
+
+        Screen.Stats ->
+            StatsScreen(
+                commandeViewModel = commandeViewModel,
+                onBack = { onNavigate(Screen.History) },
             )
 
         Screen.Modifier ->

@@ -1,9 +1,20 @@
 -- Merging decision tree log ---
+provider#androidx.core.content.FileProvider
+INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:25:5-33:16
+	android:grantUriPermissions
+		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:29:9-43
+	android:authorities
+		INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:27:9-60
+	android:exported
+		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:28:9-33
+	android:name
+		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:26:9-58
 manifest
-ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-27:12
-INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-27:12
-INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-27:12
-INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-27:12
+ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-37:12
+INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-37:12
+INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-37:12
+INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:1:1-37:12
 MERGED from [com.google.android.material:material:1.7.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9ae0f38749e9cb99208c14e94046eb44\transformed\material-1.7.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\a6aec3f346a5939d134533541be81ff9\transformed\constraintlayout-2.0.1\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.5.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\30c53beb79a52f1477a028e5bbf3c1b5\transformed\jetified-appcompat-resources-1.5.0\AndroidManifest.xml:17:1-22:12
@@ -106,8 +117,8 @@ ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml
 	android:name
 		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:6:20-71
 application
-ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:8:3-25:17
-INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:8:3-25:17
+ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:8:3-35:17
+INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:8:3-35:17
 MERGED from [com.google.android.material:material:1.7.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9ae0f38749e9cb99208c14e94046eb44\transformed\material-1.7.0\AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.7.0] C:\Users\Lenovo\.gradle\caches\8.13\transforms\9ae0f38749e9cb99208c14e94046eb44\transformed\material-1.7.0\AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.0.1] C:\Users\Lenovo\.gradle\caches\8.13\transforms\a6aec3f346a5939d134533541be81ff9\transformed\constraintlayout-2.0.1\AndroidManifest.xml:9:5-20
@@ -162,6 +173,12 @@ category#android.intent.category.LAUNCHER
 ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:21:9-69
 	android:name
 		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:21:19-66
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:30:7-32:48
+	android:resource
+		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:32:11-45
+	android:name
+		ADDED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml:31:11-61
 uses-sdk
 INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\Lenovo\Documents\ChezPaulv1\app\src\main\AndroidManifest.xml

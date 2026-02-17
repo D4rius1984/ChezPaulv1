@@ -1,13 +1,16 @@
 package com.chezpaul.viewmodel
 
+import android.app.Application
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.chezpaul.data.PersistenceManager
+import com.chezpaul.data.entities.CommandeWithItems
 import com.chezpaul.data.entities.ServiceEntity
+import com.chezpaul.data.entities.TopItemResult
 import com.chezpaul.data.repository.DataRepository
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.model.Commande
@@ -212,4 +215,57 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
 
     val caTotal: Double
         @Composable get() = caPlats + caBoissons + caGroupes
+
+    // --- Phase 2: Service Details ---
+
+    private val _serviceDetail = mutableStateOf<ServiceEntity?>(null)
+    val serviceDetail: State<ServiceEntity?> = _serviceDetail
+
+    private val _serviceCommandes = mutableStateOf<List<CommandeWithItems>>(emptyList())
+    val serviceCommandes: State<List<CommandeWithItems>> = _serviceCommandes
+
+    fun loadServiceDetail(serviceId: Long) {
+        viewModelScope.launch {
+            _serviceDetail.value = repository.getServiceById(serviceId)
+            _serviceCommandes.value = repository.getCommandesForServiceOnce(serviceId)
+        }
+    }
+
+    // --- Phase 2: Statistics ---
+
+    data class StatsData(
+        val serviceCount: Int = 0,
+        val totalCA: Double = 0.0,
+        val averageCA: Double = 0.0,
+        val totalCommands: Int = 0,
+        val totalCoversAll: Int = 0,
+        val topItems: List<TopItemResult> = emptyList()
+    )
+
+    private val _statsData = mutableStateOf(StatsData())
+    val statsData: State<StatsData> = _statsData
+
+    fun loadStats() {
+        viewModelScope.launch {
+            _statsData.value = StatsData(
+                serviceCount = repository.getServiceCount(),
+                totalCA = repository.getTotalCA(),
+                averageCA = repository.getAverageCA(),
+                totalCommands = repository.getTotalCommandCount(),
+                totalCoversAll = repository.getTotalCovers(),
+                topItems = repository.getTopItems(10)
+            )
+        }
+    }
+
+    // --- Phase 2: CSV Export ---
+
+    fun exportCsv(onReady: (Intent) -> Unit) {
+        viewModelScope.launch {
+            val intent = repository.exportCsvFile(getApplication())
+            if (intent != null) {
+                onReady(intent)
+            }
+        }
+    }
 }
