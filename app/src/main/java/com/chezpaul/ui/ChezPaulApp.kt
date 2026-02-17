@@ -16,22 +16,16 @@ import com.chezpaul.viewmodel.BoissonViewModel
 import com.chezpaul.viewmodel.PlatViewModel
 import com.chezpaul.viewmodel.SettingsViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
-import com.chezpaul.viewmodel.AccueilViewModel
-import com.chezpaul.viewmodel.ResumeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChezPaulApp(viewModel: BottomNavViewModel) {
-    // Initialisation des ViewModels principaux
+    // Initialisation des ViewModels (gérés par le Lifecycle Android)
     val commandeViewModel: CommandeViewModel = viewModel()
     val platViewModel: PlatViewModel = viewModel()
     val boissonViewModel: BoissonViewModel = viewModel()
     val settingsViewModel: SettingsViewModel = viewModel()
     val printerViewModel: PrinterViewModel = viewModel()
-
-    // ViewModels spécialisés qui dépendent du CommandeViewModel
-    val accueilViewModel = AccueilViewModel(commandeViewModel)
-    val resumeViewModel = ResumeViewModel(commandeViewModel)
 
     // Observer les états d'activation depuis les ViewModels
     val platsActivationState by platViewModel.platsActivationState.observeAsState(emptyMap())
@@ -67,8 +61,6 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     currentScreen = currentScreen,
                     showResume = showResume,
                     commandeEnCours = commandeEnCours,
-                    accueilViewModel = accueilViewModel,
-                    resumeViewModel = resumeViewModel,
                     commandeViewModel = commandeViewModel,
                     settingsViewModel = settingsViewModel,
                     printerViewModel = printerViewModel,
@@ -82,17 +74,17 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     },
                     onValide = {
                         commandeEnCours?.let { commande ->
-                            resumeViewModel.validateCommande(commande)
+                            commandeViewModel.validateCommande(commande)
                             commandeEnCours = null
                             showResume = false
                             viewModel.selectScreen(Screen.Accueil)
                         }
                     },
                     onSupprimeTable = { commandeASupprimer ->
-                        resumeViewModel.deleteCommande(commandeASupprimer)
+                        commandeViewModel.deleteCommande(commandeASupprimer)
                     },
                     onModifieTable = { commandeAModifier ->
-                        resumeViewModel.deleteCommande(commandeAModifier)
+                        commandeViewModel.deleteCommande(commandeAModifier)
                         commandeEnCours = commandeAModifier
                         showResume = false
                         viewModel.selectScreen(Screen.Commandes)
@@ -111,8 +103,6 @@ private fun AppNavigationContent(
     currentScreen: Screen,
     showResume: Boolean,
     commandeEnCours: Commande?,
-    accueilViewModel: AccueilViewModel,
-    resumeViewModel: ResumeViewModel,
     commandeViewModel: CommandeViewModel,
     settingsViewModel: SettingsViewModel,
     printerViewModel: PrinterViewModel,
@@ -128,7 +118,7 @@ private fun AppNavigationContent(
 ) {
     when (currentScreen) {
         Screen.Accueil -> AccueilScreen(
-            accueilViewModel = accueilViewModel
+            commandeViewModel = commandeViewModel
         )
 
         Screen.Commandes -> {
@@ -142,7 +132,7 @@ private fun AppNavigationContent(
                 )
             } else {
                 ResumeScreen(
-                    resumeViewModel = resumeViewModel,
+                    commandeViewModel = commandeViewModel,
                     commande = commandeEnCours,
                     onValide = onValide,
                     onSupprimeTable = onSupprimeTable,
@@ -153,7 +143,7 @@ private fun AppNavigationContent(
         }
 
         Screen.Tables -> ResumeScreen(
-            resumeViewModel = resumeViewModel,
+            commandeViewModel = commandeViewModel,
             commande = null,
             onValide = {},
             onSupprimeTable = onSupprimeTable,
