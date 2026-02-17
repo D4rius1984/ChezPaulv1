@@ -220,9 +220,10 @@ fun ResumeScreen(
                                         val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
                                         val prixTotal = prixPlats + prixBoissons
                                         val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0
+                                        val tmColor = getTicketMoyenColor(ticketMoyen)
                                         Text(
                                             "%.0f€ · TM %.0f€".format(prixTotal, ticketMoyen),
-                                            color = Color.White,
+                                            color = tmColor,
                                             fontWeight = FontWeight.Bold,
                                             style = MaterialTheme.typography.bodySmall,
                                             maxLines = 1
@@ -375,5 +376,14 @@ fun ResumeScreen(
                 }
             }
         }
+    }
+}
+
+private fun getTicketMoyenColor(ticketMoyen: Double): Color {
+    return when {
+        ticketMoyen >= 49.0 -> Color(0xFFFF9800) // Orange - ticket élevé
+        ticketMoyen >= 40.0 -> Color(0xFFFFE066) // Jaune - bon ticket
+        ticketMoyen >= 32.0 -> Color.White       // Blanc - standard (menu)
+        else -> Color.Gray                       // Gris - en cours / faible
     }
 }
