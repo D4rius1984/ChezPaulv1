@@ -93,7 +93,8 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     },
                     onNavigate = { screen ->
                         viewModel.selectScreen(screen)
-                    }
+                    },
+                    printerViewModelForResume = printerViewModel
                 )
             }
         }
@@ -116,7 +117,8 @@ private fun AppNavigationContent(
     onValide: () -> Unit,
     onSupprimeTable: (Commande) -> Unit,
     onModifieTable: (Commande) -> Unit,
-    onNavigate: (Screen) -> Unit
+    onNavigate: (Screen) -> Unit,
+    printerViewModelForResume: PrinterViewModel
 ) {
     when (currentScreen) {
         Screen.Accueil -> AccueilScreen(
@@ -139,7 +141,8 @@ private fun AppNavigationContent(
                     onValide = onValide,
                     onSupprimeTable = onSupprimeTable,
                     onModifieTable = onModifieTable,
-                    isInCommandeFlow = true
+                    isInCommandeFlow = true,
+                    printerViewModel = printerViewModelForResume
                 )
             }
         }
@@ -150,7 +153,8 @@ private fun AppNavigationContent(
             onValide = {},
             onSupprimeTable = onSupprimeTable,
             onModifieTable = onModifieTable,
-            isInCommandeFlow = false
+            isInCommandeFlow = false,
+            printerViewModel = printerViewModelForResume
         )
 
         Screen.Settings -> SettingsScreen(

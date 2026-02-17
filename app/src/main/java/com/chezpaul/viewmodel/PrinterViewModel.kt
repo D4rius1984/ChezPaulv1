@@ -239,15 +239,21 @@ class PrinterViewModel : ViewModel() {
             socket.connect(InetSocketAddress(ip, port), 5000)
 
             val outputStream = socket.getOutputStream()
-            val writer = OutputStreamWriter(outputStream, "UTF-8")
 
-            // Commandes ESC/POS basiques pour imprimantes thermiques
-            writer.write("\u001B@") // Initialize printer
-            writer.write(text)
-            writer.write("\n\n\n") // Feed paper
-            writer.write("\u001Bi") // Cut paper (if supported)
-            writer.flush()
+            // ESC/POS : Initialize printer
+            outputStream.write(byteArrayOf(0x1B, 0x40))
 
+            // Encoder le texte en ISO-8859-1 pour les accents français
+            val textBytes = text.toByteArray(Charsets.ISO_8859_1)
+            outputStream.write(textBytes)
+
+            // Feed paper (3 lignes)
+            outputStream.write("\n\n\n".toByteArray(Charsets.ISO_8859_1))
+
+            // ESC/POS : Cut paper (partial cut)
+            outputStream.write(byteArrayOf(0x1D, 0x56, 0x42, 0x00))
+
+            outputStream.flush()
             socket.close()
             PingResult(true, "Texte envoyé vers $ip:$port")
 

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.CommandeViewModel
+import com.chezpaul.viewmodel.PrinterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,8 +30,10 @@ fun ResumeScreen(
     onValide: () -> Unit,
     onSupprimeTable: (Commande) -> Unit,
     onModifieTable: (Commande) -> Unit,
-    isInCommandeFlow: Boolean // Nouveau paramètre pour gérer le flow
+    isInCommandeFlow: Boolean,
+    printerViewModel: PrinterViewModel? = null
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
     val jauneMenu = Color(0xFFFFE066)
 
     // Observer les données du ViewModel
@@ -346,6 +349,34 @@ fun ResumeScreen(
                         style = MaterialTheme.typography.bodyLarge,
                         color = Color.White
                     )
+                }
+
+                // Option Imprimer
+                if (printerViewModel != null && printerViewModel.isPrinterEnabled.value) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedCommande?.let { commande ->
+                                    printerViewModel.printCommande(commande, context)
+                                    commandeViewModel.toggleBottomSheet(null)
+                                }
+                            }
+                            .padding(horizontal = 24.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "\uD83D\uDDA8",
+                            modifier = Modifier.size(24.dp),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = "Imprimer en cuisine",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = ChezPaulColors.JauneMenu
+                        )
+                    }
                 }
 
                 // Option Supprimer
