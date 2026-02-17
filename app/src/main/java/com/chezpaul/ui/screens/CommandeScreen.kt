@@ -595,20 +595,56 @@ fun CommandeScreen(
                 Text("Remarque pour la table $numeroTable", color = jauneMenu)
             },
             text = {
-                OutlinedTextField(
-                    value = remarqueText,
-                    onValueChange = { remarqueText = it },
-                    label = { Text("Votre remarque") },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = jauneMenu,
-                        unfocusedBorderColor = Color.Gray,
-                        focusedLabelColor = jauneMenu,
-                        unfocusedLabelColor = Color.Gray,
-                        cursorColor = jauneMenu
-                    ),
-                    maxLines = 3
+                val suggestions = listOf(
+                    "sans sauce", "sauce à part", "bleu", "saignant",
+                    "à point", "bien cuit", "gratin", "PDT"
                 )
+                Column {
+                    OutlinedTextField(
+                        value = remarqueText,
+                        onValueChange = { remarqueText = it },
+                        label = { Text("Votre remarque") },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = jauneMenu,
+                            unfocusedBorderColor = Color.Gray,
+                            focusedLabelColor = jauneMenu,
+                            unfocusedLabelColor = Color.Gray,
+                            cursorColor = jauneMenu
+                        ),
+                        maxLines = 3
+                    )
+                    Spacer(Modifier.height(12.dp))
+                    @OptIn(ExperimentalLayoutApi::class)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        suggestions.forEach { mot ->
+                            SuggestionChip(
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    remarqueText = if (remarqueText.isBlank()) mot
+                                    else "$remarqueText, $mot"
+                                },
+                                label = {
+                                    Text(
+                                        text = mot,
+                                        color = MaterialTheme.colorScheme.primary,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
+                                },
+                                colors = SuggestionChipDefaults.suggestionChipColors(
+                                    containerColor = MaterialTheme.colorScheme.surface
+                                ),
+                                border = SuggestionChipDefaults.suggestionChipBorder(
+                                    enabled = true,
+                                    borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                )
+                            )
+                        }
+                    }
+                }
             },
             confirmButton = {
                 Button(
