@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.Commande
+import com.chezpaul.ui.navigation.Screen
 import com.chezpaul.ui.screens.*
 import com.chezpaul.ui.screens.BottomNavigationBar
 import com.chezpaul.ui.components.ChezPaulScreen
@@ -42,31 +43,22 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
     val boissonsActivationState by boissonViewModel.boissonsActivationState.observeAsState(emptyMap())
 
     // State pour la navigation et le flow de commande
-    var selectedRoute by remember { mutableStateOf(viewModel.selectedRoute.value) }
+    val currentScreen by viewModel.selectedScreen
     var commandeEnCours by remember { mutableStateOf<Commande?>(null) }
     var showResume by remember { mutableStateOf(false) }
-
-    // Observer la route sélectionnée via le ViewModel
-    selectedRoute = viewModel.selectedRoute.value
 
     ChezPaulTheme {
         Scaffold(
             bottomBar = {
                 BottomNavigationBar(
-                    selectedRoute = selectedRoute,
-                    onItemSelected = { route ->
-                        if (route == "ajouter") {
-                            commandeEnCours = null
-                            showResume = false
-                            viewModel.selectRoute("commandes")
-                        } else {
-                            viewModel.selectRoute(route)
-                        }
+                    selectedScreen = currentScreen,
+                    onItemSelected = { screen ->
+                        viewModel.selectScreen(screen)
                     },
                     onAddClick = {
                         commandeEnCours = null
                         showResume = false
-                        viewModel.selectRoute("commandes")
+                        viewModel.selectScreen(Screen.Commandes)
                     }
                 )
             }
@@ -76,12 +68,12 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
-                when (selectedRoute) {
-                    "accueil" -> AccueilScreen(
+                when (currentScreen) {
+                    Screen.Accueil -> AccueilScreen(
                         accueilViewModel = accueilViewModel
                     )
 
-                    "commandes" -> {
+                    Screen.Commandes -> {
                         if (!showResume) {
                             CommandeScreen(
                                 commande = commandeEnCours,
@@ -91,7 +83,7 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                                 },
                                 platsActivationState = platsActivationState,
                                 boissonsActivationState = boissonsActivationState,
-                                printerViewModel = printerViewModel // Ajout du PrinterViewModel
+                                printerViewModel = printerViewModel
                             )
                         } else {
                             ResumeScreen(
@@ -102,25 +94,24 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                                         resumeViewModel.validateCommande(commande)
                                         commandeEnCours = null
                                         showResume = false
-                                        viewModel.selectRoute("accueil")
+                                        viewModel.selectScreen(Screen.Accueil)
                                     }
                                 },
                                 onSupprimeTable = { commandeASupprimer ->
                                     resumeViewModel.deleteCommande(commandeASupprimer)
                                 },
                                 onModifieTable = { commandeAModifier ->
-                                    // Supprimer l'ancienne version avant de modifier
                                     resumeViewModel.deleteCommande(commandeAModifier)
                                     commandeEnCours = commandeAModifier
                                     showResume = false
-                                    viewModel.selectRoute("commandes")
+                                    viewModel.selectScreen(Screen.Commandes)
                                 },
                                 isInCommandeFlow = true
                             )
                         }
                     }
 
-                    "tables" -> ResumeScreen(
+                    Screen.Tables -> ResumeScreen(
                         resumeViewModel = resumeViewModel,
                         commande = null,
                         onValide = {},
@@ -128,16 +119,15 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                             resumeViewModel.deleteCommande(commandeASupprimer)
                         },
                         onModifieTable = { commandeAModifier ->
-                            // Supprimer l'ancienne version avant de modifier
                             resumeViewModel.deleteCommande(commandeAModifier)
                             commandeEnCours = commandeAModifier
                             showResume = false
-                            viewModel.selectRoute("commandes")
+                            viewModel.selectScreen(Screen.Commandes)
                         },
                         isInCommandeFlow = false
                     )
 
-                    "settings" -> SettingsScreen(
+                    Screen.Settings -> SettingsScreen(
                         settingsViewModel = settingsViewModel,
                         printerViewModel = printerViewModel,
                         commandeViewModel = commandeViewModel,
@@ -145,12 +135,12 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                         boissonViewModel = boissonViewModel
                     )
 
-                    "modifier" -> {
+                    Screen.Modifier -> {
                         MenuModificationScreen(
                             platViewModel = platViewModel,
                             boissonViewModel = boissonViewModel,
                             onValidate = {
-                                viewModel.selectRoute("accueil")
+                                viewModel.selectScreen(Screen.Accueil)
                             }
                         )
                     }

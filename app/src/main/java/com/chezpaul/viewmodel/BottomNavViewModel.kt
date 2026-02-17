@@ -2,13 +2,12 @@ package com.chezpaul.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.chezpaul.ui.navigation.Screen
 
 class BottomNavViewModel : ViewModel() {
-    // Etat de la route sélectionnée
-    val selectedRoute = mutableStateOf("accueil")
+    val selectedScreen = mutableStateOf<Screen>(Screen.Accueil)
 
-    // Fonction pour mettre à jour la route sélectionnée
-    fun selectRoute(route: String) {
-        selectedRoute.value = route
+    fun selectScreen(screen: Screen) {
+        selectedScreen.value = screen
     }
 }
