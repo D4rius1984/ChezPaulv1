@@ -29,9 +29,8 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     private val nomCervelle = "cervelle"
     private val nomStMarcelin = "st marcelin"
 
-    companion object {
-        const val PRIX_MENU = 32.0
-    }
+    // Prix du menu dynamique (mis à jour par SettingsViewModel)
+    var menuPrice = mutableStateOf(32.0)
 
     private val _historyList = mutableStateOf<List<HistoryItem>>(emptyList())
     val historyList = _historyList
@@ -114,7 +113,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     fun resetAllCommandes() {
         // Archiver le service actuel avant de tout effacer
         if (_commandesList.value.isNotEmpty()) {
-            persistenceManager.archiveService(_commandesList.value)
+            persistenceManager.archiveService(_commandesList.value, menuPrice.value)
             loadHistory() // Recharger l'historique après archivage
         }
         
@@ -177,7 +176,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     val caPlats: Double
         @Composable get() = _commandesList.value
             .filter { it.plats.isNotEmpty() }
-            .sumOf { it.nombreCouverts * PRIX_MENU }
+            .sumOf { it.nombreCouverts * menuPrice.value }
 
     val caBoissons: Double
         @Composable get() = _commandesList.value

@@ -22,7 +22,8 @@ import com.chezpaul.viewmodel.CommandeViewModel
 
 @Composable
 fun AccueilScreen(
-    commandeViewModel: CommandeViewModel
+    commandeViewModel: CommandeViewModel,
+    menuPrice: Double = 32.0
 ) {
     val commandesList by commandeViewModel.commandesList
     val totalCouverts = commandeViewModel.totalCouverts
@@ -167,7 +168,7 @@ fun AccueilScreen(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Plats (menu 32€)", color = ChezPaulColors.TexteBlanc)
+                    Text("Plats (menu ${menuPrice.toInt()}€)", color = ChezPaulColors.TexteBlanc)
                     Text(
                         "%.2f €".format(commandeViewModel.caPlats),
                         color = ChezPaulColors.JauneMenu,

@@ -3,6 +3,7 @@ package com.chezpaul.ui.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -107,6 +108,82 @@ fun SettingsScreen(
                     color = ChezPaulColors.TexteGris,
                     style = MaterialTheme.typography.bodySmall
                 )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Section Prix du Menu
+        ChezPaulCard {
+            Text(
+                "Prix du Menu",
+                color = ChezPaulColors.JauneMenu,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                "Actuel : ${settingsViewModel.getMenuModeLabel()}",
+                color = ChezPaulColors.TexteGris,
+                style = MaterialTheme.typography.bodySmall
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            val menuMode by settingsViewModel.menuModeOverride
+            val options = listOf(
+                Triple("AUTO", "Auto (selon l'heure)", "Midi 24€ / Soir-WE 32€"),
+                Triple("FORCE_MIDI", "Forcer Midi (24€)", "Lun-Ven déjeuner"),
+                Triple("FORCE_SOIR", "Forcer Soir/WE (32€)", "Soir, samedi, dimanche")
+            )
+
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                options.forEach { (value, label, description) ->
+                    val isSelected = menuMode == value
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected) ChezPaulColors.JauneMenu.copy(alpha = 0.15f) else Color.Transparent,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                settingsViewModel.menuModeOverride.value = value
+                                // Mettre à jour le prix dans CommandeViewModel
+                                commandeViewModel?.menuPrice?.value = settingsViewModel.getMenuPrice()
+                            }
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = {
+                                    settingsViewModel.menuModeOverride.value = value
+                                    commandeViewModel?.menuPrice?.value = settingsViewModel.getMenuPrice()
+                                },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = ChezPaulColors.JauneMenu,
+                                    unselectedColor = ChezPaulColors.TexteGris
+                                )
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text(
+                                    label,
+                                    color = if (isSelected) ChezPaulColors.JauneMenu else ChezPaulColors.TexteBlanc,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                )
+                                Text(
+                                    description,
+                                    color = ChezPaulColors.TexteGris,
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
 

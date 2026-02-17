@@ -219,7 +219,7 @@ fun ResumeScreen(
                                                 }
                                             }
                                         }
-                                        val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * 32.0 else 0.0
+                                        val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * commandeViewModel.menuPrice.value else 0.0
                                         val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
                                         val prixTotal = prixPlats + prixBoissons
                                         val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0

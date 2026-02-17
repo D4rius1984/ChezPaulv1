@@ -32,6 +32,12 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
     val platsActivationState by platViewModel.platsActivationState.observeAsState(emptyMap())
     val boissonsActivationState by boissonViewModel.boissonsActivationState.observeAsState(emptyMap())
 
+    // Synchroniser le prix du menu depuis SettingsViewModel vers CommandeViewModel
+    val menuModeOverride by settingsViewModel.menuModeOverride
+    LaunchedEffect(menuModeOverride) {
+        commandeViewModel.menuPrice.value = settingsViewModel.getMenuPrice()
+    }
+
     // State pour la navigation et le flow de commande
     val currentScreen by viewModel.selectedScreen
     var commandeEnCours by remember { mutableStateOf<Commande?>(null) }
@@ -122,7 +128,8 @@ private fun AppNavigationContent(
 ) {
     when (currentScreen) {
         Screen.Accueil -> AccueilScreen(
-            commandeViewModel = commandeViewModel
+            commandeViewModel = commandeViewModel,
+            menuPrice = commandeViewModel.menuPrice.value
         )
 
         Screen.Commandes -> {
