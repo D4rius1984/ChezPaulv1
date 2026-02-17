@@ -35,10 +35,8 @@ class SettingsViewModel : ViewModel() {
             // Réinitialiser l'état du service
             isServiceActive.value = false
 
-            // Réinitialiser toutes les commandes
-            commandeViewModel?.let {
-                it.commandesList.value = emptyList()
-            }
+            // Archiver puis réinitialiser toutes les commandes
+            commandeViewModel?.resetAllCommandes()
 
             // Réinitialiser les états des plats
             platViewModel?.let {

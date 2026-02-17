@@ -6,5 +6,6 @@ data class Commande(
     val plats: List<Plat>,
     val boissons: List<Boisson>,
     val remarque: String? = null,
-    val isGroupe: Boolean = false
+    val isGroupe: Boolean = false,
+    val timestamp: Long = System.currentTimeMillis()
 )

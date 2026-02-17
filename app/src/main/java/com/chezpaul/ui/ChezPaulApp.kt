@@ -158,7 +158,13 @@ private fun AppNavigationContent(
             printerViewModel = printerViewModel,
             commandeViewModel = commandeViewModel,
             platViewModel = platViewModel,
-            boissonViewModel = boissonViewModel
+            boissonViewModel = boissonViewModel,
+            onHistoryClick = { onNavigate(Screen.History) }
+        )
+
+        Screen.History -> HistoryScreen(
+            commandeViewModel = commandeViewModel,
+            onBack = { onNavigate(Screen.Settings) }
         )
 
         Screen.Modifier -> MenuModificationScreen(

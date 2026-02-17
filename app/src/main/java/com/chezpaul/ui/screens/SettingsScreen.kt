@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.graphics.Color
 import com.chezpaul.ui.components.*
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.SettingsViewModel
@@ -25,7 +26,8 @@ fun SettingsScreen(
     printerViewModel: PrinterViewModel,
     commandeViewModel: CommandeViewModel? = null,
     platViewModel: PlatViewModel? = null,
-    boissonViewModel: BoissonViewModel? = null
+    boissonViewModel: BoissonViewModel? = null,
+    onHistoryClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -76,6 +78,32 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     "Clôture le service et réinitialise toutes les données",
+                    color = ChezPaulColors.TexteGris,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
+            
+            HorizontalDivider(color = Color.Gray.copy(alpha = 0.3f))
+            
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
+                    ) {
+                        onHistoryClick()
+                    }
+                    .padding(vertical = 12.dp)
+            ) {
+                Text(
+                    "Historique des services",
+                    color = ChezPaulColors.TexteBlanc,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    "Consulter et gérer les archives des services passés",
                     color = ChezPaulColors.TexteGris,
                     style = MaterialTheme.typography.bodySmall
                 )
