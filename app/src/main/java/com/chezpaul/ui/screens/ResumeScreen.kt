@@ -257,7 +257,10 @@ fun ResumeScreen(
                                             tint = Color.White,
                                             modifier = Modifier
                                                 .size(24.dp)
-                                                .clickable { commandeViewModel.toggleBottomSheet(cmd) }
+                                                .clickable {
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                    commandeViewModel.toggleBottomSheet(cmd)
+                                                }
                                         )
                                     }
                                     if (cmd.plats.isNotEmpty()) {

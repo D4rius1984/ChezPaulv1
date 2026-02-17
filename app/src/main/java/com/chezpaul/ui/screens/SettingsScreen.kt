@@ -9,7 +9,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
@@ -31,6 +33,7 @@ fun SettingsScreen(
     onHistoryClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
 
     val isPrinterEnabled by printerViewModel.isPrinterEnabled
     val printerName by printerViewModel.printerName
@@ -145,8 +148,8 @@ fun SettingsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 settingsViewModel.menuModeOverride.value = value
-                                // Mettre à jour le prix dans CommandeViewModel
                                 commandeViewModel?.menuPrice?.value = settingsViewModel.getMenuPrice()
                             }
                     ) {
@@ -159,6 +162,7 @@ fun SettingsScreen(
                             RadioButton(
                                 selected = isSelected,
                                 onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     settingsViewModel.menuModeOverride.value = value
                                     commandeViewModel?.menuPrice?.value = settingsViewModel.getMenuPrice()
                                 },
@@ -219,7 +223,10 @@ fun SettingsScreen(
                 }
                 Switch(
                     checked = isPrinterEnabled,
-                    onCheckedChange = { printerViewModel.isPrinterEnabled.value = it },
+                    onCheckedChange = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        printerViewModel.isPrinterEnabled.value = it
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = ChezPaulColors.JauneMenu,
                         uncheckedThumbColor = ChezPaulColors.TexteGris,

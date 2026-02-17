@@ -79,7 +79,10 @@ fun BottomNavigationBar(
                 val isSelected = item.screen == selectedScreen
                 NavigationBarItem(
                     selected = isSelected,
-                    onClick = { item.screen?.let { onItemSelected(it) } },
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        item.screen?.let { onItemSelected(it) }
+                    },
                     icon = {
                         Icon(
                             imageVector = item.icon,

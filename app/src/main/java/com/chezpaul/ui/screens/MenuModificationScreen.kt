@@ -163,12 +163,18 @@ fun MenuModificationScreen(
         ) {
             Tab(
                 selected = selectedTab == 0,
-                onClick = { selectedTab = 0 },
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    selectedTab = 0
+                },
                 text = { Text("Plats") }
             )
             Tab(
                 selected = selectedTab == 1,
-                onClick = { selectedTab = 1 },
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    selectedTab = 1
+                },
                 text = { Text("Boissons") }
             )
         }
@@ -197,7 +203,10 @@ fun MenuModificationScreen(
                 Spacer(modifier = Modifier.width(8.dp))
                 Switch(
                     checked = isGroupePreview,
-                    onCheckedChange = { isGroupePreview = it },
+                    onCheckedChange = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        isGroupePreview = it
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = jauneMenu,
                         checkedTrackColor = jauneMenu.copy(alpha = 0.5f)

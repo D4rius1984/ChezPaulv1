@@ -143,7 +143,10 @@ fun CommandeScreen(
                 Column(Modifier.padding(16.dp)) {
                     OutlinedTextField(
                         value = numeroTable,
-                        onValueChange = { numeroTable = it },
+                        onValueChange = {
+                            if (it != numeroTable) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            numeroTable = it
+                        },
                         label = { Text("Numéro de table") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -159,7 +162,10 @@ fun CommandeScreen(
                     Spacer(Modifier.height(12.dp))
                     OutlinedTextField(
                         value = couverts,
-                        onValueChange = { couverts = it },
+                        onValueChange = {
+                            if (it != couverts) haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                            couverts = it
+                        },
                         label = { Text("Nombre de couverts") },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
@@ -182,6 +188,7 @@ fun CommandeScreen(
                         Switch(
                             checked = isGroupe,
                             onCheckedChange = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 isGroupe = it
                                 if (!it) prixGroupeSelectionne = null
                             },
@@ -276,7 +283,10 @@ fun CommandeScreen(
                         }
                         Switch(
                             checked = shouldPrint,
-                            onCheckedChange = { shouldPrint = it },
+                            onCheckedChange = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                shouldPrint = it
+                            },
                             enabled = isPrinterEnabled && printerName.isNotEmpty(),
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = jauneMenu,
@@ -363,7 +373,10 @@ fun CommandeScreen(
                         Surface(
                             color = jauneMenu.copy(alpha = 0.15f),
                             shape = RoundedCornerShape(10.dp),
-                            modifier = Modifier.clickable { showRemarqueDialog = true }
+                            modifier = Modifier.clickable {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                showRemarqueDialog = true
+                            }
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
@@ -445,7 +458,10 @@ fun CommandeScreen(
                         tabTitles.forEachIndexed { index, title ->
                             Tab(
                                 selected = selectedTab == index,
-                                onClick = { selectedTab = index },
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    selectedTab = index
+                                },
                                 text = { Text(title, color = if (selectedTab == index) orangeMenu else Color.White) }
                             )
                         }
