@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.chezpaul.app-mergeDebugResources-64:/values-large-v4/values-large-v4.xml",
+            "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\89f9d5031ff3ff1f54fbbd86e401f077\\transformed\\material-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\9ae0f38749e9cb99208c14e94046eb44\\transformed\\material-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,10",
                         "startColumns": "4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\080731de8a4b4221679aa3e1026936c3\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\5dfd84ee1a217c65107a3ceea5e6383c\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",

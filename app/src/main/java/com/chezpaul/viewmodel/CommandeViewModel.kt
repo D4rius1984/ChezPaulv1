@@ -5,13 +5,19 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import com.chezpaul.data.PersistenceManager
+import com.chezpaul.data.entities.ServiceEntity
+import com.chezpaul.data.repository.DataRepository
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.model.Commande
-import com.chezpaul.data.HistoryItem
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class CommandeViewModel(application: Application) : AndroidViewModel(application) {
     private val persistenceManager = PersistenceManager(application.applicationContext)
+    private val repository = DataRepository(application)
+
     private val _commandesList = mutableStateOf<List<Commande>>(emptyList())
     val commandesList = _commandesList
 
@@ -32,33 +38,44 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     // Prix du menu dynamique (mis à jour par SettingsViewModel)
     var menuPrice = mutableStateOf(32.0)
 
-    private val _historyList = mutableStateOf<List<HistoryItem>>(emptyList())
-    val historyList = _historyList
+    // --- History (Room) ---
+    private val _historyList = mutableStateOf<List<ServiceEntity>>(emptyList())
+    val historyList: State<List<ServiceEntity>> = _historyList
 
     init {
         loadCommandes()
-        loadHistory()
+        observeHistory()
+        migrateLegacyData()
     }
 
     private fun loadCommandes() {
         _commandesList.value = persistenceManager.loadCommandes()
             .sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
     }
-    
-    fun loadHistory() {
-        _historyList.value = persistenceManager.loadHistory().sortedByDescending { it.timestamp }
+
+    private fun observeHistory() {
+        viewModelScope.launch {
+            repository.allHistoryServices.collectLatest { services ->
+                _historyList.value = services
+            }
+        }
+    }
+
+    private fun migrateLegacyData() {
+        viewModelScope.launch {
+            repository.migrateLegacyHistory()
+        }
     }
 
     private fun saveCommandes() {
         persistenceManager.saveCommandes(_commandesList.value)
     }
 
-    fun deleteHistoryItem(item: HistoryItem) {
-        persistenceManager.deleteHistoryItem(item)
-        loadHistory()
+    fun deleteHistoryItem(service: ServiceEntity) {
+        viewModelScope.launch {
+            repository.deleteService(service)
+        }
     }
-
-
 
     // --- Gestion des commandes ---
 
@@ -113,8 +130,9 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     fun resetAllCommandes() {
         // Archiver le service actuel avant de tout effacer
         if (_commandesList.value.isNotEmpty()) {
-            persistenceManager.archiveService(_commandesList.value, menuPrice.value)
-            loadHistory() // Recharger l'historique après archivage
+            viewModelScope.launch {
+                repository.archiveService(_commandesList.value, menuPrice.value)
+            }
         }
         
         _commandesList.value = emptyList()

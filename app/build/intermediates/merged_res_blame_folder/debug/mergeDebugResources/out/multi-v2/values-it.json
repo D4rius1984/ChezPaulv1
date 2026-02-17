@@ -1,27 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.chezpaul.app-mergeDebugResources-64:/values-it/values-it.xml",
+            "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-it/values-it.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\08de9e534704db41297a8d91843272a5\\transformed\\core-1.13.1\\res\\values-it\\values-it.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,153,255,354,456,565,672,802",
-                        "endColumns": "97,101,98,101,108,106,129,100",
-                        "endOffsets": "148,250,349,451,560,667,797,898"
-                    },
-                    "to": {
-                        "startLines": "34,35,36,37,38,39,40,168",
-                        "startColumns": "4,4,4,4,4,4,4,4",
-                        "startOffsets": "3089,3187,3289,3388,3490,3599,3706,15996",
-                        "endColumns": "97,101,98,101,108,106,129,100",
-                        "endOffsets": "3182,3284,3383,3485,3594,3701,3831,16092"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\080731de8a4b4221679aa3e1026936c3\\transformed\\appcompat-1.5.0\\res\\values-it\\values-it.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\5dfd84ee1a217c65107a3ceea5e6383c\\transformed\\appcompat-1.5.0\\res\\values-it\\values-it.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -38,7 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\89f9d5031ff3ff1f54fbbd86e401f077\\transformed\\material-1.7.0\\res\\values-it\\values-it.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\7b8fc2acaecf8aa0a4b75624654e8354\\transformed\\jetified-ui-release\\res\\values-it\\values-it.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,205,292,390,490,577,656,762,855,950,1015,1079,1163,1251,1336,1414,1483",
+                        "endColumns": "99,86,97,99,86,78,105,92,94,64,63,83,87,84,77,68,120",
+                        "endOffsets": "200,287,385,485,572,651,757,850,945,1010,1074,1158,1246,1331,1409,1478,1599"
+                    },
+                    "to": {
+                        "startLines": "44,45,46,47,48,52,53,159,160,161,162,164,165,167,169,170,171",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "4158,4258,4345,4443,4543,4876,4955,15260,15353,15448,15513,15657,15741,15911,16097,16175,16244",
+                        "endColumns": "99,86,97,99,86,78,105,92,94,64,63,83,87,84,77,68,120",
+                        "endOffsets": "4253,4340,4438,4538,4625,4950,5056,15348,15443,15508,15572,15736,15824,15991,16170,16239,16360"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\9ae0f38749e9cb99208c14e94046eb44\\transformed\\material-1.7.0\\res\\values-it\\values-it.xml",
                     "from": {
                         "startLines": "2,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -57,24 +57,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\bacbd34b7ce332b71d144120ea034b25\\transformed\\jetified-ui-release\\res\\values-it\\values-it.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,205,292,390,490,577,656,762,855,950,1015,1079,1163,1251,1336,1414,1483",
-                        "endColumns": "99,86,97,99,86,78,105,92,94,64,63,83,87,84,77,68,120",
-                        "endOffsets": "200,287,385,485,572,651,757,850,945,1010,1074,1158,1246,1331,1409,1478,1599"
-                    },
-                    "to": {
-                        "startLines": "44,45,46,47,48,52,53,159,160,161,162,164,165,167,169,170,171",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "4158,4258,4345,4443,4543,4876,4955,15260,15353,15448,15513,15657,15741,15911,16097,16175,16244",
-                        "endColumns": "99,86,97,99,86,78,105,92,94,64,63,83,87,84,77,68,120",
-                        "endOffsets": "4253,4340,4438,4538,4625,4950,5056,15348,15443,15508,15572,15736,15824,15991,16170,16239,16360"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\c56fbf731bf734dfef9e776f43a47d2c\\transformed\\jetified-material3-release\\res\\values-it\\values-it.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\ac5024cec05af01468e752fc2d57b239\\transformed\\jetified-material3-release\\res\\values-it\\values-it.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -91,7 +74,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\3713de719b87f3bc55cfd69ba58782e9\\transformed\\jetified-foundation-release\\res\\values-it\\values-it.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\14a08948c3a06815196b41be60fdb342\\transformed\\jetified-foundation-release\\res\\values-it\\values-it.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -105,6 +88,23 @@
                         "startOffsets": "16365,16463",
                         "endColumns": "97,98",
                         "endOffsets": "16458,16557"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\fae381413d8f226775182c8d3ac92f70\\transformed\\core-1.13.1\\res\\values-it\\values-it.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,153,255,354,456,565,672,802",
+                        "endColumns": "97,101,98,101,108,106,129,100",
+                        "endOffsets": "148,250,349,451,560,667,797,898"
+                    },
+                    "to": {
+                        "startLines": "34,35,36,37,38,39,40,168",
+                        "startColumns": "4,4,4,4,4,4,4,4",
+                        "startOffsets": "3089,3187,3289,3388,3490,3599,3706,15996",
+                        "endColumns": "97,101,98,101,108,106,129,100",
+                        "endOffsets": "3182,3284,3383,3485,3594,3701,3831,16092"
                     }
                 }
             ]

@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.chezpaul.app-mergeDebugResources-64:/values-w480dp-port-v13/values-w480dp-port-v13.xml",
+            "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-w480dp-port-v13/values-w480dp-port-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\89f9d5031ff3ff1f54fbbd86e401f077\\transformed\\material-1.7.0\\res\\values-w480dp-port-v13\\values-w480dp-port-v13.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\9ae0f38749e9cb99208c14e94046eb44\\transformed\\material-1.7.0\\res\\values-w480dp-port-v13\\values-w480dp-port-v13.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",

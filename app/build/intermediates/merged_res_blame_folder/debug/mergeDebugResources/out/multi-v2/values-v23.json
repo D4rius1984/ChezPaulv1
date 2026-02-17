@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.chezpaul.app-mergeDebugResources-64:/values-v23/values-v23.xml",
+            "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-v23/values-v23.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\080731de8a4b4221679aa3e1026936c3\\transformed\\appcompat-1.5.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\5dfd84ee1a217c65107a3ceea5e6383c\\transformed\\appcompat-1.5.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,20,34,35,36,39,43,44,45,46",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -15,7 +15,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\b0bf875a6326035ce0fffffa9893aa8f\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\87779b82f53ce66596e73fedcb39d3b2\\transformed\\cardview-1.0.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -34,7 +34,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\89f9d5031ff3ff1f54fbbd86e401f077\\transformed\\material-1.7.0\\res\\values-v23\\values-v23.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\9ae0f38749e9cb99208c14e94046eb44\\transformed\\material-1.7.0\\res\\values-v23\\values-v23.xml",
                     "from": {
                         "startLines": "2,5,8,13,17,20,23,26,31,34,38",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4",

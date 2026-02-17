@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
+
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
 }
 
 // Charger les propriétés du keystore
@@ -90,4 +92,9 @@ dependencies {
 
     // JSON serialization
     implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Room Database
+    implementation "androidx.room:room-runtime:2.6.1"
+    implementation "androidx.room:room-ktx:2.6.1"
+    ksp "androidx.room:room-compiler:2.6.1"
 }
