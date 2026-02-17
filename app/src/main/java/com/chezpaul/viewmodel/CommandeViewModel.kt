@@ -3,11 +3,14 @@ package com.chezpaul.viewmodel
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import com.chezpaul.data.PersistenceManager
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.model.Commande
 
-class CommandeViewModel : ViewModel() {
+class CommandeViewModel(application: Application) : AndroidViewModel(application) {
+    private val persistenceManager = PersistenceManager(application.applicationContext)
     private val _commandesList = mutableStateOf<List<Commande>>(emptyList())
     val commandesList = _commandesList
 
@@ -20,7 +23,7 @@ class CommandeViewModel : ViewModel() {
 
     private val _selectedCommande = mutableStateOf<Commande?>(null)
     val selectedCommande: State<Commande?> = _selectedCommande
-
+    
     // Constantes
     private val nomCervelle = "cervelle"
     private val nomStMarcelin = "st marcelin"
@@ -29,20 +32,36 @@ class CommandeViewModel : ViewModel() {
         const val PRIX_MENU = 32.0
     }
 
+    init {
+        loadCommandes()
+    }
+
+    private fun loadCommandes() {
+        _commandesList.value = persistenceManager.loadCommandes()
+            .sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
+    }
+
+    private fun saveCommandes() {
+        persistenceManager.saveCommandes(_commandesList.value)
+    }
+
     // --- Gestion des commandes ---
 
     fun ajouterCommande(cmd: Commande) {
         _commandesList.value = (_commandesList.value + cmd).sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
+        saveCommandes()
     }
 
     fun modifierCommande(cmd: Commande) {
         _commandesList.value = _commandesList.value.map { commande ->
             if (commande.numeroTable == cmd.numeroTable) cmd else commande
         }.sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
+        saveCommandes()
     }
 
     fun supprimerCommande(cmd: Commande) {
         _commandesList.value = _commandesList.value.filterNot { it.numeroTable == cmd.numeroTable }
+        saveCommandes()
     }
 
     fun verifierPlatsSelonCouverts(cmd: Commande): Boolean {
@@ -79,6 +98,7 @@ class CommandeViewModel : ViewModel() {
     fun resetAllCommandes() {
         _commandesList.value = emptyList()
         validerCommandeResult.value = true
+        saveCommandes()
     }
 
     // --- BottomSheet (ex-ResumeViewModel) ---
