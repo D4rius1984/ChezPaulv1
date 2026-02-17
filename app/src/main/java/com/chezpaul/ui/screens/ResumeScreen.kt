@@ -15,6 +15,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
@@ -34,6 +36,7 @@ fun ResumeScreen(
     printerViewModel: PrinterViewModel? = null
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val jauneMenu = Color(0xFFFFE066)
 
     // Observer les données du ViewModel
@@ -149,7 +152,10 @@ fun ResumeScreen(
 
                         Spacer(Modifier.height(18.dp))
                         Button(
-                            onClick = onValide,
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                onValide()
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(54.dp),

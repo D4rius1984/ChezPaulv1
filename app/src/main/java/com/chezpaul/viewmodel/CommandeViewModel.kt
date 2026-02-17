@@ -239,7 +239,8 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         val averageCA: Double = 0.0,
         val totalCommands: Int = 0,
         val totalCoversAll: Int = 0,
-        val topItems: List<TopItemResult> = emptyList()
+        val topPlats: List<TopItemResult> = emptyList(),
+        val topBoissons: List<TopItemResult> = emptyList()
     )
 
     private val _statsData = mutableStateOf(StatsData())
@@ -253,7 +254,8 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
                 averageCA = repository.getAverageCA(),
                 totalCommands = repository.getTotalCommandCount(),
                 totalCoversAll = repository.getTotalCovers(),
-                topItems = repository.getTopItems(10)
+                topPlats = repository.getTopPlats(10),
+                topBoissons = repository.getTopBoissons(10)
             )
         }
     }

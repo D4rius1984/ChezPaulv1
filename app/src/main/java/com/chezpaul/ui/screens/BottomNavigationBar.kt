@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.chezpaul.ui.navigation.Screen
 import com.chezpaul.ui.theme.ChezPaulColors
@@ -29,6 +31,8 @@ fun BottomNavigationBar(
     onItemSelected: (Screen) -> Unit,
     onAddClick: () -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
+
     NavigationBar(
         containerColor = ChezPaulColors.FondPrincipal,
         tonalElevation = 6.dp,
@@ -55,7 +59,10 @@ fun BottomNavigationBar(
                     contentAlignment = Alignment.Center
                 ) {
                     FloatingActionButton(
-                        onClick = onAddClick,
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onAddClick()
+                        },
                         containerColor = ChezPaulColors.JauneMenu,
                         contentColor = ChezPaulColors.TexteNoir,
                         modifier = Modifier.size(62.dp),

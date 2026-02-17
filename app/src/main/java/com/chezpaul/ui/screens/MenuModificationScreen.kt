@@ -15,6 +15,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +35,7 @@ fun MenuModificationScreen(
 ) {
     val jauneMenu = Color(0xFFFFE066)
     val orangeMenu = Color(0xFFEDA637)
+    val haptic = LocalHapticFeedback.current
 
     // Onglets et leur état sélectionné
     var selectedTab by remember { mutableStateOf(0) } // 0 = Plats, 1 = Boissons
@@ -83,6 +86,7 @@ fun MenuModificationScreen(
                         Checkbox(
                             checked = isActivated,
                             onCheckedChange = { checked ->
+                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                 toggleActivation(plat.nom, checked)
                             },
                             colors = CheckboxDefaults.colors(checkedColor = jauneMenu)
@@ -126,6 +130,7 @@ fun MenuModificationScreen(
                             Checkbox(
                                 checked = isActivated,
                                 onCheckedChange = { checked ->
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     toggleActivation(boisson.nom, checked)
                                 },
                                 colors = CheckboxDefaults.colors(checkedColor = jauneMenu)
@@ -247,6 +252,7 @@ fun MenuModificationScreen(
         // Button to validate the selection, placed at the bottom
         Button(
             onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 Toast.makeText(context, "Modifications sauvegardées", Toast.LENGTH_SHORT).show()
                 onValidate()
             },

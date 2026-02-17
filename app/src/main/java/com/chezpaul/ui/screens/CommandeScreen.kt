@@ -289,7 +289,10 @@ fun CommandeScreen(
 
                     Spacer(Modifier.height(16.dp))
                     Button(
-                        onClick = { initDone = true },
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            initDone = true
+                        },
                         enabled = numeroTable.isNotBlank() && couverts.isNotBlank() && (!isGroupe || prixGroupeSelectionne != null),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
