@@ -84,10 +84,11 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                         commandeViewModel.deleteCommande(commandeASupprimer)
                     },
                     onModifieTable = { commandeAModifier ->
-                        commandeViewModel.deleteCommande(commandeAModifier)
-                        commandeEnCours = commandeAModifier
-                        showResume = false
-                        viewModel.selectScreen(Screen.Commandes)
+                        commandeViewModel.startModification(commandeAModifier) { cmd ->
+                            commandeEnCours = cmd
+                            showResume = false
+                            viewModel.selectScreen(Screen.Commandes)
+                        }
                     },
                     onNavigate = { screen ->
                         viewModel.selectScreen(screen)
