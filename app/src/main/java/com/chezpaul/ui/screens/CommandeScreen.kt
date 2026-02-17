@@ -22,7 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.*
 import com.chezpaul.viewmodel.CommandeViewModel
@@ -41,6 +43,7 @@ fun CommandeScreen(
     val orangeMenu = Color(0xFFEDA637)
     val commandeViewModel: CommandeViewModel = viewModel()
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
 
     // Observer l'état de l'imprimante
     val isPrinterEnabled by printerViewModel.isPrinterEnabled
@@ -425,6 +428,7 @@ fun CommandeScreen(
                                             Row(verticalAlignment = Alignment.CenterVertically) {
                                                 IconButton(onClick = {
                                                     if (count > 0) {
+                                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                                         val newMap = boissonsSelectionnees.toMutableMap()
                                                         newMap[boisson.nom] = count - 1
                                                         boissonsSelectionnees = newMap
@@ -434,6 +438,7 @@ fun CommandeScreen(
                                                 }
                                                 Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                                 IconButton(onClick = {
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                                     val newMap = boissonsSelectionnees.toMutableMap()
                                                     newMap[boisson.nom] = count + 1
                                                     boissonsSelectionnees = newMap
@@ -460,6 +465,7 @@ fun CommandeScreen(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         IconButton(onClick = {
                                             if (count > 0) {
+                                                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                                 val newMap = platsSelectionnes.toMutableMap()
                                                 newMap[plat.nom] = count - 1
                                                 platsSelectionnes = newMap
@@ -472,6 +478,7 @@ fun CommandeScreen(
                                             enabled = peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin",
                                             onClick = {
                                                 if (peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin") {
+                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                                     val newMap = platsSelectionnes.toMutableMap()
                                                     newMap[plat.nom] = count + 1
                                                     platsSelectionnes = newMap
@@ -514,6 +521,7 @@ fun CommandeScreen(
 
             Button(
                 onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     val newCommande = Commande(
                         numeroTable = numeroTable,
                         nombreCouverts = nbCouvertsInt,

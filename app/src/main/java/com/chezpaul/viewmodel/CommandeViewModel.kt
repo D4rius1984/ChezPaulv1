@@ -98,6 +98,11 @@ class CommandeViewModel : ViewModel() {
         validerCommande(commande)
     }
 
+    fun startModification(commande: Commande, onReady: (Commande) -> Unit) {
+        deleteCommande(commande)
+        onReady(commande)
+    }
+
     // --- Calculs Accueil (ex-AccueilViewModel) ---
 
     val totalCouverts: Int
