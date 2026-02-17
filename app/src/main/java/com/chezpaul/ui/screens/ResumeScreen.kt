@@ -120,7 +120,15 @@ fun ResumeScreen(
                             Text("Aucun plat", color = Color.Gray)
                         }
                         Spacer(Modifier.height(8.dp))
-                        Text("Boissons :", color = Color.White, style = MaterialTheme.typography.titleSmall)
+                        if (commande.isGroupe && commande.prixMenuGroupe != null) {
+                            Text(
+                                "Boissons (incluses ${commande.prixMenuGroupe.toInt()}€/cvt) :",
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleSmall
+                            )
+                        } else {
+                            Text("Boissons :", color = Color.White, style = MaterialTheme.typography.titleSmall)
+                        }
                         if (commande.boissons.isNotEmpty()) {
                             commande.boissons.forEach { boisson ->
                                 Text(
@@ -219,9 +227,15 @@ fun ResumeScreen(
                                                 }
                                             }
                                         }
-                                        val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * commandeViewModel.menuPrice.value else 0.0
-                                        val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
-                                        val prixTotal = prixPlats + prixBoissons
+                                        val prixTotal = if (cmd.isGroupe && cmd.prixMenuGroupe != null) {
+                                            // Groupe : prix fixe, boissons incluses
+                                            cmd.nombreCouverts * cmd.prixMenuGroupe
+                                        } else {
+                                            // Standard : plats + boissons séparées
+                                            val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * commandeViewModel.menuPrice.value else 0.0
+                                            val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
+                                            prixPlats + prixBoissons
+                                        }
                                         val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0
                                         val tmColor = getTicketMoyenColor(ticketMoyen)
                                         Text(
@@ -252,8 +266,9 @@ fun ResumeScreen(
                                         Text("Plats : Aucun plat", color = Color.Gray)
                                     }
                                     if (cmd.boissons.isNotEmpty()) {
+                                        val boissonSuffix = if (cmd.isGroupe && cmd.prixMenuGroupe != null) " (incluses)" else ""
                                         Text(
-                                            "Boissons : " + cmd.boissons.joinToString { "${it.nom} x${it.quantite}" },
+                                            "Boissons$boissonSuffix : " + cmd.boissons.joinToString { "${it.nom} x${it.quantite}" },
                                             color = Color.White
                                         )
                                     } else {

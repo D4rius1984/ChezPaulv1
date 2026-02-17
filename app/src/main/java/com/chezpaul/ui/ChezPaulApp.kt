@@ -10,16 +10,15 @@ import com.chezpaul.model.Commande
 import com.chezpaul.ui.navigation.Screen
 import com.chezpaul.ui.screens.*
 import com.chezpaul.ui.theme.ChezPaulTheme
-import com.chezpaul.viewmodel.CommandeViewModel
-import com.chezpaul.viewmodel.BottomNavViewModel
 import com.chezpaul.viewmodel.BoissonViewModel
+import com.chezpaul.viewmodel.BottomNavViewModel
+import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.PlatViewModel
-import com.chezpaul.viewmodel.SettingsViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
+import com.chezpaul.viewmodel.SettingsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun ChezPaulApp(viewModel: BottomNavViewModel) {
     // Initialisation des ViewModels (gérés par le Lifecycle Android)
     val commandeViewModel: CommandeViewModel = viewModel()
@@ -55,14 +54,15 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                         commandeEnCours = null
                         showResume = false
                         viewModel.selectScreen(Screen.Commandes)
-                    }
+                    },
                 )
-            }
+            },
         ) { innerPadding ->
             Box(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize(),
             ) {
                 AppNavigationContent(
                     currentScreen = currentScreen,
@@ -100,7 +100,7 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     onNavigate = { screen ->
                         viewModel.selectScreen(screen)
                     },
-                    printerViewModelForResume = printerViewModel
+                    printerViewModelForResume = printerViewModel,
                 )
             }
         }
@@ -124,13 +124,14 @@ private fun AppNavigationContent(
     onSupprimeTable: (Commande) -> Unit,
     onModifieTable: (Commande) -> Unit,
     onNavigate: (Screen) -> Unit,
-    printerViewModelForResume: PrinterViewModel
+    printerViewModelForResume: PrinterViewModel,
 ) {
     when (currentScreen) {
-        Screen.Accueil -> AccueilScreen(
-            commandeViewModel = commandeViewModel,
-            menuPrice = commandeViewModel.menuPrice.value
-        )
+        Screen.Accueil ->
+            AccueilScreen(
+                commandeViewModel = commandeViewModel,
+                menuPrice = commandeViewModel.menuPrice.value,
+            )
 
         Screen.Commandes -> {
             if (!showResume) {
@@ -139,7 +140,7 @@ private fun AppNavigationContent(
                     onNext = onNext,
                     platsActivationState = platsActivationState,
                     boissonsActivationState = boissonsActivationState,
-                    printerViewModel = printerViewModel
+                    printerViewModel = printerViewModel,
                 )
             } else {
                 ResumeScreen(
@@ -149,39 +150,43 @@ private fun AppNavigationContent(
                     onSupprimeTable = onSupprimeTable,
                     onModifieTable = onModifieTable,
                     isInCommandeFlow = true,
-                    printerViewModel = printerViewModelForResume
+                    printerViewModel = printerViewModelForResume,
                 )
             }
         }
 
-        Screen.Tables -> ResumeScreen(
-            commandeViewModel = commandeViewModel,
-            commande = null,
-            onValide = {},
-            onSupprimeTable = onSupprimeTable,
-            onModifieTable = onModifieTable,
-            isInCommandeFlow = false,
-            printerViewModel = printerViewModelForResume
-        )
+        Screen.Tables ->
+            ResumeScreen(
+                commandeViewModel = commandeViewModel,
+                commande = null,
+                onValide = {},
+                onSupprimeTable = onSupprimeTable,
+                onModifieTable = onModifieTable,
+                isInCommandeFlow = false,
+                printerViewModel = printerViewModelForResume,
+            )
 
-        Screen.Settings -> SettingsScreen(
-            settingsViewModel = settingsViewModel,
-            printerViewModel = printerViewModel,
-            commandeViewModel = commandeViewModel,
-            platViewModel = platViewModel,
-            boissonViewModel = boissonViewModel,
-            onHistoryClick = { onNavigate(Screen.History) }
-        )
+        Screen.Settings ->
+            SettingsScreen(
+                settingsViewModel = settingsViewModel,
+                printerViewModel = printerViewModel,
+                commandeViewModel = commandeViewModel,
+                platViewModel = platViewModel,
+                boissonViewModel = boissonViewModel,
+                onHistoryClick = { onNavigate(Screen.History) },
+            )
 
-        Screen.History -> HistoryScreen(
-            commandeViewModel = commandeViewModel,
-            onBack = { onNavigate(Screen.Settings) }
-        )
+        Screen.History ->
+            HistoryScreen(
+                commandeViewModel = commandeViewModel,
+                onBack = { onNavigate(Screen.Settings) },
+            )
 
-        Screen.Modifier -> MenuModificationScreen(
-            platViewModel = platViewModel,
-            boissonViewModel = boissonViewModel,
-            onValidate = { onNavigate(Screen.Accueil) }
-        )
+        Screen.Modifier ->
+            MenuModificationScreen(
+                platViewModel = platViewModel,
+                boissonViewModel = boissonViewModel,
+                onValidate = { onNavigate(Screen.Accueil) },
+            )
     }
 }

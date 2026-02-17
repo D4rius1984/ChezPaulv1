@@ -187,6 +187,20 @@ fun AccueilScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+                if (commandeViewModel.caGroupes > 0) {
+                    Spacer(Modifier.height(3.dp))
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text("Groupes (boissons incl.)", color = ChezPaulColors.TexteBlanc)
+                        Text(
+                            "%.2f €".format(commandeViewModel.caGroupes),
+                            color = ChezPaulColors.JauneMenu,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
                 Spacer(Modifier.height(3.dp))
                 Row(
                     Modifier.fillMaxWidth(),

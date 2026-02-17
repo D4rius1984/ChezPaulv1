@@ -173,16 +173,25 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
             }
         }
 
+    // CA pour les tables standard (non-groupe)
     val caPlats: Double
         @Composable get() = _commandesList.value
-            .filter { it.plats.isNotEmpty() }
+            .filter { !it.isGroupe && it.plats.isNotEmpty() }
             .sumOf { it.nombreCouverts * menuPrice.value }
 
+    // CA pour les boissons (uniquement tables standard, les groupes sont inclus)
     val caBoissons: Double
         @Composable get() = _commandesList.value
+            .filter { !it.isGroupe }
             .flatMap { it.boissons }
             .sumOf { it.quantite * it.prix }
 
+    // CA pour les tables groupe (prix fixe, boissons incluses)
+    val caGroupes: Double
+        @Composable get() = _commandesList.value
+            .filter { it.isGroupe && it.prixMenuGroupe != null }
+            .sumOf { it.nombreCouverts * (it.prixMenuGroupe ?: 0.0) }
+
     val caTotal: Double
-        @Composable get() = caPlats + caBoissons
+        @Composable get() = caPlats + caBoissons + caGroupes
 }

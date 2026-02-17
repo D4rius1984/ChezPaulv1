@@ -55,6 +55,7 @@ fun CommandeScreen(
     var numeroTable by remember { mutableStateOf(commande?.numeroTable ?: "") }
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
     var isGroupe by remember { mutableStateOf(commande?.isGroupe ?: false) }
+    var prixGroupeSelectionne by remember { mutableStateOf(commande?.prixMenuGroupe) }
     var shouldPrint by remember { mutableStateOf(false) } // Switch pour l'impression
 
     var selectedTab by remember { mutableIntStateOf(1) }
@@ -70,6 +71,7 @@ fun CommandeScreen(
             numeroTable = commande.numeroTable
             couverts = commande.nombreCouverts.toString()
             isGroupe = commande.isGroupe
+            prixGroupeSelectionne = commande.prixMenuGroupe
             remarqueText = commande.remarque ?: ""
             platsSelectionnes = commande.plats.associate { plat -> plat.nom to plat.quantite }
             boissonsSelectionnees = commande.boissons.associate { boisson -> boisson.nom to boisson.quantite }
@@ -176,15 +178,66 @@ fun CommandeScreen(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("Groupe", color = jauneMenu, modifier = Modifier.weight(1f))
+                        Text("Table de Groupe", color = jauneMenu, modifier = Modifier.weight(1f))
                         Switch(
                             checked = isGroupe,
-                            onCheckedChange = { isGroupe = it },
+                            onCheckedChange = {
+                                isGroupe = it
+                                if (!it) prixGroupeSelectionne = null
+                            },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = jauneMenu,
                                 checkedTrackColor = jauneMenu.copy(alpha = 0.5f)
                             )
                         )
+                    }
+
+                    // Prix Groupe - chips de sélection
+                    if (isGroupe) {
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            "Prix menu groupe :",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(Modifier.height(6.dp))
+                        @OptIn(ExperimentalLayoutApi::class)
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        ) {
+                            listOf(33.0, 39.0, 45.0).forEach { prix ->
+                                val isSelected = prixGroupeSelectionne == prix
+                                SuggestionChip(
+                                    onClick = {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        prixGroupeSelectionne = prix
+                                    },
+                                    label = {
+                                        Text(
+                                            "${prix.toInt()}€",
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                            color = if (isSelected) Color.Black else jauneMenu
+                                        )
+                                    },
+                                    colors = SuggestionChipDefaults.suggestionChipColors(
+                                        containerColor = if (isSelected) jauneMenu else Color.Transparent
+                                    ),
+                                    border = SuggestionChipDefaults.suggestionChipBorder(
+                                        enabled = true,
+                                        borderColor = jauneMenu.copy(alpha = if (isSelected) 1f else 0.5f)
+                                    )
+                                )
+                            }
+                        }
+                        if (prixGroupeSelectionne != null) {
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "Boissons incluses dans le prix groupe",
+                                color = Color.Gray,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
 
                     Spacer(Modifier.height(8.dp))
@@ -237,7 +290,7 @@ fun CommandeScreen(
                     Spacer(Modifier.height(16.dp))
                     Button(
                         onClick = { initDone = true },
-                        enabled = numeroTable.isNotBlank() && couverts.isNotBlank(),
+                        enabled = numeroTable.isNotBlank() && couverts.isNotBlank() && (!isGroupe || prixGroupeSelectionne != null),
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(16.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -285,6 +338,22 @@ fun CommandeScreen(
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
+                        }
+                        // Badge Prix Groupe
+                        if (isGroupe && prixGroupeSelectionne != null) {
+                            Spacer(Modifier.width(8.dp))
+                            Surface(
+                                color = orangeMenu.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(
+                                    "Groupe ${prixGroupeSelectionne!!.toInt()}€",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = orangeMenu,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                )
+                            }
                         }
                         Spacer(Modifier.width(8.dp))
                         // Badge Remarque cliquable
@@ -543,7 +612,8 @@ fun CommandeScreen(
                             )
                         },
                         remarque = remarqueText.takeIf { it.isNotBlank() },
-                        isGroupe = isGroupe
+                        isGroupe = isGroupe,
+                        prixMenuGroupe = if (isGroupe) prixGroupeSelectionne else null
                     )
 
                     // Impression si demandée (non bloquant !)

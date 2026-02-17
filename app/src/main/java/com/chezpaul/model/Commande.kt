@@ -7,5 +7,6 @@ data class Commande(
     val boissons: List<Boisson>,
     val remarque: String? = null,
     val isGroupe: Boolean = false,
-    val timestamp: Long = System.currentTimeMillis()
+    val prixMenuGroupe: Double? = null,
+    val timestamp: Long = System.currentTimeMillis(),
 )
