@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.chezpaul.data.PersistenceManager
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.model.Commande
+import com.chezpaul.data.HistoryItem
 
 class CommandeViewModel(application: Application) : AndroidViewModel(application) {
     private val persistenceManager = PersistenceManager(application.applicationContext)
@@ -32,18 +33,33 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         const val PRIX_MENU = 32.0
     }
 
+    private val _historyList = mutableStateOf<List<HistoryItem>>(emptyList())
+    val historyList = _historyList
+
     init {
         loadCommandes()
+        loadHistory()
     }
 
     private fun loadCommandes() {
         _commandesList.value = persistenceManager.loadCommandes()
             .sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
     }
+    
+    fun loadHistory() {
+        _historyList.value = persistenceManager.loadHistory().sortedByDescending { it.timestamp }
+    }
 
     private fun saveCommandes() {
         persistenceManager.saveCommandes(_commandesList.value)
     }
+
+    fun deleteHistoryItem(item: HistoryItem) {
+        persistenceManager.deleteHistoryItem(item)
+        loadHistory()
+    }
+
+
 
     // --- Gestion des commandes ---
 
@@ -96,6 +112,12 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun resetAllCommandes() {
+        // Archiver le service actuel avant de tout effacer
+        if (_commandesList.value.isNotEmpty()) {
+            persistenceManager.archiveService(_commandesList.value)
+            loadHistory() // Recharger l'historique après archivage
+        }
+        
         _commandesList.value = emptyList()
         validerCommandeResult.value = true
         saveCommandes()
