@@ -19,12 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
 import com.chezpaul.ui.theme.ChezPaulColors
-import com.chezpaul.viewmodel.ResumeViewModel
+import com.chezpaul.viewmodel.CommandeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResumeScreen(
-    resumeViewModel: ResumeViewModel,
+    commandeViewModel: CommandeViewModel,
     commande: Commande?,
     onValide: () -> Unit,
     onSupprimeTable: (Commande) -> Unit,
@@ -34,9 +34,9 @@ fun ResumeScreen(
     val jauneMenu = Color(0xFFFFE066)
 
     // Observer les données du ViewModel
-    val commandesList by resumeViewModel.commandesList
-    val showBottomSheet by resumeViewModel.showBottomSheet
-    val selectedCommande by resumeViewModel.selectedCommande
+    val commandesList by commandeViewModel.commandesList
+    val showBottomSheet by commandeViewModel.showBottomSheet
+    val selectedCommande by commandeViewModel.selectedCommande
 
     val bottomSheetState = rememberModalBottomSheetState()
 
@@ -233,7 +233,7 @@ fun ResumeScreen(
                                             tint = Color.White,
                                             modifier = Modifier
                                                 .size(24.dp)
-                                                .clickable { resumeViewModel.toggleBottomSheet(cmd) }
+                                                .clickable { commandeViewModel.toggleBottomSheet(cmd) }
                                         )
                                     }
                                     if (cmd.plats.isNotEmpty()) {
@@ -283,7 +283,7 @@ fun ResumeScreen(
     if (showBottomSheet && selectedCommande != null) {
         ModalBottomSheet(
             onDismissRequest = {
-                resumeViewModel.toggleBottomSheet(null)
+                commandeViewModel.toggleBottomSheet(null)
             },
             sheetState = bottomSheetState,
             containerColor = Color(0xFF292929),
@@ -326,7 +326,7 @@ fun ResumeScreen(
                         .fillMaxWidth()
                         .clickable {
                             selectedCommande?.let { commande ->
-                                resumeViewModel.toggleBottomSheet(null)
+                                commandeViewModel.toggleBottomSheet(null)
                                 onModifieTable(commande)
                             }
                         }
@@ -353,7 +353,7 @@ fun ResumeScreen(
                         .fillMaxWidth()
                         .clickable {
                             selectedCommande?.let { commande ->
-                                resumeViewModel.deleteCommande(commande)
+                                commandeViewModel.deleteCommande(commande)
                                 onSupprimeTable(commande)
                             }
                         }

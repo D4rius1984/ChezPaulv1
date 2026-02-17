@@ -18,16 +18,16 @@ import androidx.compose.ui.unit.dp
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.ui.components.*
 import com.chezpaul.ui.theme.ChezPaulColors
-import com.chezpaul.viewmodel.AccueilViewModel
+import com.chezpaul.viewmodel.CommandeViewModel
 
 @Composable
 fun AccueilScreen(
-    accueilViewModel: AccueilViewModel
+    commandeViewModel: CommandeViewModel
 ) {
-    val commandesList by accueilViewModel.commandesList
-    val totalCouverts = accueilViewModel.totalCouverts
-    val boissonsParCategorie = accueilViewModel.boissonsParCategorie
-    val nombreRavigotes = accueilViewModel.nombreRavigotes
+    val commandesList by commandeViewModel.commandesList
+    val totalCouverts = commandeViewModel.totalCouverts
+    val boissonsParCategorie = commandeViewModel.boissonsParCategorie
+    val nombreRavigotes = commandeViewModel.nombreRavigotes
 
     val categories = listOf(
         CategorieBoisson.APEROS to "Apéros",
@@ -156,7 +156,7 @@ fun AccueilScreen(
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        "%.2f €".format(accueilViewModel.caTotal),
+                        "%.2f €".format(commandeViewModel.caTotal),
                         color = ChezPaulColors.JauneMenu,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
@@ -169,7 +169,7 @@ fun AccueilScreen(
                 ) {
                     Text("Plats (menu 32€)", color = ChezPaulColors.TexteBlanc)
                     Text(
-                        "%.2f €".format(accueilViewModel.caPlats),
+                        "%.2f €".format(commandeViewModel.caPlats),
                         color = ChezPaulColors.JauneMenu,
                         fontWeight = FontWeight.Bold
                     )
@@ -181,7 +181,7 @@ fun AccueilScreen(
                 ) {
                     Text("Boissons", color = ChezPaulColors.TexteBlanc)
                     Text(
-                        "%.2f €".format(accueilViewModel.caBoissons),
+                        "%.2f €".format(commandeViewModel.caBoissons),
                         color = ChezPaulColors.JauneMenu,
                         fontWeight = FontWeight.Bold
                     )
@@ -193,7 +193,7 @@ fun AccueilScreen(
                 ) {
                     Text("Ticket moyen", color = ChezPaulColors.TexteBlanc)
                     Text(
-                        if (totalCouverts > 0) "%.2f €".format(accueilViewModel.caTotal / totalCouverts)
+                        if (totalCouverts > 0) "%.2f €".format(commandeViewModel.caTotal / totalCouverts)
                         else "— €",
                         color = ChezPaulColors.JauneMenu,
                         fontWeight = FontWeight.Bold
