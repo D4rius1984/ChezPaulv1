@@ -19,6 +19,7 @@ import com.chezpaul.viewmodel.PrinterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+
 fun ChezPaulApp(viewModel: BottomNavViewModel) {
     // Initialisation des ViewModels (gérés par le Lifecycle Android)
     val commandeViewModel: CommandeViewModel = viewModel()
