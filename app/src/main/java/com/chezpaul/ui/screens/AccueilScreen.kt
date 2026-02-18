@@ -1,8 +1,6 @@
 package com.chezpaul.ui.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Euro
 import androidx.compose.material.icons.filled.LocalDrink
@@ -249,11 +247,7 @@ fun AccueilScreen(
                     )
                 }
                 Spacer(Modifier.height(6.dp))
-                Column(
-                    modifier = Modifier
-                        .weight(1f, fill = false)
-                        .verticalScroll(rememberScrollState())
-                ) {
+                Column {
                     commandesList.forEach { cmd ->
                         Row(
                             Modifier.fillMaxWidth(),
