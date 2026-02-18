@@ -1,8 +1,7 @@
 plugins {
-    id 'com.android.application'
-
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.devtools.ksp'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 // Charger les propriétés du keystore
@@ -14,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace 'com.chezpaul'
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.chezpaul"
@@ -45,56 +44,55 @@ android {
         compose true
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.5.11' // Compatible avec Kotlin 1.9.23 / Compose 2024.04.00
-    }
-
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
 dependencies {
     // Core dependencies
-    implementation "androidx.core:core-ktx:1.13.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.7.0"
-    implementation "androidx.activity:activity-compose:1.9.0"
+    implementation libs.androidx.core.ktx
+    implementation libs.androidx.lifecycle.runtime.ktx
+    implementation libs.androidx.activity.compose
 
-    // Compose BOM (version compatible avec Compose 2024)
-    implementation platform('androidx.compose:compose-bom:2024.04.00')
+    // Compose BOM
+    implementation platform(libs.androidx.compose.bom)
 
-    // Compose modules
-    implementation "androidx.compose.ui:ui"
-    implementation "androidx.compose.ui:ui-tooling-preview"
-    implementation "androidx.compose.ui:ui-text"
-    implementation "androidx.compose.material3:material3:1.1.0" // Mise à jour vers Material3
-    implementation "androidx.compose.material:material-icons-extended"
-    implementation "androidx.navigation:navigation-compose"
-    implementation "androidx.compose.runtime:runtime-livedata"
-    implementation "androidx.compose.foundation:foundation"
-    implementation "androidx.compose.foundation:foundation-layout"
-    implementation "androidx.navigation:navigation-compose:2.7.7"
+    // Compose modules (versions managed by BOM)
+    implementation libs.androidx.compose.ui
+    implementation libs.androidx.compose.ui.tooling.preview
+    implementation libs.androidx.compose.ui.text
+    implementation libs.androidx.compose.material3
+    implementation libs.androidx.compose.material.icons.extended
+    implementation libs.androidx.compose.runtime.livedata
+    implementation libs.androidx.compose.foundation
+    implementation libs.androidx.compose.foundation.layout
 
-    // Google Material (thème classique Android)
-    implementation "com.google.android.material:material:1.7.0"
+    // Navigation
+    implementation libs.androidx.navigation.compose
 
-    // ViewModel for Compose - Lifecycle integration
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0"  // Ajout pour collectAsStateWithLifecycle
+    // Google Material
+    implementation libs.material
+
+    // ViewModel for Compose
+    implementation libs.androidx.lifecycle.viewmodel.compose
 
     // Debug dependencies
-    debugImplementation "androidx.compose.ui:ui-tooling"
-    debugImplementation "androidx.compose.ui:ui-test-manifest"
+    debugImplementation libs.androidx.compose.ui.tooling
+    debugImplementation libs.androidx.compose.ui.test.manifest
 
     // JSON serialization
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation libs.gson
 
     // Room Database
-    implementation "androidx.room:room-runtime:2.6.1"
-    implementation "androidx.room:room-ktx:2.6.1"
-    ksp "androidx.room:room-compiler:2.6.1"
+    implementation libs.androidx.room.runtime
+    implementation libs.androidx.room.ktx
+    ksp libs.androidx.room.compiler
 }

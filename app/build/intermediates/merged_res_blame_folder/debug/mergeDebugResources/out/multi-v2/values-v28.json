@@ -4,7 +4,7 @@
             "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-v28/values-v28.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\9ae0f38749e9cb99208c14e94046eb44\\transformed\\material-1.7.0\\res\\values-v28\\values-v28.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\f1cc7d8e530e0992a472b759a1e27ec0\\transformed\\material-1.7.0\\res\\values-v28\\values-v28.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\5dfd84ee1a217c65107a3ceea5e6383c\\transformed\\appcompat-1.5.0\\res\\values-v28\\values-v28.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\dab1d0f6bc49f85f060ba92dd4cfa80f\\transformed\\appcompat-1.5.0\\res\\values-v28\\values-v28.xml",
                     "from": {
                         "startLines": "2,3,4,8",
                         "startColumns": "4,4,4,4",
