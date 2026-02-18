@@ -1,6 +1,7 @@
 package com.chezpaul.ui.screens
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,13 +11,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Print
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -62,6 +66,7 @@ fun CommandeScreen(
 
     var selectedTab by remember { mutableIntStateOf(1) }
     val tabTitles = remember { listOf("Plats", "Boissons") }
+    var expandedCategories by rememberSaveable { mutableStateOf(setOf<String>()) }
     var remarqueText by remember { mutableStateOf(commande?.remarque ?: "") }
     var showRemarqueDialog by remember { mutableStateOf(false) }
     var platsSelectionnes by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
@@ -503,63 +508,119 @@ fun CommandeScreen(
                             val boissonsByCategory = boissonsFiltres.groupBy { it.categorie }
 
                             boissonsByCategory.forEach { (categorie, boissonsDeCategorie) ->
-                                // Header de catégorie
-                                item {
-                                    Text(
-                                        text = categorie.displayName,
-                                        color = orangeMenu,
-                                        fontWeight = FontWeight.Bold,
-                                        style = MaterialTheme.typography.titleSmall,
-                                        modifier = Modifier.padding(vertical = 8.dp)
+                                val catKey = categorie.name
+                                val isExpanded = catKey in expandedCategories
+                                val selectedCount = boissonsDeCategorie.sumOf { boissonsSelectionnees[it.nom] ?: 0 }
+
+                                // Header de catégorie (cliquable, avec chevron)
+                                item(key = "header_$catKey") {
+                                    val rotation by animateFloatAsState(
+                                        targetValue = if (isExpanded) 180f else 0f,
+                                        label = "chevron"
                                     )
-                                }
-
-                                // Grouper par sous-catégorie si présente
-                                val parSousCategorie = boissonsDeCategorie.groupBy { it.sousCategorie }
-
-                                parSousCategorie.forEach { (sousCat, boissons) ->
-                                    // Afficher le sous-header si une sous-catégorie existe
-                                    if (sousCat != null) {
-                                        item {
-                                            Text(
-                                                text = sousCat,
-                                                color = jauneMenu.copy(alpha = 0.7f),
-                                                fontWeight = FontWeight.SemiBold,
-                                                style = MaterialTheme.typography.bodyMedium,
-                                                modifier = Modifier.padding(start = 8.dp, top = 4.dp, bottom = 2.dp)
-                                            )
+                                    Surface(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 4.dp),
+                                        shape = RoundedCornerShape(10.dp),
+                                        color = ChezPaulColors.FondCard,
+                                        onClick = {
+                                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                            expandedCategories = if (isExpanded) {
+                                                expandedCategories - catKey
+                                            } else {
+                                                expandedCategories + catKey
+                                            }
                                         }
-                                    }
-
-                                    items(boissons, key = { it.nom }) { boisson ->
-                                        val count = boissonsSelectionnees[boisson.nom] ?: 0
+                                    ) {
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth()
-                                                .padding(vertical = 4.dp),
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.SpaceBetween
+                                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                                            verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Text(boisson.nom, color = Color.White, modifier = Modifier.weight(1f))
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                IconButton(onClick = {
-                                                    if (count > 0) {
+                                            Text(
+                                                text = categorie.displayName,
+                                                color = orangeMenu,
+                                                fontWeight = FontWeight.Bold,
+                                                style = MaterialTheme.typography.titleSmall,
+                                                modifier = Modifier.weight(1f)
+                                            )
+                                            if (selectedCount > 0) {
+                                                Surface(
+                                                    shape = RoundedCornerShape(12.dp),
+                                                    color = orangeMenu
+                                                ) {
+                                                    Text(
+                                                        text = "$selectedCount",
+                                                        color = ChezPaulColors.TexteNoir,
+                                                        fontWeight = FontWeight.Bold,
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                                    )
+                                                }
+                                                Spacer(Modifier.width(8.dp))
+                                            }
+                                            Icon(
+                                                Icons.Default.KeyboardArrowDown,
+                                                contentDescription = if (isExpanded) "Réduire" else "Développer",
+                                                tint = orangeMenu,
+                                                modifier = Modifier
+                                                    .size(24.dp)
+                                                    .rotate(rotation)
+                                            )
+                                        }
+                                    }
+                                }
+
+                                // Contenu de la catégorie (animé)
+                                if (isExpanded) {
+                                    val parSousCategorie = boissonsDeCategorie.groupBy { it.sousCategorie }
+
+                                    parSousCategorie.forEach { (sousCat, boissons) ->
+                                        if (sousCat != null) {
+                                            item(key = "subheader_${catKey}_$sousCat") {
+                                                Text(
+                                                    text = sousCat,
+                                                    color = jauneMenu.copy(alpha = 0.7f),
+                                                    fontWeight = FontWeight.SemiBold,
+                                                    style = MaterialTheme.typography.bodyMedium,
+                                                    modifier = Modifier.padding(start = 12.dp, top = 4.dp, bottom = 2.dp)
+                                                )
+                                            }
+                                        }
+
+                                        items(boissons, key = { it.nom }) { boisson ->
+                                            val count = boissonsSelectionnees[boisson.nom] ?: 0
+                                            Row(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(start = 8.dp)
+                                                    .padding(vertical = 4.dp),
+                                                verticalAlignment = Alignment.CenterVertically,
+                                                horizontalArrangement = Arrangement.SpaceBetween
+                                            ) {
+                                                Text(boisson.nom, color = Color.White, modifier = Modifier.weight(1f))
+                                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                                    IconButton(onClick = {
+                                                        if (count > 0) {
+                                                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                            val newMap = boissonsSelectionnees.toMutableMap()
+                                                            newMap[boisson.nom] = count - 1
+                                                            boissonsSelectionnees = newMap
+                                                        }
+                                                    }) {
+                                                        Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
+                                                    }
+                                                    Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
+                                                    IconButton(onClick = {
                                                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                                         val newMap = boissonsSelectionnees.toMutableMap()
-                                                        newMap[boisson.nom] = count - 1
+                                                        newMap[boisson.nom] = count + 1
                                                         boissonsSelectionnees = newMap
+                                                    }) {
+                                                        Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                                     }
-                                                }) {
-                                                    Icon(Icons.Default.Remove, contentDescription = "Retirer", tint = jauneMenu)
-                                                }
-                                                Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
-                                                IconButton(onClick = {
-                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                    val newMap = boissonsSelectionnees.toMutableMap()
-                                                    newMap[boisson.nom] = count + 1
-                                                    boissonsSelectionnees = newMap
-                                                }) {
-                                                    Icon(Icons.Default.Add, contentDescription = "Ajouter", tint = jauneMenu)
                                                 }
                                             }
                                         }
