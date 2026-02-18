@@ -27,6 +27,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.*
+import com.chezpaul.model.MenuConstants
+import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
 
@@ -39,8 +41,8 @@ fun CommandeScreen(
     boissonsActivationState: Map<String, Boolean>,
     printerViewModel: PrinterViewModel // Ajout du PrinterViewModel
 ) {
-    val jauneMenu = Color(0xFFFFE066)
-    val orangeMenu = Color(0xFFEDA637)
+    val jauneMenu = ChezPaulColors.JauneMenu
+    val orangeMenu = ChezPaulColors.OrangeMenu
     val commandeViewModel: CommandeViewModel = viewModel()
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
@@ -59,7 +61,7 @@ fun CommandeScreen(
     var shouldPrint by remember { mutableStateOf(false) } // Switch pour l'impression
 
     var selectedTab by remember { mutableIntStateOf(1) }
-    val tabTitles = listOf("Plats", "Boissons")
+    val tabTitles = remember { listOf("Plats", "Boissons") }
     var remarqueText by remember { mutableStateOf(commande?.remarque ?: "") }
     var showRemarqueDialog by remember { mutableStateOf(false) }
     var platsSelectionnes by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
@@ -79,50 +81,76 @@ fun CommandeScreen(
         }
     }
 
-    // Etat pour badge Ravigote
-    val hasRavigote = platsSelectionnes.any { (nom, quantite) ->
-        val plat = platsData.find { it.nom == nom }
-        plat?.contientRavigote == true && quantite > 0
-    }
-
-    // Calcul du total des plats hors cervelle et st marcelin
-    val totalPlatsHorsCervelle = platsSelectionnes.entries
-        .filter { (nom, _) ->
-            nom.lowercase() != "cervelle" && nom.lowercase() != "st marcelin"
+    val hasRavigote by remember {
+        derivedStateOf {
+            platsSelectionnes.any { (nom, quantite) ->
+                val plat = platsData.find { it.nom == nom }
+                plat?.contientRavigote == true && quantite > 0
+            }
         }
-        .sumOf { it.value }
-
-    val nbCouvertsInt = couverts.toIntOrNull() ?: 0
-
-    val peutAjouterPlat = totalPlatsHorsCervelle < nbCouvertsInt
-
-    // Logique de validation : soit plats respectent la règle, soit juste des boissons, soit les deux
-    val aDesPlats = platsSelectionnes.any { it.value > 0 }
-    val aDesBoissons = boissonsSelectionnees.any { it.value > 0 }
-    val platsRespectentRegle = totalPlatsHorsCervelle == nbCouvertsInt
-
-    val boutonValiderActif = numeroTable.isNotBlank() && (
-            (!aDesPlats && aDesBoissons) ||  // Seulement boissons = OK
-                    (aDesPlats && platsRespectentRegle) ||  // Plats respectent la règle = OK
-                    (aDesPlats && aDesBoissons && platsRespectentRegle)  // Les deux = OK
-            )
-
-    // Filtrer les plats et boissons selon l'activation ET le type de commande (groupe/non-groupe)
-    val platsFiltres = platsData.filter { plat ->
-        val isActivated = platsActivationState[plat.nom] ?: true
-        val isAvailableForCurrentType = if (isGroupe) plat.isGroupe else plat.isNonGroupe
-        isActivated && isAvailableForCurrentType
     }
-    val boissonsFiltres = boissonsList.filter { boisson ->
-        val isActivated = boissonsActivationState[boisson.nom] ?: true
-        val isAvailableForCurrentType = if (isGroupe) boisson.isGroupe else boisson.isNonGroupe
-        isActivated && isAvailableForCurrentType
+
+    val totalPlatsHorsCervelle by remember {
+        derivedStateOf {
+            platsSelectionnes.entries
+                .filter { (nom, _) ->
+                    nom.lowercase() !in MenuConstants.PLATS_ILLIMITES
+                }
+                .sumOf { it.value }
+        }
+    }
+
+    val nbCouvertsInt by remember {
+        derivedStateOf { couverts.toIntOrNull() ?: 0 }
+    }
+
+    val peutAjouterPlat by remember {
+        derivedStateOf { totalPlatsHorsCervelle < nbCouvertsInt }
+    }
+
+    val aDesPlats by remember {
+        derivedStateOf { platsSelectionnes.any { it.value > 0 } }
+    }
+    val aDesBoissons by remember {
+        derivedStateOf { boissonsSelectionnees.any { it.value > 0 } }
+    }
+    val platsRespectentRegle by remember {
+        derivedStateOf { totalPlatsHorsCervelle == nbCouvertsInt }
+    }
+
+    val boutonValiderActif by remember {
+        derivedStateOf {
+            numeroTable.isNotBlank() && (
+                (!aDesPlats && aDesBoissons) ||
+                    (aDesPlats && platsRespectentRegle) ||
+                    (aDesPlats && aDesBoissons && platsRespectentRegle)
+                )
+        }
+    }
+
+    val platsFiltres by remember {
+        derivedStateOf {
+            platsData.filter { plat ->
+                val isActivated = platsActivationState[plat.nom] ?: true
+                val isAvailableForCurrentType = if (isGroupe) plat.isGroupe else plat.isNonGroupe
+                isActivated && isAvailableForCurrentType
+            }
+        }
+    }
+    val boissonsFiltres by remember {
+        derivedStateOf {
+            boissonsList.filter { boisson ->
+                val isActivated = boissonsActivationState[boisson.nom] ?: true
+                val isAvailableForCurrentType = if (isGroupe) boisson.isGroupe else boisson.isNonGroupe
+                isActivated && isAvailableForCurrentType
+            }
+        }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF23190e))
+            .background(ChezPaulColors.FondPrincipal)
             .padding(12.dp)
     ) {
         Text(
@@ -136,7 +164,7 @@ fun CommandeScreen(
         if (!initDone) {
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = Color(0xFF292929),
+                color = ChezPaulColors.FondCard,
                 tonalElevation = 8.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -213,7 +241,7 @@ fun CommandeScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            listOf(33.0, 39.0, 45.0).forEach { prix ->
+                            MenuConstants.PRIX_GROUPE_OPTIONS.forEach { prix ->
                                 val isSelected = prixGroupeSelectionne == prix
                                 SuggestionChip(
                                     onClick = {
@@ -318,7 +346,7 @@ fun CommandeScreen(
         } else {
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = Color(0xFF292929),
+                color = ChezPaulColors.FondCard,
                 tonalElevation = 8.dp,
                 modifier = Modifier.weight(1f)
             ) {
@@ -503,7 +531,7 @@ fun CommandeScreen(
                                         }
                                     }
 
-                                    items(boissons) { boisson ->
+                                    items(boissons, key = { it.nom }) { boisson ->
                                         val count = boissonsSelectionnees[boisson.nom] ?: 0
                                         Row(
                                             modifier = Modifier
@@ -540,7 +568,7 @@ fun CommandeScreen(
                             }
                         } else {
                             // Code existant pour les plats
-                            items(platsFiltres) { plat ->
+                            items(platsFiltres, key = { it.nom }) { plat ->
                                 val count = platsSelectionnes[plat.nom] ?: 0
                                 Row(
                                     modifier = Modifier
@@ -563,9 +591,9 @@ fun CommandeScreen(
                                         }
                                         Text(count.toString(), color = orangeMenu, modifier = Modifier.padding(horizontal = 8.dp))
                                         IconButton(
-                                            enabled = peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin",
+                                            enabled = peutAjouterPlat || plat.nom.lowercase() in MenuConstants.PLATS_ILLIMITES,
                                             onClick = {
-                                                if (peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin") {
+                                                if (peutAjouterPlat || plat.nom.lowercase() in MenuConstants.PLATS_ILLIMITES) {
                                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                                     val newMap = platsSelectionnes.toMutableMap()
                                                     newMap[plat.nom] = count + 1
@@ -576,7 +604,7 @@ fun CommandeScreen(
                                             Icon(
                                                 Icons.Default.Add,
                                                 contentDescription = "Ajouter",
-                                                tint = if (peutAjouterPlat || plat.nom.lowercase() == "cervelle" || plat.nom.lowercase() == "st marcelin") jauneMenu else Color.Gray
+                                                tint = if (peutAjouterPlat || plat.nom.lowercase() in MenuConstants.PLATS_ILLIMITES) jauneMenu else Color.Gray
                                             )
                                         }
                                     }
@@ -599,7 +627,7 @@ fun CommandeScreen(
                     },
                     color = when {
                         !aDesPlats && !aDesBoissons -> Color.Gray
-                        aDesPlats && totalPlatsHorsCervelle != nbCouvertsInt -> Color(0xFFFF6B6B)
+                        aDesPlats && totalPlatsHorsCervelle != nbCouvertsInt -> ChezPaulColors.RougeErreur
                         else -> jauneMenu
                     },
                     style = MaterialTheme.typography.bodySmall,
@@ -684,10 +712,7 @@ fun CommandeScreen(
                 Text("Remarque pour la table $numeroTable", color = jauneMenu)
             },
             text = {
-                val suggestions = listOf(
-                    "sans sauce", "sauce à part", "bleu", "saignant",
-                    "à point", "bien cuit", "gratin", "PDT"
-                )
+                val suggestions = remember { MenuConstants.SUGGESTIONS_REMARQUE }
                 Column {
                     OutlinedTextField(
                         value = remarqueText,
@@ -751,7 +776,7 @@ fun CommandeScreen(
                     Text("Annuler", color = Color.Gray)
                 }
             },
-            containerColor = Color(0xFF292929),
+            containerColor = ChezPaulColors.FondCard,
             titleContentColor = jauneMenu,
             textContentColor = Color.White
         )

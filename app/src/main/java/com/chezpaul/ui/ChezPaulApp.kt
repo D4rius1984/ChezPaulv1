@@ -4,7 +4,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.Commande
@@ -29,8 +28,8 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
     val printerViewModel: PrinterViewModel = viewModel()
 
     // Observer les états d'activation depuis les ViewModels
-    val platsActivationState by platViewModel.platsActivationState.observeAsState(emptyMap())
-    val boissonsActivationState by boissonViewModel.boissonsActivationState.observeAsState(emptyMap())
+    val platsActivationState by platViewModel.platsActivationState
+    val boissonsActivationState by boissonViewModel.boissonsActivationState
 
     // Synchroniser le prix du menu depuis SettingsViewModel vers CommandeViewModel
     val menuModeOverride by settingsViewModel.menuModeOverride
@@ -126,7 +125,6 @@ fun ChezPaulApp(viewModel: BottomNavViewModel) {
                     onNavigate = { screen ->
                         viewModel.selectScreen(screen)
                     },
-                    printerViewModelForResume = printerViewModel,
                 )
             }
         }
@@ -150,7 +148,6 @@ private fun AppNavigationContent(
     onSupprimeTable: (Commande) -> Unit,
     onModifieTable: (Commande) -> Unit,
     onNavigate: (Screen) -> Unit,
-    printerViewModelForResume: PrinterViewModel,
 ) {
     when (currentScreen) {
         Screen.Accueil ->
@@ -176,7 +173,7 @@ private fun AppNavigationContent(
                     onSupprimeTable = onSupprimeTable,
                     onModifieTable = onModifieTable,
                     isInCommandeFlow = true,
-                    printerViewModel = printerViewModelForResume,
+                    printerViewModel = printerViewModel,
                 )
             }
         }
@@ -189,7 +186,7 @@ private fun AppNavigationContent(
                 onSupprimeTable = onSupprimeTable,
                 onModifieTable = onModifieTable,
                 isInCommandeFlow = false,
-                printerViewModel = printerViewModelForResume,
+                printerViewModel = printerViewModel,
             )
 
         Screen.Settings ->

@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +19,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
+import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.BoissonViewModel
 import com.chezpaul.viewmodel.PlatViewModel
 import com.chezpaul.model.BoissonConfig
@@ -33,8 +33,8 @@ fun MenuModificationScreen(
     boissonViewModel: BoissonViewModel,
     onValidate: () -> Unit = {}
 ) {
-    val jauneMenu = Color(0xFFFFE066)
-    val orangeMenu = Color(0xFFEDA637)
+    val jauneMenu = ChezPaulColors.JauneMenu
+    val orangeMenu = ChezPaulColors.OrangeMenu
     val haptic = LocalHapticFeedback.current
 
     // Onglets et leur état sélectionné
@@ -42,10 +42,10 @@ fun MenuModificationScreen(
     var isGroupePreview by remember { mutableStateOf(false) } // Toggle pour prévisualiser groupe/non-groupe
 
     // Observer les données et états depuis les ViewModels
-    val plats by platViewModel.plats.observeAsState(emptyList())
-    val boissons by boissonViewModel.boissons.observeAsState(emptyList())
-    val platsActivationState by platViewModel.platsActivationState.observeAsState(emptyMap())
-    val boissonsActivationState by boissonViewModel.boissonsActivationState.observeAsState(emptyMap())
+    val plats by platViewModel.plats
+    val boissons by boissonViewModel.boissons
+    val platsActivationState by platViewModel.platsActivationState
+    val boissonsActivationState by boissonViewModel.boissonsActivationState
 
     val context = LocalContext.current
 
@@ -69,7 +69,7 @@ fun MenuModificationScreen(
                     if (isGroupeMode) plat.isGroupe else plat.isNonGroupe
                 }
 
-                items(platsFiltres) { plat ->
+                items(platsFiltres, key = { it.nom }) { plat ->
                     val isActivated = activationState[plat.nom] ?: true
 
                     Row(
@@ -113,7 +113,7 @@ fun MenuModificationScreen(
                     }
 
                     // Boissons de cette catégorie
-                    items(boissonsDeCategorie) { boisson ->
+                    items(boissonsDeCategorie, key = { it.nom }) { boisson ->
                         val isActivated = activationState[boisson.nom] ?: true
 
                         Row(
@@ -147,7 +147,7 @@ fun MenuModificationScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp)
-            .background(Color(0xFF23190e))
+            .background(ChezPaulColors.FondPrincipal)
     ) {
         Text(
             "Modification du Menu",
@@ -226,7 +226,7 @@ fun MenuModificationScreen(
         // Card layout for Plat and Boisson selections
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = Color(0xFF292929),
+            color = ChezPaulColors.FondCard,
             tonalElevation = 8.dp,
             modifier = Modifier
                 .fillMaxWidth()

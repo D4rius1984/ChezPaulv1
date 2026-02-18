@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chezpaul"
     android:versionCode="1"
-    android:versionName="1.5" >
+    android:versionName="1.6" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -27,6 +27,7 @@
         android:icon="@mipmap/ic_launcher_round"
         android:label="Chez Paul"
         android:supportsRtl="true"
+        android:testOnly="true"
         android:theme="@style/Theme.ChezPaul"
         android:usesCleartextTraffic="true" > <!-- Modification ici -->
 
@@ -49,6 +50,18 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity
+            android:name="androidx.compose.ui.tooling.PreviewActivity"
+            android:exported="true" />
+
+        <uses-library
+            android:name="androidx.window.extensions"
+            android:required="false" />
+        <uses-library
+            android:name="androidx.window.sidecar"
+            android:required="false" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.chezpaul.androidx-startup"
@@ -66,10 +79,8 @@
 
         <activity
             android:name="androidx.activity.ComponentActivity"
-            android:exported="true" />
-        <activity
-            android:name="androidx.compose.ui.tooling.PreviewActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@android:style/Theme.Material.Light.NoActionBar" />
 
         <service
             android:name="androidx.room.MultiInstanceInvalidationService"

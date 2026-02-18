@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-h720dp-v13/values-h720dp-v13.xml",
+            "outputFile": "com.chezpaul.app-mergeDebugResources-55:/values-h720dp-v13/values-h720dp-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\dab1d0f6bc49f85f060ba92dd4cfa80f\\transformed\\appcompat-1.5.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\9.3.1\\transforms\\55d5a46c05fdf8dcf658c13343cd3cc1\\workspace\\transformed\\appcompat-1.7.0\\res\\values-h720dp-v13\\values-h720dp-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

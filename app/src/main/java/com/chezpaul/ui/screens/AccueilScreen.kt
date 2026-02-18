@@ -30,14 +30,16 @@ fun AccueilScreen(
     val boissonsParCategorie = commandeViewModel.boissonsParCategorie
     val nombreRavigotes = commandeViewModel.nombreRavigotes
 
-    val categories = listOf(
-        CategorieBoisson.APEROS to "Apéros",
-        CategorieBoisson.VINS_FONTAINE to "Vins Fontaine",
-        CategorieBoisson.VINS_BOUTEILLES to "Vins Bouteilles",
-        CategorieBoisson.DIGESTIFS to "Digestifs",
-        CategorieBoisson.BIERES to "Bières",
-        CategorieBoisson.SOFTS to "Softs"
-    )
+    val categories = remember {
+        listOf(
+            CategorieBoisson.APEROS to "Apéros",
+            CategorieBoisson.VINS_FONTAINE to "Vins Fontaine",
+            CategorieBoisson.VINS_BOUTEILLES to "Vins Bouteilles",
+            CategorieBoisson.DIGESTIFS to "Digestifs",
+            CategorieBoisson.BIERES to "Bières",
+            CategorieBoisson.SOFTS to "Softs"
+        )
+    }
 
     ChezPaulScreen(title = "Accueil") {
 

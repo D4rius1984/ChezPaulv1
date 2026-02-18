@@ -1,8 +1,9 @@
-#Wed Feb 18 00:44:24 CET 2026
+#Wed Feb 18 02:57:12 CET 2026
 base.0=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.10=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
-base.11=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
+base.10=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\global_synthetics_dex\\debug\\mergeDebugGlobalSynthetics\\classes.dex
+base.11=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
+base.12=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
 base.2=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\10\\classes.dex
 base.3=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
 base.4=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\12\\classes.dex
@@ -13,8 +14,9 @@ base.8=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex
 base.9=C\:\\Users\\Lenovo\\Documents\\ChezPaulv1\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\9\\classes.dex
 path.0=classes.dex
 path.1=0/classes.dex
-path.10=classes2.dex
-path.11=classes3.dex
+path.10=classes.dex
+path.11=classes2.dex
+path.12=classes3.dex
 path.2=10/classes.dex
 path.3=11/classes.dex
 path.4=12/classes.dex
@@ -27,6 +29,7 @@ renamed.0=classes.dex
 renamed.1=classes2.dex
 renamed.10=classes11.dex
 renamed.11=classes12.dex
+renamed.12=classes13.dex
 renamed.2=classes3.dex
 renamed.3=classes4.dex
 renamed.4=classes5.dex

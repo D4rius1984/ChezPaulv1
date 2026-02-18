@@ -20,6 +20,12 @@ object ChezPaulColors {
     val RougeErreur = Color(0xFFFF6B6B)
     val RougeClair = Color(0xFFFFADAD)
     val DividerColor = Color(0x33FFFFFF)
+    val VertSucces = Color(0xFF4CAF50)
+    val VioletSoir = Color(0xFF9C27B0)
+    val OrRang1 = Color(0xFFFFD700)
+    val ArgentRang2 = Color(0xFFC0C0C0)
+    val BronzeRang3 = Color(0xFFCD7F32)
+    val FondSombre = Color(0xFF333333)
 }
 
 // Typographie personnalisée

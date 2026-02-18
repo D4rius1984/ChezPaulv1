@@ -16,6 +16,10 @@ import java.io.OutputStreamWriter
 import java.net.*
 import com.chezpaul.model.Commande
 
+/**
+ * Gère la connexion et l'impression vers une imprimante thermique ESC/POS via TCP (port 9100).
+ * Supporte le scan réseau, le ping, et l'impression formatée des commandes.
+ */
 class PrinterViewModel : ViewModel() {
     var isPrinterEnabled = mutableStateOf(false)
     var printerIP = mutableStateOf("")
@@ -52,7 +56,7 @@ class PrinterViewModel : ViewModel() {
         }
     }
 
-    // NOUVELLE MÉTHODE - Impression des commandes
+    /** Formate et envoie une commande à l'imprimante configurée (non bloquant). */
     fun printCommande(commande: Commande, context: Context) {
         if (!isPrinterEnabled.value || printerIP.value.isEmpty()) {
             Toast.makeText(context, "Imprimante non configurée", Toast.LENGTH_SHORT).show()

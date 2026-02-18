@@ -62,7 +62,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
+                        indication = ripple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
                     ) {
                         settingsViewModel.closeService(
                             context = context,
@@ -94,7 +94,7 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
+                        indication = ripple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
                     ) {
                         onHistoryClick()
                     }

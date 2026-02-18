@@ -2,7 +2,6 @@ package com.chezpaul.viewmodel
 
 import android.app.Application
 import android.content.Intent
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
@@ -14,9 +13,14 @@ import com.chezpaul.data.entities.TopItemResult
 import com.chezpaul.data.repository.DataRepository
 import com.chezpaul.model.CategorieBoisson
 import com.chezpaul.model.Commande
+import com.chezpaul.model.MenuConstants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel central gérant les commandes en cours, le CA, l'historique des services
+ * et les statistiques. Persiste via SharedPreferences (commandes) et Room (historique).
+ */
 class CommandeViewModel(application: Application) : AndroidViewModel(application) {
     private val persistenceManager = PersistenceManager(application.applicationContext)
     private val repository = DataRepository(application)
@@ -34,9 +38,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     private val _selectedCommande = mutableStateOf<Commande?>(null)
     val selectedCommande: State<Commande?> = _selectedCommande
     
-    // Constantes
-    private val nomCervelle = "cervelle"
-    private val nomStMarcelin = "st marcelin"
+    private val platsIllimites = MenuConstants.PLATS_ILLIMITES
 
     // Prix du menu dynamique (mis à jour par SettingsViewModel)
     var menuPrice = mutableStateOf(32.0)
@@ -99,6 +101,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         saveCommandes()
     }
 
+    /** Vérifie la règle 1 plat = 1 couvert (cervelle/st marcelin illimités). */
     fun verifierPlatsSelonCouverts(cmd: Commande): Boolean {
         val nbCouverts = cmd.nombreCouverts
         val aDesPlats = cmd.plats.isNotEmpty()
@@ -108,7 +111,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
 
         if (aDesPlats) {
             val totalPlats = cmd.plats
-                .filter { it.nom.lowercase() != nomCervelle && it.nom.lowercase() != nomStMarcelin }
+                .filter { it.nom.lowercase() !in platsIllimites }
                 .sumOf { it.quantite }
             return totalPlats == nbCouverts
         }
@@ -130,6 +133,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    /** Archive le service en cours dans Room puis efface toutes les commandes. */
     fun resetAllCommandes() {
         // Archiver le service actuel avant de tout effacer
         if (_commandesList.value.isNotEmpty()) {
@@ -160,6 +164,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         validerCommande(commande)
     }
 
+    /** Supprime la commande existante et la renvoie pour édition dans CommandeScreen. */
     fun startModification(commande: Commande, onReady: (Commande) -> Unit) {
         deleteCommande(commande)
         onReady(commande)
@@ -168,10 +173,10 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     // --- Calculs Accueil (ex-AccueilViewModel) ---
 
     val totalCouverts: Int
-        @Composable get() = _commandesList.value.sumOf { it.nombreCouverts }
+        get() = _commandesList.value.sumOf { it.nombreCouverts }
 
     val boissonsParCategorie: Map<CategorieBoisson, Int>
-        @Composable get() {
+        get() {
             val categories = listOf(
                 CategorieBoisson.APEROS,
                 CategorieBoisson.VINS_FONTAINE,
@@ -188,33 +193,30 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         }
 
     val nombreRavigotes: Int
-        @Composable get() = _commandesList.value.count { commande ->
+        get() = _commandesList.value.count { commande ->
             commande.plats.any { plat ->
                 plat.contientRavigote || plat.nom.contains("tête de veau", ignoreCase = true)
             }
         }
 
-    // CA pour les tables standard (non-groupe)
     val caPlats: Double
-        @Composable get() = _commandesList.value
+        get() = _commandesList.value
             .filter { !it.isGroupe && it.plats.isNotEmpty() }
             .sumOf { it.nombreCouverts * menuPrice.value }
 
-    // CA pour les boissons (uniquement tables standard, les groupes sont inclus)
     val caBoissons: Double
-        @Composable get() = _commandesList.value
+        get() = _commandesList.value
             .filter { !it.isGroupe }
             .flatMap { it.boissons }
             .sumOf { it.quantite * it.prix }
 
-    // CA pour les tables groupe (prix fixe, boissons incluses)
     val caGroupes: Double
-        @Composable get() = _commandesList.value
+        get() = _commandesList.value
             .filter { it.isGroupe && it.prixMenuGroupe != null }
             .sumOf { it.nombreCouverts * (it.prixMenuGroupe ?: 0.0) }
 
     val caTotal: Double
-        @Composable get() = caPlats + caBoissons + caGroupes
+        get() = caPlats + caBoissons + caGroupes
 
     // --- Phase 2: Service Details ---
 

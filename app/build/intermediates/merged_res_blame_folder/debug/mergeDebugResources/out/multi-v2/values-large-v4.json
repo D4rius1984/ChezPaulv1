@@ -1,35 +1,33 @@
 {
     "logs": [
         {
-            "outputFile": "com.chezpaul.app-mergeDebugResources-68:/values-large-v4/values-large-v4.xml",
+            "outputFile": "com.chezpaul.app-mergeDebugResources-55:/values-large-v4/values-large-v4.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\f1cc7d8e530e0992a472b759a1e27ec0\\transformed\\material-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
-                    "from": {
-                        "startLines": "2,3,4,10",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "55,177,311,752",
-                        "endLines": "2,3,9,15",
-                        "endColumns": "121,133,10,10",
-                        "endOffsets": "172,306,747,1190"
-                    },
-                    "to": {
-                        "startLines": "11,12,13,19",
-                        "startColumns": "4,4,4,4",
-                        "startOffsets": "752,874,1008,1449",
-                        "endLines": "11,12,18,24",
-                        "endColumns": "121,133,10,10",
-                        "endOffsets": "869,1003,1444,1887"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\8.13\\transforms\\dab1d0f6bc49f85f060ba92dd4cfa80f\\transformed\\appcompat-1.5.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\9.3.1\\transforms\\55d5a46c05fdf8dcf658c13343cd3cc1\\workspace\\transformed\\appcompat-1.7.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
                         "startOffsets": "55,114,185,256,326,396,464,532,636",
                         "endColumns": "58,70,70,69,69,67,67,103,115",
                         "endOffsets": "109,180,251,321,391,459,527,631,747"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\9.3.1\\transforms\\f8e5ee5665d7ce8f9333223f86f80790\\workspace\\transformed\\material-1.13.0\\res\\values-large-v4\\values-large-v4.xml",
+                    "from": {
+                        "startLines": "2,3,4,5",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "55,169,285,407",
+                        "endColumns": "113,115,121,133",
+                        "endOffsets": "164,280,402,536"
+                    },
+                    "to": {
+                        "startLines": "11,12,13,14",
+                        "startColumns": "4,4,4,4",
+                        "startOffsets": "752,866,982,1104",
+                        "endColumns": "113,115,121,133",
+                        "endOffsets": "861,977,1099,1233"
                     }
                 }
             ]

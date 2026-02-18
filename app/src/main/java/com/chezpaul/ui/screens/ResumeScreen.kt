@@ -37,7 +37,7 @@ fun ResumeScreen(
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
     val haptic = LocalHapticFeedback.current
-    val jauneMenu = Color(0xFFFFE066)
+    val jauneMenu = ChezPaulColors.JauneMenu
 
     // Observer les données du ViewModel
     val commandesList by commandeViewModel.commandesList
@@ -49,7 +49,7 @@ fun ResumeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF23190e))
+            .background(ChezPaulColors.FondPrincipal)
             .padding(16.dp)
     ) {
         Text(
@@ -65,7 +65,7 @@ fun ResumeScreen(
             // CARD Commande en cours
             Card(
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
+                colors = CardDefaults.cardColors(containerColor = ChezPaulColors.FondCard),
                 elevation = CardDefaults.cardElevation(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,7 +97,7 @@ fun ResumeScreen(
                                 ) {
                                     Text(
                                         "Groupe",
-                                        color = Color(0xFF222222),
+                                        color = ChezPaulColors.TexteNoir,
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.labelSmall,
                                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
@@ -162,7 +162,7 @@ fun ResumeScreen(
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = jauneMenu,
-                                contentColor = Color(0xFF222222)
+                                contentColor = ChezPaulColors.TexteNoir
                             )
                         ) {
                             Text("Valider la commande", fontWeight = FontWeight.Bold)
@@ -185,7 +185,7 @@ fun ResumeScreen(
         // CARD liste commandes
         Card(
             shape = RoundedCornerShape(20.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF292929)),
+            colors = CardDefaults.cardColors(containerColor = ChezPaulColors.FondCard),
             elevation = CardDefaults.cardElevation(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -225,7 +225,7 @@ fun ResumeScreen(
                                                 ) {
                                                     Text(
                                                         "Groupe",
-                                                        color = Color(0xFF222222),
+                                                        color = ChezPaulColors.TexteNoir,
                                                         fontWeight = FontWeight.Bold,
                                                         style = MaterialTheme.typography.labelSmall,
                                                         modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -233,16 +233,16 @@ fun ResumeScreen(
                                                 }
                                             }
                                         }
-                                        val prixTotal = if (cmd.isGroupe && cmd.prixMenuGroupe != null) {
-                                            // Groupe : prix fixe, boissons incluses
-                                            cmd.nombreCouverts * cmd.prixMenuGroupe
-                                        } else {
-                                            // Standard : plats + boissons séparées
-                                            val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * commandeViewModel.menuPrice.value else 0.0
-                                            val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
-                                            prixPlats + prixBoissons
+                                        val prixTotal = remember(cmd) {
+                                            if (cmd.isGroupe && cmd.prixMenuGroupe != null) {
+                                                cmd.nombreCouverts * cmd.prixMenuGroupe
+                                            } else {
+                                                val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * commandeViewModel.menuPrice.value else 0.0
+                                                val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
+                                                prixPlats + prixBoissons
+                                            }
                                         }
-                                        val ticketMoyen = if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0
+                                        val ticketMoyen = remember(cmd) { if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0 }
                                         val tmColor = getTicketMoyenColor(ticketMoyen)
                                         Text(
                                             "%.0f€ · TM %.0f€".format(prixTotal, ticketMoyen),
@@ -296,7 +296,7 @@ fun ResumeScreen(
                                     HorizontalDivider(
                                         modifier = Modifier.padding(vertical = 4.dp),
                                         thickness = 0.7.dp,
-                                        color = Color(0x33FFFFFF)
+                                        color = ChezPaulColors.DividerColor
                                     )
                                 }
                             }
@@ -314,7 +314,7 @@ fun ResumeScreen(
                 commandeViewModel.toggleBottomSheet(null)
             },
             sheetState = bottomSheetState,
-            containerColor = Color(0xFF292929),
+            containerColor = ChezPaulColors.FondCard,
             contentColor = Color.White,
             dragHandle = {
                 Surface(
@@ -322,7 +322,7 @@ fun ResumeScreen(
                         .padding(vertical = 11.dp)
                         .size(width = 32.dp, height = 4.dp),
                     shape = RoundedCornerShape(16.dp),
-                    color = Color(0xFF666666)
+                    color = Color.Gray
                 ) {}
             }
         ) {
@@ -342,7 +342,7 @@ fun ResumeScreen(
 
                 HorizontalDivider(
                     thickness = 0.5.dp,
-                    color = Color(0x33FFFFFF),
+                    color = ChezPaulColors.DividerColor,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
 
@@ -419,14 +419,14 @@ fun ResumeScreen(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = null,
-                        tint = Color(0xFFFF6B6B),
+                        tint = ChezPaulColors.RougeErreur,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         text = "Supprimer",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = Color(0xFFFF6B6B)
+                        color = ChezPaulColors.RougeErreur
                     )
                 }
             }
@@ -437,7 +437,7 @@ fun ResumeScreen(
 private fun getTicketMoyenColor(ticketMoyen: Double): Color {
     return when {
         ticketMoyen >= 49.0 -> Color(0xFFFF9800) // Orange - ticket élevé
-        ticketMoyen >= 40.0 -> Color(0xFFFFE066) // Jaune - bon ticket
+        ticketMoyen >= 40.0 -> ChezPaulColors.JauneMenu // Jaune - bon ticket
         ticketMoyen >= 32.0 -> Color.White       // Blanc - standard (menu)
         else -> Color.Gray                       // Gris - en cours / faible
     }
