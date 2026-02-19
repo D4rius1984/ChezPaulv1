@@ -9,4 +9,5 @@ data class Commande(
     val isGroupe: Boolean = false,
     val prixMenuGroupe: Double? = null,
     val timestamp: Long = System.currentTimeMillis(),
+    val modifiedAt: Long? = null,
 )

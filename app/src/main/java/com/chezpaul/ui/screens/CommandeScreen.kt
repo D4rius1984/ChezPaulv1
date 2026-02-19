@@ -10,10 +10,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.Print
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
@@ -71,6 +73,7 @@ fun CommandeScreen(
     var showRemarqueDialog by remember { mutableStateOf(false) }
     var platsSelectionnes by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
     var boissonsSelectionnees by remember { mutableStateOf<Map<String, Int>>(mutableMapOf()) }
+    var boissonSearchQuery by remember { mutableStateOf("") }
 
     // Initialiser la sélection si commande existante
     LaunchedEffect(commande) {
@@ -149,6 +152,18 @@ fun CommandeScreen(
                 val isAvailableForCurrentType = if (isGroupe) boisson.isGroupe else boisson.isNonGroupe
                 isActivated && isAvailableForCurrentType
             }
+        }
+    }
+    val boissonsFiltresPourRecherche by remember {
+        derivedStateOf {
+            if (boissonSearchQuery.isBlank()) boissonsFiltres
+            else boissonsFiltres.filter { it.nom.lowercase().contains(boissonSearchQuery.trim().lowercase()) }
+        }
+    }
+    val effectiveExpandedCategories by remember {
+        derivedStateOf {
+            if (boissonSearchQuery.isBlank()) expandedCategories
+            else boissonsFiltresPourRecherche.map { it.categorie.name }.toSet()
         }
     }
 
@@ -493,6 +508,7 @@ fun CommandeScreen(
                                 selected = selectedTab == index,
                                 onClick = {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    if (index == 0) boissonSearchQuery = ""
                                     selectedTab = index
                                 },
                                 text = { Text(title, color = if (selectedTab == index) orangeMenu else Color.White) }
@@ -504,12 +520,53 @@ fun CommandeScreen(
 
                     LazyColumn {
                         if (selectedTab == 1) {
+                            // Search bar
+                            item(key = "boisson_search") {
+                                OutlinedTextField(
+                                    value = boissonSearchQuery,
+                                    onValueChange = { boissonSearchQuery = it },
+                                    label = { Text("Rechercher une boisson") },
+                                    leadingIcon = {
+                                        Icon(Icons.Default.Search, contentDescription = null, tint = orangeMenu)
+                                    },
+                                    trailingIcon = {
+                                        if (boissonSearchQuery.isNotEmpty()) {
+                                            IconButton(onClick = { boissonSearchQuery = "" }) {
+                                                Icon(Icons.Default.Clear, contentDescription = "Effacer", tint = Color.Gray)
+                                            }
+                                        }
+                                    },
+                                    singleLine = true,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 8.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = orangeMenu,
+                                        unfocusedBorderColor = Color.Gray,
+                                        focusedLabelColor = orangeMenu,
+                                        unfocusedLabelColor = Color.Gray,
+                                        cursorColor = orangeMenu
+                                    )
+                                )
+                            }
+
+                            if (boissonsFiltresPourRecherche.isEmpty() && boissonSearchQuery.isNotBlank()) {
+                                item(key = "no_results") {
+                                    Text(
+                                        "Aucune boisson trouvée",
+                                        color = Color.Gray,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                            }
+
                             // Grouper les boissons par catégorie
-                            val boissonsByCategory = boissonsFiltres.groupBy { it.categorie }
+                            val boissonsByCategory = boissonsFiltresPourRecherche.groupBy { it.categorie }
 
                             boissonsByCategory.forEach { (categorie, boissonsDeCategorie) ->
                                 val catKey = categorie.name
-                                val isExpanded = catKey in expandedCategories
+                                val isExpanded = catKey in effectiveExpandedCategories
                                 val selectedCount = boissonsDeCategorie.sumOf { boissonsSelectionnees[it.nom] ?: 0 }
 
                                 // Header de catégorie (cliquable, avec chevron)
@@ -573,7 +630,7 @@ fun CommandeScreen(
                                     }
                                 }
 
-                                // Contenu de la catégorie (animé)
+                                // Contenu de la catégorie
                                 if (isExpanded) {
                                     val parSousCategorie = boissonsDeCategorie.groupBy { it.sousCategorie }
 

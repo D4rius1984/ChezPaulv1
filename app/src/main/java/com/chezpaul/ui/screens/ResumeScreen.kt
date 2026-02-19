@@ -23,6 +23,9 @@ import com.chezpaul.model.Commande
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -292,6 +295,18 @@ fun ResumeScreen(
                                             style = MaterialTheme.typography.bodySmall
                                         )
                                     }
+
+                                    // Timestamp
+                                    val timeFormat = remember { SimpleDateFormat("HH'h'mm", Locale.FRENCH) }
+                                    val timeLabel = if (cmd.modifiedAt != null)
+                                        "Modifiée à ${timeFormat.format(Date(cmd.modifiedAt))}"
+                                    else
+                                        "Ajoutée à ${timeFormat.format(Date(cmd.timestamp))}"
+                                    Text(
+                                        timeLabel,
+                                        color = Color.Gray,
+                                        style = MaterialTheme.typography.labelSmall
+                                    )
 
                                     HorizontalDivider(
                                         modifier = Modifier.padding(vertical = 4.dp),

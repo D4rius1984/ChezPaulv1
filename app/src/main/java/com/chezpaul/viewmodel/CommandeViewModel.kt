@@ -2,11 +2,11 @@ package com.chezpaul.viewmodel
 
 import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.chezpaul.data.PersistenceManager
 import com.chezpaul.data.entities.CommandeWithItems
 import com.chezpaul.data.entities.ServiceEntity
 import com.chezpaul.data.entities.TopItemResult
@@ -19,10 +19,9 @@ import kotlinx.coroutines.launch
 
 /**
  * ViewModel central gérant les commandes en cours, le CA, l'historique des services
- * et les statistiques. Persiste via SharedPreferences (commandes) et Room (historique).
+ * et les statistiques. Persiste via Room (commandes actives + historique).
  */
 class CommandeViewModel(application: Application) : AndroidViewModel(application) {
-    private val persistenceManager = PersistenceManager(application.applicationContext)
     private val repository = DataRepository(application)
 
     private val _commandesList = mutableStateOf<List<Commande>>(emptyList())
@@ -37,7 +36,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
 
     private val _selectedCommande = mutableStateOf<Commande?>(null)
     val selectedCommande: State<Commande?> = _selectedCommande
-    
+
     private val platsIllimites = MenuConstants.PLATS_ILLIMITES
 
     // Prix du menu dynamique (mis à jour par SettingsViewModel)
@@ -47,15 +46,22 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     private val _historyList = mutableStateOf<List<ServiceEntity>>(emptyList())
     val historyList: State<List<ServiceEntity>> = _historyList
 
+    // --- Import CSV ---
+    private val _importResult = mutableStateOf<String?>(null)
+    val importResult: State<String?> = _importResult
+
     init {
-        loadCommandes()
+        observeActiveCommandes()
         observeHistory()
-        migrateLegacyData()
+        migrateData()
     }
 
-    private fun loadCommandes() {
-        _commandesList.value = persistenceManager.loadCommandes()
-            .sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
+    private fun observeActiveCommandes() {
+        viewModelScope.launch {
+            repository.activeCommandes.collectLatest { commandes ->
+                _commandesList.value = commandes.sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
+            }
+        }
     }
 
     private fun observeHistory() {
@@ -66,14 +72,11 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private fun migrateLegacyData() {
+    private fun migrateData() {
         viewModelScope.launch {
+            repository.migrateActiveCommandesFromPrefs()
             repository.migrateLegacyHistory()
         }
-    }
-
-    private fun saveCommandes() {
-        persistenceManager.saveCommandes(_commandesList.value)
     }
 
     fun deleteHistoryItem(service: ServiceEntity) {
@@ -85,20 +88,22 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     // --- Gestion des commandes ---
 
     fun ajouterCommande(cmd: Commande) {
-        _commandesList.value = (_commandesList.value + cmd).sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
-        saveCommandes()
+        viewModelScope.launch {
+            repository.upsertActiveCommande(cmd)
+        }
     }
 
     fun modifierCommande(cmd: Commande) {
-        _commandesList.value = _commandesList.value.map { commande ->
-            if (commande.numeroTable == cmd.numeroTable) cmd else commande
-        }.sortedBy { it.numeroTable.toIntOrNull() ?: Int.MAX_VALUE }
-        saveCommandes()
+        val cmdWithTimestamp = cmd.copy(modifiedAt = System.currentTimeMillis())
+        viewModelScope.launch {
+            repository.upsertActiveCommande(cmdWithTimestamp)
+        }
     }
 
     fun supprimerCommande(cmd: Commande) {
-        _commandesList.value = _commandesList.value.filterNot { it.numeroTable == cmd.numeroTable }
-        saveCommandes()
+        viewModelScope.launch {
+            repository.deleteActiveCommande(cmd)
+        }
     }
 
     /** Vérifie la règle 1 plat = 1 couvert (cervelle/st marcelin illimités). */
@@ -135,16 +140,14 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
 
     /** Archive le service en cours dans Room puis efface toutes les commandes. */
     fun resetAllCommandes() {
-        // Archiver le service actuel avant de tout effacer
-        if (_commandesList.value.isNotEmpty()) {
-            viewModelScope.launch {
-                repository.archiveService(_commandesList.value, menuPrice.value)
+        val currentCommandes = _commandesList.value
+        viewModelScope.launch {
+            if (currentCommandes.isNotEmpty()) {
+                repository.archiveService(currentCommandes, menuPrice.value)
             }
+            repository.deleteAllActiveCommandes()
         }
-        
-        _commandesList.value = emptyList()
         validerCommandeResult.value = true
-        saveCommandes()
     }
 
     // --- BottomSheet (ex-ResumeViewModel) ---
@@ -262,7 +265,7 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    // --- Phase 2: CSV Export ---
+    // --- CSV Export ---
 
     fun exportCsv(onReady: (Intent) -> Unit) {
         viewModelScope.launch {
@@ -271,5 +274,32 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
                 onReady(intent)
             }
         }
+    }
+
+    // --- PDF Export ---
+
+    fun exportPdf(onReady: (Intent) -> Unit) {
+        viewModelScope.launch {
+            val intent = repository.exportPdfFile(getApplication())
+            if (intent != null) {
+                onReady(intent)
+            }
+        }
+    }
+
+    // --- CSV Import ---
+
+    fun importCsv(uri: Uri) {
+        viewModelScope.launch {
+            val result = repository.importCsvFile(getApplication(), uri)
+            _importResult.value = when (result) {
+                is DataRepository.ImportResult.Success -> "${result.count} service(s) importé(s) avec succès"
+                is DataRepository.ImportResult.Error -> result.message
+            }
+        }
+    }
+
+    fun clearImportResult() {
+        _importResult.value = null
     }
 }

@@ -1,5 +1,8 @@
 package com.chezpaul.ui.screens
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -192,6 +195,61 @@ fun SettingsScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Section Données
+        if (commandeViewModel != null) {
+            ChezPaulCard {
+                Text(
+                    "Données",
+                    color = ChezPaulColors.JauneMenu,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                val importResult by commandeViewModel.importResult
+
+                // Show import result toast
+                LaunchedEffect(importResult) {
+                    importResult?.let { result ->
+                        Toast.makeText(context, result, Toast.LENGTH_LONG).show()
+                        commandeViewModel.clearImportResult()
+                    }
+                }
+
+                val csvPickerLauncher = rememberLauncherForActivityResult(
+                    contract = ActivityResultContracts.OpenDocument()
+                ) { uri ->
+                    uri?.let { commandeViewModel.importCsv(it) }
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = ripple(color = ChezPaulColors.JauneMenu.copy(alpha = 0.3f))
+                        ) {
+                            csvPickerLauncher.launch(arrayOf("text/csv", "text/comma-separated-values", "*/*"))
+                        }
+                        .padding(vertical = 12.dp)
+                ) {
+                    Text(
+                        "Importer CSV",
+                        color = ChezPaulColors.TexteBlanc,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        "Restaurer un historique depuis un fichier CSV exporté",
+                        color = ChezPaulColors.TexteGris,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
 
         // Section Imprimante
         ChezPaulCard {
