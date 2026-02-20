@@ -18,6 +18,10 @@ val boissonsList =
         BoissonConfig("Ricard", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 6.0),
         BoissonConfig("Whisky", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 6.0),
         BoissonConfig("Pastis", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 6.0),
+        BoissonConfig("Campari", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 6.0),
+        BoissonConfig("Campari Orange", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 7.0),
+        BoissonConfig("Martini Rouge", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 6.0),
+        BoissonConfig("Martini Blanc", CategorieBoisson.APEROS, isGroupe = false, isNonGroupe = true, prix = 6.0),
         // Digestifs
         BoissonConfig("Chartreuse jaune", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
         BoissonConfig("Chartreuse verte", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
@@ -150,6 +154,14 @@ val boissonsList =
             isNonGroupe = true,
             sousCategorie = "Blanc",
             prix = 33.0,
+        ),
+        BoissonConfig(
+            "Viognier",
+            CategorieBoisson.VINS_BOUTEILLES,
+            isGroupe = false,
+            isNonGroupe = true,
+            sousCategorie = "Blanc",
+            prix = 28.50,
         ),
         // Vins Bouteilles - Bulles et Rosé
         BoissonConfig(
