@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
+import com.chezpaul.model.MenuConstants
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
@@ -235,12 +236,31 @@ fun ResumeScreen(
                                                     )
                                                 }
                                             }
+                                            // Badge Enfants
+                                            if (cmd.menusEnfants > 0) {
+                                                Spacer(Modifier.width(8.dp))
+                                                Surface(
+                                                    color = ChezPaulColors.OrangeMenu.copy(alpha = 0.2f),
+                                                    shape = RoundedCornerShape(4.dp)
+                                                ) {
+                                                    Text(
+                                                        "${cmd.menusEnfants} enfant${if (cmd.menusEnfants > 1) "s" else ""}",
+                                                        color = ChezPaulColors.OrangeMenu,
+                                                        fontWeight = FontWeight.Bold,
+                                                        style = MaterialTheme.typography.labelSmall,
+                                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                                    )
+                                                }
+                                            }
                                         }
                                         val prixTotal = remember(cmd) {
                                             if (cmd.isGroupe && cmd.prixMenuGroupe != null) {
                                                 cmd.nombreCouverts * cmd.prixMenuGroupe
                                             } else {
-                                                val prixPlats = if (cmd.plats.isNotEmpty()) cmd.nombreCouverts * commandeViewModel.menuPrice.value else 0.0
+                                                val prixPlats = if (cmd.plats.isNotEmpty()) {
+                                                    val adultes = cmd.nombreCouverts - cmd.menusEnfants
+                                                    adultes * commandeViewModel.menuPrice.value + cmd.menusEnfants * MenuConstants.PRIX_MENU_ENFANT
+                                                } else 0.0
                                                 val prixBoissons = cmd.boissons.sumOf { it.quantite * it.prix }
                                                 prixPlats + prixBoissons
                                             }

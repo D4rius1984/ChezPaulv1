@@ -8,6 +8,7 @@ data class Commande(
     val remarque: String? = null,
     val isGroupe: Boolean = false,
     val prixMenuGroupe: Double? = null,
+    val menusEnfants: Int = 0,
     val timestamp: Long = System.currentTimeMillis(),
     val modifiedAt: Long? = null,
 )

@@ -205,7 +205,10 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
     val caPlats: Double
         get() = _commandesList.value
             .filter { !it.isGroupe && it.plats.isNotEmpty() }
-            .sumOf { it.nombreCouverts * menuPrice.value }
+            .sumOf {
+                val adultes = it.nombreCouverts - it.menusEnfants
+                adultes * menuPrice.value + it.menusEnfants * MenuConstants.PRIX_MENU_ENFANT
+            }
 
     val caBoissons: Double
         get() = _commandesList.value

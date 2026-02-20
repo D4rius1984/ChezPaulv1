@@ -64,6 +64,8 @@ fun CommandeScreen(
     var couverts by remember { mutableStateOf(commande?.nombreCouverts?.toString() ?: "") }
     var isGroupe by remember { mutableStateOf(commande?.isGroupe ?: false) }
     var prixGroupeSelectionne by remember { mutableStateOf(commande?.prixMenuGroupe) }
+    var hasMenuEnfant by remember { mutableStateOf((commande?.menusEnfants ?: 0) > 0) }
+    var nbMenusEnfants by remember { mutableIntStateOf(commande?.menusEnfants ?: 0) }
     var shouldPrint by remember { mutableStateOf(false) } // Switch pour l'impression
 
     var selectedTab by remember { mutableIntStateOf(1) }
@@ -82,6 +84,8 @@ fun CommandeScreen(
             couverts = commande.nombreCouverts.toString()
             isGroupe = commande.isGroupe
             prixGroupeSelectionne = commande.prixMenuGroupe
+            hasMenuEnfant = commande.menusEnfants > 0
+            nbMenusEnfants = commande.menusEnfants
             remarqueText = commande.remarque ?: ""
             platsSelectionnes = commande.plats.associate { plat -> plat.nom to plat.quantite }
             boissonsSelectionnees = commande.boissons.associate { boisson -> boisson.nom to boisson.quantite }
@@ -295,6 +299,60 @@ fun CommandeScreen(
                         }
                     }
 
+                    // Switch Menus enfants (masqué si groupe)
+                    if (!isGroupe) {
+                        Spacer(Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text("Menus enfants (17€)", color = jauneMenu, modifier = Modifier.weight(1f))
+                            Switch(
+                                checked = hasMenuEnfant,
+                                onCheckedChange = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    hasMenuEnfant = it
+                                    if (!it) nbMenusEnfants = 0
+                                },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = jauneMenu,
+                                    checkedTrackColor = jauneMenu.copy(alpha = 0.5f)
+                                )
+                            )
+                        }
+                        if (hasMenuEnfant) {
+                            val maxEnfants = couverts.toIntOrNull() ?: 0
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                IconButton(onClick = {
+                                    if (nbMenusEnfants > 0) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        nbMenusEnfants--
+                                    }
+                                }) {
+                                    Icon(Icons.Default.Remove, contentDescription = "Moins", tint = jauneMenu)
+                                }
+                                Text(
+                                    "$nbMenusEnfants",
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                                IconButton(onClick = {
+                                    if (nbMenusEnfants < maxEnfants) {
+                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                        nbMenusEnfants++
+                                    }
+                                }) {
+                                    Icon(Icons.Default.Add, contentDescription = "Plus", tint = jauneMenu)
+                                }
+                            }
+                        }
+                    }
+
                     Spacer(Modifier.height(8.dp))
 
                     // Switch Impression - NOUVEAU
@@ -409,6 +467,23 @@ fun CommandeScreen(
                             ) {
                                 Text(
                                     "Groupe ${prixGroupeSelectionne!!.toInt()}€",
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = orangeMenu,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                )
+                            }
+                        }
+                        // Badge Enfants
+                        val effectiveEnfants = if (hasMenuEnfant) nbMenusEnfants else 0
+                        if (effectiveEnfants > 0) {
+                            Spacer(Modifier.width(8.dp))
+                            Surface(
+                                color = orangeMenu.copy(alpha = 0.2f),
+                                shape = RoundedCornerShape(10.dp)
+                            ) {
+                                Text(
+                                    "$effectiveEnfants enfant${if (effectiveEnfants > 1) "s" else ""}",
                                     style = MaterialTheme.typography.labelLarge,
                                     color = orangeMenu,
                                     fontWeight = FontWeight.Bold,
@@ -778,7 +853,8 @@ fun CommandeScreen(
                         },
                         remarque = remarqueText.takeIf { it.isNotBlank() },
                         isGroupe = isGroupe,
-                        prixMenuGroupe = if (isGroupe) prixGroupeSelectionne else null
+                        prixMenuGroupe = if (isGroupe) prixGroupeSelectionne else null,
+                        menusEnfants = if (!isGroupe && hasMenuEnfant) nbMenusEnfants else 0
                     )
 
                     // Impression si demandée (non bloquant !)
