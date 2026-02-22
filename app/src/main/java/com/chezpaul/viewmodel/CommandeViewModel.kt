@@ -317,6 +317,20 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun exportCsvForService(serviceId: Long, onReady: (Intent) -> Unit) {
+        viewModelScope.launch {
+            val intent = repository.exportCsvFileForService(getApplication(), serviceId)
+            if (intent != null) onReady(intent)
+        }
+    }
+
+    fun exportPdfForService(serviceId: Long, onReady: (Intent) -> Unit) {
+        viewModelScope.launch {
+            val intent = repository.exportPdfFileForService(getApplication(), serviceId)
+            if (intent != null) onReady(intent)
+        }
+    }
+
     // --- CSV Import ---
 
     fun importCsv(uri: Uri) {
