@@ -35,6 +35,8 @@ val boissonsList =
         BoissonConfig("Marc", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
         BoissonConfig("Grillotine", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
         BoissonConfig("Mirabelle", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
+        BoissonConfig("Rhum", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
+        BoissonConfig("Episcopal", CategorieBoisson.DIGESTIFS, isGroupe = false, isNonGroupe = true, prix = 9.0),
         // Bières
         BoissonConfig("Blonde 33cl", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true, prix = 6.0),
         BoissonConfig("Blanche 33cl", CategorieBoisson.BIERES, isGroupe = false, isNonGroupe = true, prix = 6.0),
