@@ -10,6 +10,17 @@ enum class CategorieBoisson {
     CAFES,
 }
 
+/** Ordre d'affichage des catégories dans l'outil de commande. */
+val categoriesOrdre = listOf(
+    CategorieBoisson.APEROS,
+    CategorieBoisson.SOFTS,
+    CategorieBoisson.BIERES,
+    CategorieBoisson.VINS_FONTAINE,
+    CategorieBoisson.VINS_BOUTEILLES,
+    CategorieBoisson.CAFES,
+    CategorieBoisson.DIGESTIFS,
+)
+
 val CategorieBoisson.displayName: String
     get() =
         when (this) {

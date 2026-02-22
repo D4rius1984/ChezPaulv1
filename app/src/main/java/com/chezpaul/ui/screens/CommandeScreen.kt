@@ -156,7 +156,7 @@ fun CommandeScreen(
                 val isActivated = boissonsActivationState[boisson.nom] ?: true
                 val isAvailableForCurrentType = if (isGroupe) boisson.isGroupe else boisson.isNonGroupe
                 isActivated && isAvailableForCurrentType
-            }
+            }.sortedBy { it.nom }
         }
     }
     val boissonsFiltresPourRecherche by remember {
@@ -634,10 +634,11 @@ fun CommandeScreen(
                                 }
                             }
 
-                            // Grouper les boissons par catégorie
+                            // Grouper les boissons par catégorie dans l'ordre défini
                             val boissonsByCategory = boissonsFiltresPourRecherche.groupBy { it.categorie }
 
-                            boissonsByCategory.forEach { (categorie, boissonsDeCategorie) ->
+                            categoriesOrdre.forEach { categorie ->
+                                val boissonsDeCategorie = boissonsByCategory[categorie] ?: return@forEach
                                 val catKey = categorie.name
                                 val isExpanded = catKey in effectiveExpandedCategories
                                 val selectedCount = boissonsDeCategorie.sumOf { boissonsSelectionnees[it.nom] ?: 0 }
