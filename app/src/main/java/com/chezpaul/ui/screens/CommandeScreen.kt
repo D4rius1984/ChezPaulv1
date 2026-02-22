@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chezpaul.model.*
 import com.chezpaul.model.MenuConstants
+import com.chezpaul.ui.components.formatPrix
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
@@ -274,7 +275,7 @@ fun CommandeScreen(
                                     },
                                     label = {
                                         Text(
-                                            "${prix.toInt()}€",
+                                            prix.formatPrix(),
                                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                                             color = if (isSelected) Color.Black else jauneMenu
                                         )
@@ -466,7 +467,7 @@ fun CommandeScreen(
                                 shape = RoundedCornerShape(10.dp)
                             ) {
                                 Text(
-                                    "Groupe ${prixGroupeSelectionne!!.toInt()}€",
+                                    "Groupe ${prixGroupeSelectionne!!.formatPrix()}",
                                     style = MaterialTheme.typography.labelLarge,
                                     color = orangeMenu,
                                     fontWeight = FontWeight.Bold,

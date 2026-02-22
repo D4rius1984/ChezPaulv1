@@ -168,7 +168,7 @@ fun AccueilScreen(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Plats (menu ${menuPrice.toInt()}€)", color = ChezPaulColors.TexteBlanc)
+                    Text("Plats (menu ${menuPrice.formatPrix()})", color = ChezPaulColors.TexteBlanc)
                     Text(
                         "%.2f €".format(commandeViewModel.caPlats),
                         color = ChezPaulColors.JauneMenu,

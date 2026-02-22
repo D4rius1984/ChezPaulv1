@@ -13,6 +13,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.ui.theme.ChezPaulColors
 
+/** Formate un prix Double : "32€" si entier, "29,50€" si centimes. */
+fun Double.formatPrix(): String =
+    if (this % 1.0 == 0.0) "${this.toInt()}€" else "%.2f€".format(this).replace('.', ',')
+
 // Écran de base avec fond et titre
 @Composable
 fun ChezPaulScreen(

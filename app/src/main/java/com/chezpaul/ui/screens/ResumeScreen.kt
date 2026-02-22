@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chezpaul.model.Commande
 import com.chezpaul.model.MenuConstants
+import com.chezpaul.ui.components.formatPrix
 import com.chezpaul.ui.theme.ChezPaulColors
 import com.chezpaul.viewmodel.CommandeViewModel
 import com.chezpaul.viewmodel.PrinterViewModel
@@ -129,7 +130,7 @@ fun ResumeScreen(
                         Spacer(Modifier.height(8.dp))
                         if (commande.isGroupe && commande.prixMenuGroupe != null) {
                             Text(
-                                "Boissons (incluses ${commande.prixMenuGroupe.toInt()}€/cvt) :",
+                                "Boissons (incluses ${commande.prixMenuGroupe.formatPrix()}/cvt) :",
                                 color = Color.White,
                                 style = MaterialTheme.typography.titleSmall
                             )
@@ -268,7 +269,7 @@ fun ResumeScreen(
                                         val ticketMoyen = remember(cmd) { if (cmd.nombreCouverts > 0) prixTotal / cmd.nombreCouverts else 0.0 }
                                         val tmColor = getTicketMoyenColor(ticketMoyen)
                                         Text(
-                                            "%.0f€ · TM %.0f€".format(prixTotal, ticketMoyen),
+                                            "${prixTotal.formatPrix()} · TM ${ticketMoyen.formatPrix()}",
                                             color = tmColor,
                                             fontWeight = FontWeight.Bold,
                                             style = MaterialTheme.typography.bodySmall,

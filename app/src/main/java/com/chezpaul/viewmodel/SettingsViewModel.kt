@@ -46,7 +46,7 @@ class SettingsViewModel : ViewModel() {
             "FORCE_SOIR" -> "Soir/WE (32€)"
             else -> {
                 val price = getMenuPrice()
-                "Auto → ${price.toInt()}€"
+                "Auto → ${if (price % 1.0 == 0.0) "${price.toInt()}€" else "%.2f€".format(price).replace('.', ',')}"
             }
         }
     }
