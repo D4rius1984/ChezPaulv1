@@ -430,9 +430,12 @@ fun CommandeScreen(
                 modifier = Modifier.weight(1f)
             ) {
                 Column(Modifier.padding(16.dp)) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 12.dp)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .padding(bottom = 12.dp)
+                            .fillMaxWidth()
                     ) {
                         Surface(
                             color = jauneMenu.copy(alpha = 0.15f),
@@ -446,7 +449,6 @@ fun CommandeScreen(
                                 modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                             )
                         }
-                        Spacer(Modifier.width(8.dp))
                         Surface(
                             color = jauneMenu.copy(alpha = 0.15f),
                             shape = RoundedCornerShape(10.dp)
@@ -461,7 +463,6 @@ fun CommandeScreen(
                         }
                         // Badge Prix Groupe
                         if (isGroupe && prixGroupeSelectionne != null) {
-                            Spacer(Modifier.width(8.dp))
                             Surface(
                                 color = orangeMenu.copy(alpha = 0.2f),
                                 shape = RoundedCornerShape(10.dp)
@@ -478,7 +479,6 @@ fun CommandeScreen(
                         // Badge Enfants
                         val effectiveEnfants = if (hasMenuEnfant) nbMenusEnfants else 0
                         if (effectiveEnfants > 0) {
-                            Spacer(Modifier.width(8.dp))
                             Surface(
                                 color = orangeMenu.copy(alpha = 0.2f),
                                 shape = RoundedCornerShape(10.dp)
@@ -492,7 +492,6 @@ fun CommandeScreen(
                                 )
                             }
                         }
-                        Spacer(Modifier.width(8.dp))
                         // Badge Remarque cliquable
                         Surface(
                             color = jauneMenu.copy(alpha = 0.15f),
@@ -525,7 +524,6 @@ fun CommandeScreen(
                         }
                         // Badge Impression si activé
                         if (shouldPrint && isPrinterEnabled && printerName.isNotEmpty()) {
-                            Spacer(Modifier.width(8.dp))
                             Surface(
                                 color = orangeMenu.copy(alpha = 0.2f),
                                 shape = RoundedCornerShape(10.dp)
@@ -552,7 +550,6 @@ fun CommandeScreen(
                         }
                         // Badge Ravigote si des plats avec ravigote sont sélectionnés
                         if (hasRavigote) {
-                            Spacer(Modifier.width(8.dp))
                             Surface(
                                 color = orangeMenu.copy(alpha = 0.2f),
                                 shape = RoundedCornerShape(10.dp)
