@@ -16,6 +16,7 @@ import com.chezpaul.model.Commande
 import com.chezpaul.model.MenuConstants
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 /**
  * ViewModel central gérant les commandes en cours, le CA, l'historique des services
@@ -66,10 +67,30 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
 
     private fun observeHistory() {
         viewModelScope.launch {
-            repository.allHistoryServices.collectLatest { services ->
-                _historyList.value = services
+            repository.allHistoryServices.collect { services ->
+                // Backfill totalCouverts pour les services archivés avant l'ajout du champ
+                services.filter { it.totalCouverts == 0 && it.commandCount > 0 }.forEach { service ->
+                    val covers = repository.getTotalCouvertsForService(service.id)
+                    if (covers > 0) {
+                        repository.updateService(service.copy(totalCouverts = covers))
+                    }
+                }
+                _historyList.value = services.sortedWith(
+                    compareByDescending<ServiceEntity> { startOfDay(it.date) }
+                        .thenBy { if (it.type == "Soir") 0 else 1 }
+                )
             }
         }
+    }
+
+    private fun startOfDay(timestamp: Long): Long {
+        val cal = Calendar.getInstance()
+        cal.timeInMillis = timestamp
+        cal.set(Calendar.HOUR_OF_DAY, 0)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal.timeInMillis
     }
 
     private fun migrateData() {
