@@ -85,6 +85,12 @@ class CommandeViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun updateServiceEntity(service: ServiceEntity) {
+        viewModelScope.launch {
+            repository.updateService(service)
+        }
+    }
+
     // --- Gestion des commandes ---
 
     fun ajouterCommande(cmd: Commande) {

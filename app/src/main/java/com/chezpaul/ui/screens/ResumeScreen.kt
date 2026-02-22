@@ -10,8 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Print
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,16 +42,12 @@ fun ResumeScreen(
     isInCommandeFlow: Boolean,
     printerViewModel: PrinterViewModel? = null
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val jauneMenu = ChezPaulColors.JauneMenu
 
     // Observer les données du ViewModel
     val commandesList by commandeViewModel.commandesList
-    val showBottomSheet by commandeViewModel.showBottomSheet
-    val selectedCommande by commandeViewModel.selectedCommande
-
-    val bottomSheetState = rememberModalBottomSheetState()
 
     Column(
         modifier = Modifier
@@ -275,17 +273,59 @@ fun ResumeScreen(
                                             style = MaterialTheme.typography.bodySmall,
                                             maxLines = 1
                                         )
-                                        Icon(
-                                            imageVector = Icons.Default.MoreVert,
-                                            contentDescription = "Options",
-                                            tint = Color.White,
-                                            modifier = Modifier
-                                                .size(24.dp)
-                                                .clickable {
-                                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                                    commandeViewModel.toggleBottomSheet(cmd)
+                                        var showMenu by remember { mutableStateOf(false) }
+                                        Box {
+                                            Icon(
+                                                imageVector = Icons.Default.MoreVert,
+                                                contentDescription = "Options",
+                                                tint = Color.White,
+                                                modifier = Modifier
+                                                    .size(24.dp)
+                                                    .clickable {
+                                                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                                        showMenu = true
+                                                    }
+                                            )
+                                            DropdownMenu(
+                                                expanded = showMenu,
+                                                onDismissRequest = { showMenu = false },
+                                                modifier = Modifier.background(ChezPaulColors.FondSombre)
+                                            ) {
+                                                DropdownMenuItem(
+                                                    text = { Text("Modifier", color = Color.White) },
+                                                    onClick = {
+                                                        showMenu = false
+                                                        onModifieTable(cmd)
+                                                    },
+                                                    leadingIcon = {
+                                                        Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
+                                                    }
+                                                )
+                                                if (printerViewModel != null && printerViewModel.isPrinterEnabled.value) {
+                                                    DropdownMenuItem(
+                                                        text = { Text("Imprimer en cuisine", color = ChezPaulColors.JauneMenu) },
+                                                        onClick = {
+                                                            showMenu = false
+                                                            printerViewModel.printCommande(cmd, context)
+                                                        },
+                                                        leadingIcon = {
+                                                            Icon(Icons.Default.Print, contentDescription = null, tint = ChezPaulColors.JauneMenu)
+                                                        }
+                                                    )
                                                 }
-                                        )
+                                                DropdownMenuItem(
+                                                    text = { Text("Supprimer", color = ChezPaulColors.RougeErreur) },
+                                                    onClick = {
+                                                        showMenu = false
+                                                        commandeViewModel.deleteCommande(cmd)
+                                                        onSupprimeTable(cmd)
+                                                    },
+                                                    leadingIcon = {
+                                                        Icon(Icons.Default.Delete, contentDescription = null, tint = ChezPaulColors.RougeErreur)
+                                                    }
+                                                )
+                                            }
+                                        }
                                     }
                                     if (cmd.plats.isNotEmpty()) {
                                         Text(
@@ -343,132 +383,8 @@ fun ResumeScreen(
         }
     }
 
-    // Bottom Sheet Modal
-    if (showBottomSheet && selectedCommande != null) {
-        ModalBottomSheet(
-            onDismissRequest = {
-                commandeViewModel.toggleBottomSheet(null)
-            },
-            sheetState = bottomSheetState,
-            containerColor = ChezPaulColors.FondCard,
-            contentColor = Color.White,
-            dragHandle = {
-                Surface(
-                    modifier = Modifier
-                        .padding(vertical = 11.dp)
-                        .size(width = 32.dp, height = 4.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    color = Color.Gray
-                ) {}
-            }
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 32.dp)
-            ) {
-                // Titre de la commande
-                Text(
-                    text = "Table ${selectedCommande!!.numeroTable}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = jauneMenu,
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-                )
-
-                HorizontalDivider(
-                    thickness = 0.5.dp,
-                    color = ChezPaulColors.DividerColor,
-                    modifier = Modifier.padding(horizontal = 24.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Option Modifier
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            selectedCommande?.let { commande ->
-                                commandeViewModel.toggleBottomSheet(null)
-                                onModifieTable(commande)
-                            }
-                        }
-                        .padding(horizontal = 24.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "Modifier",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.White
-                    )
-                }
-
-                // Option Imprimer
-                if (printerViewModel != null && printerViewModel.isPrinterEnabled.value) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                selectedCommande?.let { commande ->
-                                    printerViewModel.printCommande(commande, context)
-                                    commandeViewModel.toggleBottomSheet(null)
-                                }
-                            }
-                            .padding(horizontal = 24.dp, vertical = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "\uD83D\uDDA8",
-                            modifier = Modifier.size(24.dp),
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Text(
-                            text = "Imprimer en cuisine",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = ChezPaulColors.JauneMenu
-                        )
-                    }
-                }
-
-                // Option Supprimer
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            selectedCommande?.let { commande ->
-                                commandeViewModel.deleteCommande(commande)
-                                onSupprimeTable(commande)
-                            }
-                        }
-                        .padding(horizontal = 24.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = null,
-                        tint = ChezPaulColors.RougeErreur,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "Supprimer",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = ChezPaulColors.RougeErreur
-                    )
-                }
-            }
-        }
-    }
 }
+
 
 private fun getTicketMoyenColor(ticketMoyen: Double): Color {
     return when {
