@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Remove
@@ -146,8 +147,8 @@ fun MenuModificationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp)
             .background(ChezPaulColors.FondPrincipal)
+            .padding(12.dp)
     ) {
         Text(
             "Modification du Menu",
@@ -159,7 +160,14 @@ fun MenuModificationScreen(
 
         TabRow(
             selectedTabIndex = selectedTab,
-            containerColor = Color.Transparent
+            containerColor = Color.Transparent,
+            contentColor = jauneMenu,
+            indicator = { tabPositions ->
+                TabRowDefaults.SecondaryIndicator(
+                    modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
+                    color = jauneMenu
+                )
+            }
         ) {
             Tab(
                 selected = selectedTab == 0,
@@ -167,7 +175,7 @@ fun MenuModificationScreen(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     selectedTab = 0
                 },
-                text = { Text("Plats") }
+                text = { Text("Plats", color = if (selectedTab == 0) jauneMenu else Color.White) }
             )
             Tab(
                 selected = selectedTab == 1,
@@ -175,7 +183,7 @@ fun MenuModificationScreen(
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     selectedTab = 1
                 },
-                text = { Text("Boissons") }
+                text = { Text("Boissons", color = if (selectedTab == 1) jauneMenu else Color.White) }
             )
         }
 
@@ -224,10 +232,10 @@ fun MenuModificationScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         // Card layout for Plat and Boisson selections
-        Surface(
+        Card(
             shape = RoundedCornerShape(20.dp),
-            color = ChezPaulColors.FondCard,
-            tonalElevation = 8.dp,
+            colors = CardDefaults.cardColors(containerColor = ChezPaulColors.FondCard),
+            elevation = CardDefaults.cardElevation(8.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)

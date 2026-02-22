@@ -187,10 +187,10 @@ fun CommandeScreen(
         )
 
         if (!initDone) {
-            Surface(
+            Card(
                 shape = RoundedCornerShape(20.dp),
-                color = ChezPaulColors.FondCard,
-                tonalElevation = 8.dp,
+                colors = CardDefaults.cardColors(containerColor = ChezPaulColors.FondCard),
+                elevation = CardDefaults.cardElevation(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(Modifier.padding(16.dp)) {
@@ -423,10 +423,10 @@ fun CommandeScreen(
                 }
             }
         } else {
-            Surface(
+            Card(
                 shape = RoundedCornerShape(20.dp),
-                color = ChezPaulColors.FondCard,
-                tonalElevation = 8.dp,
+                colors = CardDefaults.cardColors(containerColor = ChezPaulColors.FondCard),
+                elevation = CardDefaults.cardElevation(8.dp),
                 modifier = Modifier.weight(1f)
             ) {
                 Column(Modifier.padding(16.dp)) {
@@ -937,16 +937,16 @@ fun CommandeScreen(
                                 label = {
                                     Text(
                                         text = mot,
-                                        color = MaterialTheme.colorScheme.primary,
+                                        color = jauneMenu,
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },
                                 colors = SuggestionChipDefaults.suggestionChipColors(
-                                    containerColor = MaterialTheme.colorScheme.surface
+                                    containerColor = ChezPaulColors.FondSombre
                                 ),
                                 border = SuggestionChipDefaults.suggestionChipBorder(
                                     enabled = true,
-                                    borderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)
+                                    borderColor = jauneMenu.copy(alpha = 0.4f)
                                 )
                             )
                         }
