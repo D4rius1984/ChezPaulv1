@@ -158,6 +158,14 @@ val boissonsList =
             prix = 33.0,
         ),
         BoissonConfig(
+            "Gascogne verre",
+            CategorieBoisson.VINS_BOUTEILLES,
+            isGroupe = false,
+            isNonGroupe = true,
+            sousCategorie = "Blanc",
+            prix = 8.0,
+        ),
+        BoissonConfig(
             "Viognier",
             CategorieBoisson.VINS_BOUTEILLES,
             isGroupe = false,
@@ -189,6 +197,14 @@ val boissonsList =
             isNonGroupe = true,
             sousCategorie = "Bulles et Rosé",
             prix = 32.0,
+        ),
+        BoissonConfig(
+            "Rosé verre",
+            CategorieBoisson.VINS_BOUTEILLES,
+            isGroupe = false,
+            isNonGroupe = true,
+            sousCategorie = "Bulles et Rosé",
+            prix = 8.0,
         ),
         // Cafés
         BoissonConfig("Expresso", CategorieBoisson.CAFES, isGroupe = true, isNonGroupe = true, prix = 2.50),
